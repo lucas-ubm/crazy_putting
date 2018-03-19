@@ -69,6 +69,7 @@ public class Game extends ApplicationAdapter {
             touchPos.set(Gdx.input.getX(), Gdx.input.getY(), 0);
             camera.unproject(touchPos);
             bucket.x = touchPos.x-64/2;
+            bucket.y = touchPos.y-20;
         }
 
         //Makes using clicks to move bucket possible
