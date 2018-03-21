@@ -74,25 +74,28 @@ public class Game extends ApplicationAdapter {
 
             Vector3 destination = new Vector3();
             Vector3 direction = new Vector3();
+
             direction.set((ballPos.x-origin.x), (ballPos.y-origin.y), 0);
             destination.set(ballPos.add(direction));
-            direction.setLength(1);
 
-            while(Math.abs(ball.x - destination.x) > 10 || Math.abs(ball.y - destination.y) > 10) {
-                System.out.println("Direction is " + direction + " ball was in" + ballPos + " clicked in " +origin+ " ball is in " + ball.x + " " + ball.y);
+            int velocity = direction.len();
+            direction.nor();
+
+            while(Math.abs(ball.x - destination.x) > 1 || Math.abs(ball.y - destination.y) > 1) {
+                System.out.println("Direction is " + direction + " ball was in" + ballPos + " clicked in " +origin+ " ball is in " + ball.x + " " + ball.y +" destination is " +destination);
 
                 if(ball.x < destination.x) {
-                    ball.x += 0.1*direction.x * Gdx.graphics.getDeltaTime();
+                    ball.x += Math.abs(direction.x) * Gdx.graphics.getDeltaTime();
                 }
                 if(ball.x > destination.x) {
-                    ball.x -= 0.1*direction.x * Gdx.graphics.getDeltaTime();
+                    ball.x -= Math.abs(direction.x) * Gdx.graphics.getDeltaTime();
                 }
 
                 if(ball.y < destination.y) {
-                    ball.y += 0.1*direction.y * Gdx.graphics.getDeltaTime();
+                    ball.y += Math.abs(direction.y) * Gdx.graphics.getDeltaTime();
                 }
                 if(ball.y > destination.y){
-                    ball.y -= 0.1*direction.y * Gdx.graphics.getDeltaTime();
+                    ball.y -= Math.abs(direction.y) * Gdx.graphics.getDeltaTime();
                 }
             }
         }
