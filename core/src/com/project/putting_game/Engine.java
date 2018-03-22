@@ -17,6 +17,7 @@ public class Engine
 
     public static void calculate(Ball ball, Field fields)
     {
+         ball.prevPosition = ball.position;
          double x =  ball.position.x;
          double y =  ball.position.y;
 
@@ -33,10 +34,14 @@ public class Engine
          System.out.println(ball.velocity.x + "XXXXXX");
 
          ball.velocity.y = (float)vy_h;
-        System.out.println(ball.velocity.y + "YYYYYY");
+         System.out.println(ball.velocity.y + "YYYYYY");
 
          ball.position.x = (float)xh;
          ball.position.y = (float)yh;
+
+         if(ball.position.x < 60 || ball.position.y < 60 || ball.position.x > 800-92 || ball.position.y > 480-92) {
+             ball.position = ball.prevPosition;
+         }
 
 
          Currentfriction = fields.matrix[(int)ball.position.y][(int)ball.position.x].friction;

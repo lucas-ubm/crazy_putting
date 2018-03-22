@@ -145,5 +145,6 @@ public class MenuScreen implements Screen {
 		golfImg.dispose();
 		checkImg.dispose();
 		uncheckImg.dispose();
+		stage.dispose();
 	}
 }
