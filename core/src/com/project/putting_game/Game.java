@@ -160,17 +160,17 @@ public class Game implements Screen {
 		    ball.velocity.y = 0;
 		    condition = true;
         }
-        if(ball.velocity.len() <= 0.2 && checkRadius(ball.position.x, ball.position.y))
+        if(ball.velocity.len() <= 0.2 && checkRadius())
         {
             game.setScreen(new com.project.putting_game.WinScreen(game));
         }
 
 	}
 
-	public boolean checkRadius(double x, double y)
+	public boolean checkRadius()
     {
         boolean result = false;
-        if(Math.pow((x-hole.position.x), 2) + Math.pow((y-hole.position.y), 2) <= Math.pow(hole.holeShape.height/2-ball.shape.width/2,2)){
+        if(Math.pow((ball.position.x+ball.shape.width/2-(hole.position.x+hole.holeShape.width/2)), 2) + Math.pow((ball.position.y+ball.shape.height/2-(hole.position.y+hole.holeShape.height/2)), 2) <= Math.pow(hole.holeShape.height/2-ball.shape.width/2,2)){
             result = true;
         }
         return result;
