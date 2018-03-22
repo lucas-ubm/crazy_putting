@@ -53,7 +53,7 @@ public class Game implements Screen {
                     pixmap.setColor(new Color(0,  value, 0, 1f));// set color White with Alpha=0.5
                 }
                 else{
-                    pixmap.setColor(new Color(0,0,1f,1f));
+                    pixmap.setColor(new Color(0,0,0.6f,1f));
                 }
                 pixmap.drawPixel(x, y);
             }
