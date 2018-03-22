@@ -33,16 +33,21 @@ public class MenuScreen implements Screen {
 	ImageButton checkBox2;
 	TextureRegionDrawable checkedState;
 	TextureRegionDrawable uncheckedState;
-
+	
+	/**Constructor of MenuScreen. Same as create() if extending ApplicationAdapter. 
+	 * Instantiating all variables defined above and its components (such as position and size).
+	 * @param game - game created when 'run' was clicked (parent of all screens)
+	 */
 	public MenuScreen(final com.project.putting_game.Project2 game){ //create()
 		this.game = game;
 		camera = new OrthographicCamera();
 		camera.setToOrtho(false, 480,800);
-
+		
+		//create a nice picture to illustrate our game for the background of the MenuScreen
 		golfImg = new Texture(Gdx.files.internal("Golf.jpg"));
-		golf = new Rectangle();
-		golf.width = Gdx.graphics.getWidth();
-		golf.height = Gdx.graphics.getWidth()*721/1280;
+		golf = new Rectangle(); //create a Rectangle which can contain the picture
+		golf.width = Gdx.graphics.getWidth(); //set it to cover the entire width of the screen
+		golf.height = Gdx.graphics.getWidth()*721/1280; //but not the entire height, just what is needed to keep the original size
 		golf.x = 0;
 		golf.y = Gdx.graphics.getHeight() - golf.height;
 
@@ -55,17 +60,18 @@ public class MenuScreen implements Screen {
 		skin.add("background",new Texture(backgroundButton));
 		//Create a button style
 		textButtonStyle = new TextButton.TextButtonStyle();
-		textButtonStyle.up = skin.newDrawable("background", Color.FOREST);
-		textButtonStyle.down = skin.newDrawable("background", Color.BLACK);
+		textButtonStyle.up = skin.newDrawable("background", Color.FOREST); //standard color of the button (no special action)
+		textButtonStyle.down = skin.newDrawable("background", Color.BLACK); //let the button turn black if you press your mouse when standing on the button
 		textButtonStyle.checked = skin.newDrawable("background", Color.BLACK);
-		textButtonStyle.over = skin.newDrawable("background", Color.BROWN);
+		textButtonStyle.over = skin.newDrawable("background", Color.BROWN); //let the button turn brown when the mouse is standing on the button
 		textButtonStyle.font = skin.getFont("default");
 		skin.add("default", textButtonStyle);
-		backgroundButton.dispose();
+		backgroundButton.dispose();//don't need it anymore, only taking memory
 		stage = new Stage(new ScreenViewport());
-		Gdx.input.setInputProcessor(stage);
+		Gdx.input.setInputProcessor(stage);//let game take input from the stage
 		startButton = new TextButton("Play!", skin);
 		startButton.setPosition(Gdx.graphics.getWidth()/2 - startButton.getWidth()/2,2*Gdx.graphics.getHeight()/6);
+		//When button 'Play!' is clicked set the screen to the GameScreen (and close MenuScreen)
 		startButton.addListener(new ClickListener(){
 			public void clicked(InputEvent event,float x, float y){
 				game.setScreen(new com.project.putting_game.Game(game));
@@ -75,6 +81,7 @@ public class MenuScreen implements Screen {
 		stage.addActor(startButton);
 		controlsButton = new TextButton("Controls", skin);
 		controlsButton.setPosition(Gdx.graphics.getWidth()/2 - controlsButton.getWidth()/2,Gdx.graphics.getHeight()/6);
+		//When button 'Controls' is clicked set the screen to the ControlsScreen (and close MenuScreen)
 		controlsButton.addListener(new ClickListener(){
 			public void clicked(InputEvent event,float x, float y){
 				game.setScreen(new com.project.putting_game.ControlsScreen(game));
@@ -112,24 +119,26 @@ public class MenuScreen implements Screen {
 		stage.addActor(checkBox1);
 		stage.addActor(checkBox2);
 	}
+	/** Called many times a second. Draws all textures and elements of the stage, such as buttons and labels, on the screen.
+	 * @param delta -  time elapsed since rendering the last frame
+	 */
 	public void render(float delta) {
-		Gdx.gl.glClearColor(0, 0.7f, 0, 0);//65/255f, 77/255f,1/255f, 0);
+		Gdx.gl.glClearColor(0, 0.7f, 0, 0); //set color of screen/background
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		camera.update();
 		stage.act();
 
 		stage.getBatch().setProjectionMatrix(camera.combined);
 		stage.getBatch().begin();
-		stage.getBatch().draw(golfImg, golf.x, golf.y, golf.width, golf.height);
+		stage.getBatch().draw(golfImg, golf.x, golf.y, golf.width, golf.height);//draw background picture
 		stage.getBatch().end();
-		stage.draw();
+		stage.draw();//draw stage (so the elements of the stage)
 	}
 	@Override
 	public void resize(int width, int height) {
 	}
 	@Override
 	public void show(){
-
 	}
 	@Override
 	public void hide(){
@@ -145,5 +154,6 @@ public class MenuScreen implements Screen {
 		golfImg.dispose();
 		checkImg.dispose();
 		uncheckImg.dispose();
+		stage.dispose();
 	}
 }
