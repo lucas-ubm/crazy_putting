@@ -1,5 +1,7 @@
 package com.project.putting_game;
 
+import com.badlogic.gdx.math.Vector3;
+
 public class Engine
 {
 
@@ -17,7 +19,6 @@ public class Engine
 
     public static void calculate(Ball ball, Field fields)
     {
-         ball.prevPosition = ball.position.cpy();
          double x =  ball.position.x;
          double y =  ball.position.y;
 
@@ -39,13 +40,15 @@ public class Engine
          ball.position.x = (float)xh;
          ball.position.y = (float)yh;
 
-         if(ball.position.x < 60 || ball.position.y < 60 || ball.position.x > 800-92 || ball.position.y > 480-92) {
+        Currentfriction = fields.matrix[(int)ball.position.y][(int)ball.position.x].friction;
+        currentHeight = fields.matrix[(int)ball.position.y][(int)ball.position.x].height;
+
+         if(ball.position.x <= 60 || ball.position.y <= 60 || ball.position.x >= 800-92 || ball.position.y >= 480-92 || currentHeight < 0) {
+             System.out.println("Previous " + ball.prevPosition);
              ball.position = ball.prevPosition;
+             ball.velocity = new Vector3(0,0,0);
          }
 
-
-         Currentfriction = fields.matrix[(int)ball.position.y][(int)ball.position.x].friction;
-         currentHeight = fields.matrix[(int)ball.position.y][(int)ball.position.x].height;
          System.out.println(ball.velocity);
     }
 

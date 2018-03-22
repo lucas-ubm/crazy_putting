@@ -77,6 +77,7 @@ public class Game implements Screen {
 
             direction.set((ballPos.x-origin.x), (ballPos.y-origin.y), 0);
             ball.velocity = direction.scl(1.5f);
+            ball.prevPosition = ballPos;
 
         }
 
