@@ -13,6 +13,7 @@ public class Game implements Screen {
 	private Texture ballImage;
 	private Texture fieldTexture;
 	private Ball ball;
+	private Hole hole;
 	private Rectangle field;
 	private Project2 game;
 
@@ -26,7 +27,7 @@ public class Game implements Screen {
 
         //Create bucket Rectangle
         ball = new Ball(new Vector3(0,0,0), new Vector3(80, 80, 0), "golfball.png", 32, 32);
-
+        hole = new Hole(new Vector3(750,430,0), "hole.png", 50, 50);
         //Create field
         field = new Rectangle();
         field.x = 0;
@@ -55,6 +56,7 @@ public class Game implements Screen {
         pixmap.dispose();
         game.batch.draw(fieldTexture, field.x, field.y, field.width, field.height);
 		game.batch.draw(ball.ballImage, ball.position.x, ball.position.y, ball.shape.width, ball.shape.height);
+		game.batch.draw(hole.holeImage, hole.position.x, hole.position.y, hole.holeShape.width, hole.holeShape.height );
 
 		game.batch.end();
 
@@ -69,7 +71,6 @@ public class Game implements Screen {
             touchPos.set(Gdx.input.getX(), Gdx.input.getY(), 0);
             camera.unproject(touchPos);
             origin.set((int)touchPos.x - 64/2, (int)touchPos.y - 64/2, 0);
-
 
             ballPos.set((int)ball.position.x, (int)ball.position.y, 0);
             Vector3 direction = new Vector3();
@@ -89,6 +90,7 @@ public class Game implements Screen {
 //                ball.velocity.y = 0;
                 condition = false;
             }
+
             if(ball.position.x > 800 - 32) {
                 ball.position.x = 800 - 32;
 //                ball.velocity.x = 0;
@@ -110,14 +112,23 @@ public class Game implements Screen {
 
 
         }
-
-
-
-
-
+        if(ball.velocity.len() <= 0.2 && checkRadius(ball.position.x, ball.position.y))
+        {
+            game.setScreen(new com.project.putting_game.WinScreen(game));
+        }
 
 	}
-	
+
+	public boolean checkRadius(double x, double y)
+    {
+        if(Math.pow((x-750), 2) + Math.pow((y-430), 2) <= 2500)
+        {
+            return true;
+        }
+        else
+            return false;
+    }
+
 	@Override
 	public void dispose () {
         ballImage.dispose();

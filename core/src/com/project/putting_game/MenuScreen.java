@@ -41,8 +41,8 @@ public class MenuScreen implements Screen {
 	public MenuScreen(final com.project.putting_game.Project2 game){ //create()
 		this.game = game;
 		camera = new OrthographicCamera();
-		camera.setToOrtho(false, 480,800);
-		
+		camera.setToOrtho(false, 800,480);
+
 		//create a nice picture to illustrate our game for the background of the MenuScreen
 		golfImg = new Texture(Gdx.files.internal("Golf.jpg"));
 		golf = new Rectangle(); //create a Rectangle which can contain the picture
@@ -76,6 +76,11 @@ public class MenuScreen implements Screen {
 			public void clicked(InputEvent event,float x, float y){
 				game.setScreen(new com.project.putting_game.Game(game));
 				dispose();
+
+
+
+
+
 			}
 		});
 		stage.addActor(startButton);
