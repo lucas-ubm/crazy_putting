@@ -20,7 +20,7 @@ public class Field {
 
         for(int i = 0; i < matrix.length; i++) {
             for(int j = 0; j < matrix[0].length; j++) {
-                matrix[i][j].height = 1;
+                matrix[i][j].height = Math.sin(j/(400/5.1))+Math.sin(i/(240/5.1));
             }
         }
 
