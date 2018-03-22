@@ -29,10 +29,10 @@ public class Game implements Screen {
 
         //Create field
         field = new Rectangle();
-        field.x = 60;
-        field.y = 60;
-        field.width = 800 - 60*2;
-        field.height = 480 - 60*2;
+        field.x = 0;
+        field.y = 0;
+        field.width = 800;
+        field.height = 480;
 
 	}
 
@@ -83,26 +83,26 @@ public class Game implements Screen {
         while(ball.velocity.len() >= 0.02 && condition) {
             //Makes sure the bucket doesn't get out of the window
             Engine.calculate(ball, field);
-            if(ball.position.x < 60){
+            if(ball.position.x < 0){
                 ball.position.x = 60;
 //                ball.velocity.x = 0;
 //                ball.velocity.y = 0;
                 condition = false;
             }
-            if(ball.position.x > 800 - 92) {
-                ball.position.x = 800 - 92;
+            if(ball.position.x > 800 - 32) {
+                ball.position.x = 800 - 32;
 //                ball.velocity.x = 0;
 //                ball.velocity.y = 0;
                 condition = false;
             }
-            if(ball.position.y < 60) {
-                ball.position.y = 60;
+            if(ball.position.y < 0) {
+                ball.position.y = 0;
 //                ball.velocity.x = 0;
 //                ball.velocity.y = 0;
                 condition = false;
             }
-            if(ball.position.y > 480 - 92) {
-                ball.position.y = 480-92;
+            if(ball.position.y > 480 - 32) {
+                ball.position.y = 480- 32;
 //                ball.velocity.x = 0;
 //                ball.velocity.y = 0;
                 condition = false;
