@@ -13,12 +13,8 @@ public class Game implements Screen {
 	private Texture ballImage;
 	private Texture fieldTexture;
 	private Ball ball;
-<<<<<<< HEAD
 	private Rectangle fieldShape;
-=======
 	private Hole hole;
-	private Rectangle field;
->>>>>>> f145ddc00d969b85d26b7ba15940ea128c24e90f
 	private Project2 game;
 	boolean condition = true;
 	private String course;
@@ -34,7 +30,7 @@ public class Game implements Screen {
 
         //Create bucket Rectangle
         ball = new Ball(new Vector3(0,0,0), new Vector3(80, 80, 0), "golfball.png", 32, 32);
-        hole = new Hole(new Vector3(750,430,0), "hole.png", 50, 50);
+        hole = new Hole(new Vector3(300,300,0), "hole.png", 50, 50);
         //Create field
         fieldShape = new Rectangle();
         fieldShape.x = 60;
@@ -51,13 +47,11 @@ public class Game implements Screen {
 
 		game.batch.setProjectionMatrix(camera.combined);
 		game.batch.begin();
-
+        course = "flat";
         Field field = new Field(800, 480, new Vector3(0, 0, 0), 3, course);
         Pixmap pixmap = new Pixmap((int) Gdx.graphics.getWidth(), (int) Gdx.graphics.getHeight(), Pixmap.Format.RGBA8888);
 
 		if(course.equals("sinx+siny")) {
-            Field field = new Field(800, 480, new Vector3(0, 0, 0), 3, "sinx+siny");
-            Pixmap pixmap = new Pixmap((int) Gdx.graphics.getWidth(), (int) Gdx.graphics.getHeight(), Pixmap.Format.RGBA8888);
             for (int x = 0; x < Gdx.graphics.getWidth(); x++) {
                 for (int y = 0; y < Gdx.graphics.getHeight(); y++) {
                     if(field.matrix[y][x].height >=0) {
@@ -74,9 +68,7 @@ public class Game implements Screen {
             pixmap.dispose();
         }
         else if(course.equals("flat")) {
-            Field field = new Field(800, 480, new Vector3(0, 0, 0), 3, "flat");
-            Pixmap pixmap = new Pixmap((int) Gdx.graphics.getWidth(), (int) Gdx.graphics.getHeight(), Pixmap.Format.RGBA8888);
-            for (int x = 0; x < Gdx.graphics.getWidth(); x++) {
+		    for (int x = 0; x < Gdx.graphics.getWidth(); x++) {
                 for (int y = 0; y < Gdx.graphics.getHeight(); y++) {
                     pixmap.setColor(new Color(0,  0.8f, 0, 1f));// set color White with Alpha=0.5
                     pixmap.drawPixel(x, y);
@@ -86,8 +78,6 @@ public class Game implements Screen {
             pixmap.dispose();
         }
         else if(course.equals("slope")) {
-            Field field = new Field(800, 480, new Vector3(0, 0, 0), 3, "slope");
-            Pixmap pixmap = new Pixmap((int) Gdx.graphics.getWidth(), (int) Gdx.graphics.getHeight(), Pixmap.Format.RGBA8888);
             for (int x = 0; x < Gdx.graphics.getWidth(); x++) {
                 for (int y = 0; y < Gdx.graphics.getHeight(); y++) {
                     if(field.matrix[y][x].height >=0) {
@@ -153,17 +143,9 @@ public class Game implements Screen {
             if(ball.position.x < 60){
                 ball.position.x = 60;
             }
-<<<<<<< HEAD
             if(ball.position.x > 800 - 92) {
                 ball.position.x = 800 - 92;
-=======
 
-            if(ball.position.x > 800 - 32) {
-                ball.position.x = 800 - 32;
-//                ball.velocity.x = 0;
-//                ball.velocity.y = 0;
-                condition = false;
->>>>>>> f145ddc00d969b85d26b7ba15940ea128c24e90f
             }
             if(ball.position.y < 60) {
                 ball.position.y = 60;
@@ -187,12 +169,12 @@ public class Game implements Screen {
 
 	public boolean checkRadius(double x, double y)
     {
-        if(Math.pow((x-750), 2) + Math.pow((y-430), 2) <= 2500)
-        {
-            return true;
+        boolean result = false;
+        if(Math.pow((x-hole.position.x), 2) + Math.pow((y-hole.position.y), 2) <= Math.pow(hole.holeShape.height/2-ball.shape.width/2,2)){
+            result = true;
         }
-        else
-            return false;
+        return result;
+
     }
 
 	@Override
