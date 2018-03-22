@@ -60,32 +60,60 @@ public class Game implements Screen {
 
         Vector3 origin = new Vector3();
         Vector3 ballPos = new Vector3();
-        boolean condition = false;
-		if(Gdx.input.isTouched()) {
+
+        Field field = new Field(800, 480, new Vector3(0, 0, 0), 3);
+
+		if(Gdx.input.isTouched() ) {
 		    
             Vector3 touchPos = new Vector3();
             touchPos.set(Gdx.input.getX(), Gdx.input.getY(), 0);
             camera.unproject(touchPos);
             origin.set((int)touchPos.x - 64/2, (int)touchPos.y - 64/2, 0);
 
-            condition = true;
-            ballPos.set((int)ball.position.x, (int)ball.position.y, 0);
 
-            Vector3 destination = new Vector3();
+            ballPos.set((int)ball.position.x, (int)ball.position.y, 0);
             Vector3 direction = new Vector3();
 
             direction.set((ballPos.x-origin.x), (ballPos.y-origin.y), 0);
-            ball.velocity = direction;
+            ball.velocity = direction.scl(0.2f);
 
-            destination.set(ballPos.add(direction));
+
+        }
+        boolean condition = true;
+        while(ball.velocity.len() >= 0.02 && condition) {
+            //Makes sure the bucket doesn't get out of the window
+            Engine.calculate(ball, field);
+            if(ball.position.x < 60){
+                ball.position.x = 60;
+//                ball.velocity.x = 0;
+//                ball.velocity.y = 0;
+                condition = false;
+            }
+            if(ball.position.x > 800 - 92) {
+                ball.position.x = 800 - 92;
+//                ball.velocity.x = 0;
+//                ball.velocity.y = 0;
+                condition = false;
+            }
+            if(ball.position.y < 60) {
+                ball.position.y = 60;
+//                ball.velocity.x = 0;
+//                ball.velocity.y = 0;
+                condition = false;
+            }
+            if(ball.position.y > 480 - 92) {
+                ball.position.y = 480-92;
+//                ball.velocity.x = 0;
+//                ball.velocity.y = 0;
+                condition = false;
+            }
+
+
         }
 
-        System.out.println(ball.velocity);
-        //Makes sure the bucket doesn't get out of the window
-        if(ball.position.x < 60) ball.position.x = 60;
-        if(ball.position.x > 800 - 124) ball.position.x = 800 - 124;
-        if(ball.position.y < 60) ball.position.y = 60;
-        if(ball.position.y > 480 - 124) ball.position.y = 480-124;
+
+
+
 
 
 	}

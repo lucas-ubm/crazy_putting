@@ -20,13 +20,13 @@ public class Field {
 
         for(int i = 0; i < matrix.length; i++) {
             for(int j = 0; j < matrix[0].length; j++) {
-                matrix[i][j].height = Math.sin(i) + Math.pow(j,2);
+                matrix[i][j].height = 1;
             }
         }
 
         for(int i = 0; i < matrix.length; i++) {
             for(int j = 0; j < matrix[0].length; j++) {
-                matrix[i][j].friction = Math.sin(i) + Math.cos(Math.sin(Math.pow(j,2)));
+                matrix[i][j].friction = 0.08;
             }
         }
 
