@@ -15,6 +15,7 @@ public class Game implements Screen {
 	private Ball ball;
 	private Rectangle field;
 	private Project2 game;
+	boolean condition = true;
 
 	public Game (Project2 game) {
 	    //Creation of camera
@@ -62,9 +63,9 @@ public class Game implements Screen {
         Vector3 ballPos = new Vector3();
 
         Field field = new Field(800, 480, new Vector3(0, 0, 0), 3);
+		if(Gdx.input.justTouched() && condition) {
+		    boolean condition = true;
 
-		if(Gdx.input.isTouched() ) {
-		    
             Vector3 touchPos = new Vector3();
             touchPos.set(Gdx.input.getX(), Gdx.input.getY(), 0);
             camera.unproject(touchPos);
@@ -75,40 +76,32 @@ public class Game implements Screen {
             Vector3 direction = new Vector3();
 
             direction.set((ballPos.x-origin.x), (ballPos.y-origin.y), 0);
-            ball.velocity = direction.scl(0.2f);
-
+            ball.velocity = direction.scl(1.5f);
 
         }
-        boolean condition = true;
-        while(ball.velocity.len() >= 0.02 && condition) {
+
+        if(ball.velocity.len() >= 0.02) {
+		    condition = false;
             //Makes sure the bucket doesn't get out of the window
             Engine.calculate(ball, field);
             if(ball.position.x < 60){
                 ball.position.x = 60;
-//                ball.velocity.x = 0;
-//                ball.velocity.y = 0;
-                condition = false;
             }
             if(ball.position.x > 800 - 92) {
                 ball.position.x = 800 - 92;
-//                ball.velocity.x = 0;
-//                ball.velocity.y = 0;
-                condition = false;
             }
             if(ball.position.y < 60) {
                 ball.position.y = 60;
-//                ball.velocity.x = 0;
-//                ball.velocity.y = 0;
-                condition = false;
             }
             if(ball.position.y > 480 - 92) {
                 ball.position.y = 480- 92;
-//                ball.velocity.x = 0;
-//                ball.velocity.y = 0;
-                condition = false;
             }
 
-
+        }
+        if(ball.velocity.len() < 50){
+		    ball.velocity.x = 0;
+		    ball.velocity.y = 0;
+		    condition = true;
         }
 
 

@@ -6,7 +6,7 @@ public class Engine
     public static final double g = 9.81;
     public static double Currentfriction;
     public static double currentHeight;
-    public static final double h = 0.1;
+    public static final double h = 0.01;
     public static double xh;
     public static double yh;
     public static double vx_h;
@@ -17,7 +17,7 @@ public class Engine
 
     public static void calculate(Ball ball, Field fields)
     {
-         ball.prevPosition = ball.position;
+         ball.prevPosition = ball.position.cpy();
          double x =  ball.position.x;
          double y =  ball.position.y;
 
