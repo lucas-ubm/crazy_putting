@@ -1,24 +1,20 @@
-package com.mygdx.game;
+package com.project.putting_game;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.*;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
-import com.badlogic.gdx.scenes.scene2d.InputEvent;
-
-import java.awt.*;
 
 
 public class MenuScreen implements Screen {
-	final Project2 game;
+	final com.project.putting_game.Project2 game;
 	OrthographicCamera camera;
 	Skin skin;
 	private Stage stage;
@@ -38,7 +34,7 @@ public class MenuScreen implements Screen {
 	TextureRegionDrawable checkedState;
 	TextureRegionDrawable uncheckedState;
 
-	public MenuScreen(final Project2 game){ //create()
+	public MenuScreen(final com.project.putting_game.Project2 game){ //create()
 		this.game = game;
 		camera = new OrthographicCamera();
 		camera.setToOrtho(false, 480,800);
@@ -72,7 +68,7 @@ public class MenuScreen implements Screen {
 		startButton.setPosition(Gdx.graphics.getWidth()/2 - startButton.getWidth()/2,2*Gdx.graphics.getHeight()/6);
 		startButton.addListener(new ClickListener(){
 			public void clicked(InputEvent event,float x, float y){
-				game.setScreen(new GameScreen(game)); //#TODO take radioButtons input
+				game.setScreen(new com.project.putting_game.Game(game));
 				dispose();
 			}
 		});
@@ -81,7 +77,7 @@ public class MenuScreen implements Screen {
 		controlsButton.setPosition(Gdx.graphics.getWidth()/2 - controlsButton.getWidth()/2,Gdx.graphics.getHeight()/6);
 		controlsButton.addListener(new ClickListener(){
 			public void clicked(InputEvent event,float x, float y){
-				game.setScreen(new ControlsScreen(game));
+				game.setScreen(new com.project.putting_game.ControlsScreen(game));
 				dispose();
 			}
 		});

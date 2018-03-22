@@ -1,4 +1,4 @@
-package com.mygdx.game;
+package com.project.putting_game;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;

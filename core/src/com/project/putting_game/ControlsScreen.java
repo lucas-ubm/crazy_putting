@@ -1,4 +1,4 @@
-package com.mygdx.game;
+package com.project.putting_game;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
@@ -72,7 +72,7 @@ public class ControlsScreen implements Screen {
 		skin.add("default", style);
 		backgroundButton.dispose();
 		backButton = new TextButton("Back",skin);
-		backButton.setPosition(Gdx.graphics.getWidth()/2 - backButton.getWidth()/2,2*Gdx.graphics.getHeight()/6);
+		backButton.setPosition(Gdx.graphics.getWidth()/2-backButton.getWidth()/2, mode2.getY()-backButton.getHeight());
 		backButton.addListener(new ClickListener(){
 			public void clicked(InputEvent event, float x, float y){
 				game.setScreen(new MenuScreen(game));
