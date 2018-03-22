@@ -7,7 +7,7 @@ public class Field {
     public Vector3 hole;
     public int holeRadius;
 
-    public Field (int x, int y, Vector3 hole, int holeRadius) {
+    public Field (int x, int y, Vector3 hole, int holeRadius, String course) {
         matrix = new Properties[y][x];
 
         for(int i = 0; i < matrix.length; i++) {
@@ -17,10 +17,11 @@ public class Field {
         }
 
 
-
-        for(int i = 0; i < matrix.length; i++) {
-            for(int j = 0; j < matrix[0].length; j++) {
-                matrix[i][j].height = Math.sin(j/(400/5.1))+Math.sin(i/(240/5.1));
+        if(course.equals("sinx+siny")) {
+            for(int i = 0; i < matrix.length; i++) {
+                for(int j = 0; j < matrix[0].length; j++) {
+                    matrix[i][j].height = Math.sin(j/(400/5.1))+Math.sin(i/(240/5.1));
+                }
             }
         }
 
