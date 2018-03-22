@@ -47,6 +47,9 @@ public class Game implements Screen {
 		game.batch.setProjectionMatrix(camera.combined);
 		game.batch.begin();
 
+        Field field = new Field(800, 480, new Vector3(0, 0, 0), 3, course);
+        Pixmap pixmap = new Pixmap((int) Gdx.graphics.getWidth(), (int) Gdx.graphics.getHeight(), Pixmap.Format.RGBA8888);
+
 		if(course.equals("sinx+siny")) {
             Field field = new Field(800, 480, new Vector3(0, 0, 0), 3, "sinx+siny");
             Pixmap pixmap = new Pixmap((int) Gdx.graphics.getWidth(), (int) Gdx.graphics.getHeight(), Pixmap.Format.RGBA8888);
@@ -71,6 +74,40 @@ public class Game implements Screen {
             for (int x = 0; x < Gdx.graphics.getWidth(); x++) {
                 for (int y = 0; y < Gdx.graphics.getHeight(); y++) {
                     pixmap.setColor(new Color(0,  0.8f, 0, 1f));// set color White with Alpha=0.5
+                    pixmap.drawPixel(x, y);
+                }
+            }
+            fieldTexture = new Texture(pixmap);
+            pixmap.dispose();
+        }
+        else if(course.equals("slope")) {
+            Field field = new Field(800, 480, new Vector3(0, 0, 0), 3, "slope");
+            Pixmap pixmap = new Pixmap((int) Gdx.graphics.getWidth(), (int) Gdx.graphics.getHeight(), Pixmap.Format.RGBA8888);
+            for (int x = 0; x < Gdx.graphics.getWidth(); x++) {
+                for (int y = 0; y < Gdx.graphics.getHeight(); y++) {
+                    if(field.matrix[y][x].height >=0) {
+                        float value = -1*map(x+y, 1280,0);
+                        pixmap.setColor(new Color(0,  value, 0, 1f));// set color White with Alpha=0.5
+                    }
+                    else{
+                        pixmap.setColor(new Color(0,0,0.4f,1f));
+                    }
+                    pixmap.drawPixel(x, y);
+                }
+            }
+            fieldTexture = new Texture(pixmap);
+            pixmap.dispose();
+        }
+        else if(course.equals("parabola")) {
+            for (int x = 0; x < Gdx.graphics.getWidth(); x++) {
+                for (int y = 0; y < Gdx.graphics.getHeight(); y++) {
+                    if(field.matrix[y][x].height >=0) {
+                        float value = -1*map(x*y, 384000,0);
+                        pixmap.setColor(new Color(0,  value, 0, 1f));// set color White with Alpha=0.5
+                    }
+                    else{
+                        pixmap.setColor(new Color(0,0,0.4f,1f));
+                    }
                     pixmap.drawPixel(x, y);
                 }
             }

@@ -24,6 +24,27 @@ public class Field {
                 }
             }
         }
+        else if(course.equals("flat")) {
+            for(int i = 0; i < matrix.length; i++) {
+                for(int j = 0; j < matrix[0].length; j++) {
+                    matrix[i][j].height = 1;
+                }
+            }
+        }
+        else if(course.equals("slope")) {
+            for(int i = 0; i < matrix.length; i++) {
+                for(int j = 0; j < matrix[0].length; j++) {
+                    matrix[i][j].height = i+j;
+                }
+            }
+        }
+        else if(course.equals("parabola")) {
+            for(int i = 0; i < matrix.length; i++) {
+                for(int j = 0; j < matrix[0].length; j++) {
+                    matrix[i][j].height = i+j;
+                }
+            }
+        }
 
         for(int i = 0; i < matrix.length; i++) {
             for(int j = 0; j < matrix[0].length; j++) {
