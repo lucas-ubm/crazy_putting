@@ -11,10 +11,14 @@ public class Ball {
     public Vector3 prevPosition;
     public Texture ballImage;
     public Rectangle shape;
+//    public Queue<Vector3> moveHistory;
 
 
     public Ball(Vector3 velocity, Vector3 position, String path, int width, int height) {
         this.velocity = velocity;
+//        moveHistory = new Queue<Vector3>();
+//        moveHistory.enqueue(velocity);
+
         this.position = position;
         this.ballImage = new Texture(Gdx.files.internal(path));
         this.prevPosition = null;
@@ -24,6 +28,11 @@ public class Ball {
         shape.height = height;
         shape.width = width;
 
+    }
+
+    public void setUserVelocity(Vector3 newVelocity) {
+        this.velocity = newVelocity;
+//        moveHistory.enqueue(newVelocity);
 
     }
 

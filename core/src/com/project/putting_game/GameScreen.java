@@ -1,4 +1,4 @@
-package com.mygdx.game;
+package com.project.putting_game;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
@@ -12,10 +12,9 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
 import static com.badlogic.gdx.math.MathUtils.sin;
-import static com.badlogic.gdx.math.MathUtils.cos;
 
 public class GameScreen implements Screen {
-	final Project2 game;
+	final com.project.putting_game.Project2 game;
 	Texture ballImg;
 	Texture holeImg;
 	Rectangle ball;
@@ -27,7 +26,7 @@ public class GameScreen implements Screen {
 	TextButton.TextButtonStyle style;
 	Skin skin;
 
-	public GameScreen (final Project2 game) {
+	public GameScreen (final com.project.putting_game.Project2 game) {
 		this.game = game;
 		ballImg = new Texture(Gdx.files.internal("golfball.png"));
 		ball = new Rectangle();

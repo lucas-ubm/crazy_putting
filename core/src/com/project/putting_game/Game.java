@@ -1,35 +1,31 @@
 package com.project.putting_game;
 
-import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector3;
 
-public class Game extends ApplicationAdapter {
+public class Game implements Screen {
 	private SpriteBatch batch;
 	private OrthographicCamera camera;
 	private Texture ballImage;
 	private Texture fieldTexture;
 	private Ball ball;
 	private Rectangle field;
-	
-	@Override
-	public void create () {
+	private Project2 game;
+
+	public Game (Project2 game) {
 	    //Creation of camera
+        this.game = game;
         camera = new OrthographicCamera();
         camera.setToOrtho(false, 800, 480);
 
-		batch = new SpriteBatch();
 
-		//load images of droplet and bucket
-        fieldTexture = new Texture(Gdx.files.internal("green.png"));
 
         //Create bucket Rectangle
-        ball = new Ball(null, new Vector3(80, 80, 0), "golfball.png", 32, 32);
+        ball = new Ball(new Vector3(0,0,0), new Vector3(80, 80, 0), "golfball.png", 32, 32);
 
         //Create field
         field = new Rectangle();
@@ -38,22 +34,29 @@ public class Game extends ApplicationAdapter {
         field.width = 800 - 60*2;
         field.height = 480 - 60*2;
 
-
-
 	}
 
-	@Override
-	public void render () {
+	public void render (float delta) {
 		Gdx.gl.glClearColor(0, 0, 0.2f, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		camera.update();
 
-		batch.setProjectionMatrix(camera.combined);
-		batch.begin();
-        batch.draw(fieldTexture, field.x, field.y, field.width, field.height);
-		batch.draw(ball.ballImage, ball.position.x, ball.position.y, ball.shape.width, ball.shape.height);
+		game.batch.setProjectionMatrix(camera.combined);
+		game.batch.begin();
+        Pixmap pixmap = new Pixmap((int) Gdx.graphics.getWidth(), (int) Gdx.graphics.getHeight(), Pixmap.Format.RGBA8888);
+        for (int x = 0; x < Gdx.graphics.getWidth(); x++) {
+            for (int y = 0; y < Gdx.graphics.getHeight(); y++) {
 
-		batch.end();
+                pixmap.setColor(new Color(0f, 0.5f , 0f, 1f));// set color White with Alpha=0.5
+                pixmap.drawPixel(x, y);
+            }
+        }
+        fieldTexture = new Texture(pixmap);
+        pixmap.dispose();
+        game.batch.draw(fieldTexture, field.x, field.y, field.width, field.height);
+		game.batch.draw(ball.ballImage, ball.position.x, ball.position.y, ball.shape.width, ball.shape.height);
+
+		game.batch.end();
 
         Vector3 origin = new Vector3();
         Vector3 ballPos = new Vector3();
@@ -77,7 +80,7 @@ public class Game extends ApplicationAdapter {
             destination.set(ballPos.add(direction));
         }
 
-//
+        System.out.println(ball.velocity);
         //Makes sure the bucket doesn't get out of the window
         if(ball.position.x < 60) ball.position.x = 60;
         if(ball.position.x > 800 - 124) ball.position.x = 800 - 124;
@@ -93,5 +96,28 @@ public class Game extends ApplicationAdapter {
         fieldTexture.dispose();
 		batch.dispose();
 	}
+
+    @Override
+    public void resize(int width, int height) {
+    }
+    @Override
+    public void show(){
+        //play music
+    }
+    @Override
+    public void hide(){
+    }
+    @Override
+    public void pause() {
+    }
+    @Override
+    public void resume() {
+    }
+
+    public static float map (double x, double max, double min) {
+        return (float) (0.1 - (max-x)/(max-min));
+
+    }
+
 
 }
