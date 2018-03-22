@@ -89,7 +89,7 @@ public class MenuScreen implements Screen {
 			}
 		});
 		stage.addActor(controlsButton);
-
+		//create buttons and labels for choosing which mode to play
 		labelStyle = new Label.LabelStyle();
 		labelStyle.font = game.font;
 		mode1Label = new Label("Mode 1",labelStyle);
@@ -150,6 +150,9 @@ public class MenuScreen implements Screen {
 	public void resume() {
 	}
 	@Override
+	/**Will be called when a button is clicked and we move to another screen, as specified in the listeners. 
+	 * Deletes elements of the MenuScreen.
+	 */
 	public void dispose(){
 		golfImg.dispose();
 		checkImg.dispose();
