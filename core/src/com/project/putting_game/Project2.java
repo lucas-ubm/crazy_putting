@@ -9,6 +9,8 @@ public class Project2 extends Game {
 	public BitmapFont font;
 	
 	@Override
+	/** Gets called when 'run' is clicked.
+	 */
 	public void create () {
 		batch = new SpriteBatch();
 		font = new BitmapFont();
@@ -17,11 +19,15 @@ public class Project2 extends Game {
 	}
 
 	@Override
+	/** Called many times a second. Keeps screen up to date. 
+	 */
 	public void render () {
 		super.render();
 	}
 	
 	@Override
+	/** Called when user clicks on close window. Disposes everything created in this class.
+	 */
 	public void dispose () {
 		batch.dispose();
 		font.dispose();

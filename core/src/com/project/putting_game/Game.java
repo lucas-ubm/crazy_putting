@@ -13,7 +13,12 @@ public class Game implements Screen {
 	private Texture ballImage;
 	private Texture fieldTexture;
 	private Ball ball;
+<<<<<<< HEAD
 	private Rectangle fieldShape;
+=======
+	private Hole hole;
+	private Rectangle field;
+>>>>>>> f145ddc00d969b85d26b7ba15940ea128c24e90f
 	private Project2 game;
 	boolean condition = true;
 	private String course;
@@ -29,7 +34,7 @@ public class Game implements Screen {
 
         //Create bucket Rectangle
         ball = new Ball(new Vector3(0,0,0), new Vector3(80, 80, 0), "golfball.png", 32, 32);
-
+        hole = new Hole(new Vector3(750,430,0), "hole.png", 50, 50);
         //Create field
         fieldShape = new Rectangle();
         fieldShape.x = 60;
@@ -117,6 +122,7 @@ public class Game implements Screen {
 
         game.batch.draw(fieldTexture, fieldShape.x, fieldShape.y, fieldShape.width, fieldShape.height);
 		game.batch.draw(ball.ballImage, ball.position.x, ball.position.y, ball.shape.width, ball.shape.height);
+		game.batch.draw(hole.holeImage, hole.position.x, hole.position.y, hole.holeShape.width, hole.holeShape.height );
 
 		game.batch.end();
         Vector3 origin = new Vector3();
@@ -130,7 +136,6 @@ public class Game implements Screen {
             touchPos.set(Gdx.input.getX(), Gdx.input.getY(), 0);
             camera.unproject(touchPos);
             origin.set((int)touchPos.x - 64/2, (int)touchPos.y - 64/2, 0);
-
 
             ballPos.set((int)ball.position.x, (int)ball.position.y, 0);
             Vector3 direction = new Vector3();
@@ -148,8 +153,17 @@ public class Game implements Screen {
             if(ball.position.x < 60){
                 ball.position.x = 60;
             }
+<<<<<<< HEAD
             if(ball.position.x > 800 - 92) {
                 ball.position.x = 800 - 92;
+=======
+
+            if(ball.position.x > 800 - 32) {
+                ball.position.x = 800 - 32;
+//                ball.velocity.x = 0;
+//                ball.velocity.y = 0;
+                condition = false;
+>>>>>>> f145ddc00d969b85d26b7ba15940ea128c24e90f
             }
             if(ball.position.y < 60) {
                 ball.position.y = 60;
@@ -164,14 +178,23 @@ public class Game implements Screen {
 		    ball.velocity.y = 0;
 		    condition = true;
         }
-
-
-
-
-
+        if(ball.velocity.len() <= 0.2 && checkRadius(ball.position.x, ball.position.y))
+        {
+            game.setScreen(new com.project.putting_game.WinScreen(game));
+        }
 
 	}
-	
+
+	public boolean checkRadius(double x, double y)
+    {
+        if(Math.pow((x-750), 2) + Math.pow((y-430), 2) <= 2500)
+        {
+            return true;
+        }
+        else
+            return false;
+    }
+
 	@Override
 	public void dispose () {
         ballImage.dispose();
