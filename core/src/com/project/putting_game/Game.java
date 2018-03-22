@@ -13,9 +13,16 @@ public class Game implements Screen {
 	private Texture ballImage;
 	private Texture fieldTexture;
 	private Ball ball;
+<<<<<<< HEAD
+	private Rectangle fieldShape;
+=======
 	private Hole hole;
 	private Rectangle field;
+>>>>>>> f145ddc00d969b85d26b7ba15940ea128c24e90f
 	private Project2 game;
+	boolean condition = true;
+	private String course;
+
 
 	public Game (Project2 game) {
 	    //Creation of camera
@@ -29,11 +36,11 @@ public class Game implements Screen {
         ball = new Ball(new Vector3(0,0,0), new Vector3(80, 80, 0), "golfball.png", 32, 32);
         hole = new Hole(new Vector3(750,430,0), "hole.png", 50, 50);
         //Create field
-        field = new Rectangle();
-        field.x = 0;
-        field.y = 0;
-        field.width = 800;
-        field.height = 480;
+        fieldShape = new Rectangle();
+        fieldShape.x = 60;
+        fieldShape.y = 60;
+        fieldShape.width = 800 - 120;
+        fieldShape.height = 480 - 120;
 
 	}
 
@@ -44,29 +51,87 @@ public class Game implements Screen {
 
 		game.batch.setProjectionMatrix(camera.combined);
 		game.batch.begin();
-        Pixmap pixmap = new Pixmap((int) Gdx.graphics.getWidth(), (int) Gdx.graphics.getHeight(), Pixmap.Format.RGBA8888);
-        for (int x = 0; x < Gdx.graphics.getWidth(); x++) {
-            for (int y = 0; y < Gdx.graphics.getHeight(); y++) {
 
-                pixmap.setColor(new Color(0f, 0.5f , 0f, 1f));// set color White with Alpha=0.5
-                pixmap.drawPixel(x, y);
+        Field field = new Field(800, 480, new Vector3(0, 0, 0), 3, course);
+        Pixmap pixmap = new Pixmap((int) Gdx.graphics.getWidth(), (int) Gdx.graphics.getHeight(), Pixmap.Format.RGBA8888);
+
+		if(course.equals("sinx+siny")) {
+            Field field = new Field(800, 480, new Vector3(0, 0, 0), 3, "sinx+siny");
+            Pixmap pixmap = new Pixmap((int) Gdx.graphics.getWidth(), (int) Gdx.graphics.getHeight(), Pixmap.Format.RGBA8888);
+            for (int x = 0; x < Gdx.graphics.getWidth(); x++) {
+                for (int y = 0; y < Gdx.graphics.getHeight(); y++) {
+                    if(field.matrix[y][x].height >=0) {
+                        float value = -1*map(Math.sin(x/(400/5.1))+Math.sin(y/(240/5.1)), 2,-2);
+                        pixmap.setColor(new Color(0,  value, 0, 1f));// set color White with Alpha=0.5
+                    }
+                    else{
+                        pixmap.setColor(new Color(0,0,0.4f,1f));
+                    }
+                    pixmap.drawPixel(x, y);
+                }
             }
+            fieldTexture = new Texture(pixmap);
+            pixmap.dispose();
         }
-        fieldTexture = new Texture(pixmap);
-        pixmap.dispose();
-        game.batch.draw(fieldTexture, field.x, field.y, field.width, field.height);
+        else if(course.equals("flat")) {
+            Field field = new Field(800, 480, new Vector3(0, 0, 0), 3, "flat");
+            Pixmap pixmap = new Pixmap((int) Gdx.graphics.getWidth(), (int) Gdx.graphics.getHeight(), Pixmap.Format.RGBA8888);
+            for (int x = 0; x < Gdx.graphics.getWidth(); x++) {
+                for (int y = 0; y < Gdx.graphics.getHeight(); y++) {
+                    pixmap.setColor(new Color(0,  0.8f, 0, 1f));// set color White with Alpha=0.5
+                    pixmap.drawPixel(x, y);
+                }
+            }
+            fieldTexture = new Texture(pixmap);
+            pixmap.dispose();
+        }
+        else if(course.equals("slope")) {
+            Field field = new Field(800, 480, new Vector3(0, 0, 0), 3, "slope");
+            Pixmap pixmap = new Pixmap((int) Gdx.graphics.getWidth(), (int) Gdx.graphics.getHeight(), Pixmap.Format.RGBA8888);
+            for (int x = 0; x < Gdx.graphics.getWidth(); x++) {
+                for (int y = 0; y < Gdx.graphics.getHeight(); y++) {
+                    if(field.matrix[y][x].height >=0) {
+                        float value = -1*map(x+y, 1280,0);
+                        pixmap.setColor(new Color(0,  value, 0, 1f));// set color White with Alpha=0.5
+                    }
+                    else{
+                        pixmap.setColor(new Color(0,0,0.4f,1f));
+                    }
+                    pixmap.drawPixel(x, y);
+                }
+            }
+            fieldTexture = new Texture(pixmap);
+            pixmap.dispose();
+        }
+        else if(course.equals("parabola")) {
+            for (int x = 0; x < Gdx.graphics.getWidth(); x++) {
+                for (int y = 0; y < Gdx.graphics.getHeight(); y++) {
+                    if(field.matrix[y][x].height >=0) {
+                        float value = -1*map(x*y, 384000,0);
+                        pixmap.setColor(new Color(0,  value, 0, 1f));// set color White with Alpha=0.5
+                    }
+                    else{
+                        pixmap.setColor(new Color(0,0,0.4f,1f));
+                    }
+                    pixmap.drawPixel(x, y);
+                }
+            }
+            fieldTexture = new Texture(pixmap);
+            pixmap.dispose();
+        }
+
+        game.batch.draw(fieldTexture, fieldShape.x, fieldShape.y, fieldShape.width, fieldShape.height);
 		game.batch.draw(ball.ballImage, ball.position.x, ball.position.y, ball.shape.width, ball.shape.height);
 		game.batch.draw(hole.holeImage, hole.position.x, hole.position.y, hole.holeShape.width, hole.holeShape.height );
 
 		game.batch.end();
-
         Vector3 origin = new Vector3();
         Vector3 ballPos = new Vector3();
 
-        Field field = new Field(800, 480, new Vector3(0, 0, 0), 3);
 
-		if(Gdx.input.isTouched() ) {
-		    
+		if(Gdx.input.justTouched() && condition) {
+		    boolean condition = true;
+
             Vector3 touchPos = new Vector3();
             touchPos.set(Gdx.input.getX(), Gdx.input.getY(), 0);
             camera.unproject(touchPos);
@@ -76,41 +141,42 @@ public class Game implements Screen {
             Vector3 direction = new Vector3();
 
             direction.set((ballPos.x-origin.x), (ballPos.y-origin.y), 0);
-            ball.velocity = direction.scl(0.2f);
-
+            ball.velocity = direction.scl(3f);
+            ball.prevPosition = ballPos;
 
         }
-        boolean condition = true;
-        while(ball.velocity.len() >= 0.02 && condition) {
+
+        if(ball.velocity.len() >= 0.02) {
+		    condition = false;
             //Makes sure the bucket doesn't get out of the window
             Engine.calculate(ball, field);
-            if(ball.position.x < 0){
+            if(ball.position.x < 60){
                 ball.position.x = 60;
-//                ball.velocity.x = 0;
-//                ball.velocity.y = 0;
-                condition = false;
             }
+<<<<<<< HEAD
+            if(ball.position.x > 800 - 92) {
+                ball.position.x = 800 - 92;
+=======
 
             if(ball.position.x > 800 - 32) {
                 ball.position.x = 800 - 32;
 //                ball.velocity.x = 0;
 //                ball.velocity.y = 0;
                 condition = false;
+>>>>>>> f145ddc00d969b85d26b7ba15940ea128c24e90f
             }
-            if(ball.position.y < 0) {
-                ball.position.y = 0;
-//                ball.velocity.x = 0;
-//                ball.velocity.y = 0;
-                condition = false;
+            if(ball.position.y < 60) {
+                ball.position.y = 60;
             }
-            if(ball.position.y > 480 - 32) {
-                ball.position.y = 480- 32;
-//                ball.velocity.x = 0;
-//                ball.velocity.y = 0;
-                condition = false;
+            if(ball.position.y > 480 - 92) {
+                ball.position.y = 480- 92;
             }
 
-
+        }
+        if(ball.velocity.len() < 200){
+		    ball.velocity.x = 0;
+		    ball.velocity.y = 0;
+		    condition = true;
         }
         if(ball.velocity.len() <= 0.2 && checkRadius(ball.position.x, ball.position.y))
         {
@@ -154,7 +220,7 @@ public class Game implements Screen {
     }
 
     public static float map (double x, double max, double min) {
-        return (float) (0.1 - (max-x)/(max-min));
+	    return (float) (0 - (max-x)/(max-min));
 
     }
 

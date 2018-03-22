@@ -1,12 +1,14 @@
 package com.project.putting_game;
 
+import com.badlogic.gdx.math.Vector3;
+
 public class Engine
 {
 
     public static final double g = 9.81;
     public static double Currentfriction;
     public static double currentHeight;
-    public static final double h = 0.1;
+    public static final double h = 0.01;
     public static double xh;
     public static double yh;
     public static double vx_h;
@@ -33,14 +35,20 @@ public class Engine
          System.out.println(ball.velocity.x + "XXXXXX");
 
          ball.velocity.y = (float)vy_h;
-        System.out.println(ball.velocity.y + "YYYYYY");
+         System.out.println(ball.velocity.y + "YYYYYY");
 
          ball.position.x = (float)xh;
          ball.position.y = (float)yh;
 
+        Currentfriction = fields.matrix[(int)ball.position.y][(int)ball.position.x].friction;
+        currentHeight = fields.matrix[(int)ball.position.y][(int)ball.position.x].height;
 
-         Currentfriction = fields.matrix[(int)ball.position.y][(int)ball.position.x].friction;
-         currentHeight = fields.matrix[(int)ball.position.y][(int)ball.position.x].height;
+         if(ball.position.x <= 60 || ball.position.y <= 60 || ball.position.x >= 800-92 || ball.position.y >= 480-92 || currentHeight < 0) {
+             System.out.println("Previous " + ball.prevPosition);
+             ball.position = ball.prevPosition;
+             ball.velocity = new Vector3(0,0,0);
+         }
+
          System.out.println(ball.velocity);
     }
 
