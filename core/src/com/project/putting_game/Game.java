@@ -47,7 +47,7 @@ public class Game implements Screen {
 
 		game.batch.setProjectionMatrix(camera.combined);
 		game.batch.begin();
-        course = "sinx+siny";
+        course = "parabola";
         Field field = new Field(800, 480, new Vector3(0, 0, 0), 3, course);
         Pixmap pixmap = new Pixmap((int) Gdx.graphics.getWidth(), (int) Gdx.graphics.getHeight(), Pixmap.Format.RGBA8888);
 
@@ -77,7 +77,7 @@ public class Game implements Screen {
             fieldTexture = new Texture(pixmap);
             pixmap.dispose();
         }
-        else if(course.equals("slope") || course.equals("waterslope")) {
+        else if(course.equals("slope")) {
             for (int x = 0; x < Gdx.graphics.getWidth(); x++) {
                 for (int y = 0; y < Gdx.graphics.getHeight(); y++) {
                     if(field.matrix[y][x].height >=0) {
@@ -97,7 +97,7 @@ public class Game implements Screen {
             for (int x = 0; x < Gdx.graphics.getWidth(); x++) {
                 for (int y = 0; y < Gdx.graphics.getHeight(); y++) {
                     if(field.matrix[y][x].height >=0) {
-                        float value = -1*map(x/400.0*y/240.0, 4,0);
+                        float value = -1*map(0.1*x+0.03*Math.pow(x, 2)+0.2*y, 19376,0);
                         pixmap.setColor(new Color(0,  value, 0, 1f));// set color White with Alpha=0.5
                     }
                     else{
@@ -136,9 +136,11 @@ public class Game implements Screen {
 
         }
 
+
+
         if(ball.velocity.len() >= 0.02) {
 		    condition = false;
-            Engine.calculate(ball, field);
+            Engine.calculate(ball, field, course);
             if(ball.position.x < 60){
                 ball.position.x = 60;
             }
@@ -201,7 +203,7 @@ public class Game implements Screen {
     }
 
     public static float map (double x, double max, double min) {
-	    return (float) (0 - (max-x)/(max-min));
+	    return (float) (0.4 - (max-x)/(max-min));
 
     }
 
