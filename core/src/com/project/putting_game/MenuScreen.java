@@ -76,11 +76,6 @@ public class MenuScreen implements Screen {
 			public void clicked(InputEvent event,float x, float y){
 				game.setScreen(new com.project.putting_game.Game(game));
 				dispose();
-
-
-
-
-
 			}
 		});
 		stage.addActor(startButton);

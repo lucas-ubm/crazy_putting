@@ -45,6 +45,19 @@ public class Field {
                 }
             }
         }
+        else if(course.equals("waterslope")) {
+            for(int i = 0; i < matrix.length; i++) {
+                for(int j = 0; j < matrix[0].length; j++) {
+                    if(Math.pow((i-250), 2) + Math.pow((j-400),2) <= Math.pow(50, 2)){
+                        matrix[i][j].height = -1;
+                    }
+                    else {
+                        matrix[i][j].height = i+j;
+                    }
+                }
+            }
+        }
+
 
         for(int i = 0; i < matrix.length; i++) {
             for(int j = 0; j < matrix[0].length; j++) {

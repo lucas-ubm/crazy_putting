@@ -43,30 +43,27 @@ public class Engine
         Currentfriction = fields.matrix[(int)ball.position.y][(int)ball.position.x].friction;
         currentHeight = fields.matrix[(int)ball.position.y][(int)ball.position.x].height;
 
-         if(ball.position.x <= 60 || ball.position.y <= 60 || ball.position.x >= 800-92 || ball.position.y >= 480-92 || currentHeight < 0) {
+         if(ball.position.x <= 60 || ball.position.y <= 60 || ball.position.x >= 800-92 || ball.position.y >= 480-92 || touchedWater()) {
              System.out.println("Previous " + ball.prevPosition);
              ball.position = ball.prevPosition;
              ball.velocity = new Vector3(0,0,0);
          }
 
-         System.out.println(ball.velocity);
     }
 
     public static double forceX(Ball ball)
     {
         double Fx = ((-g) * (0)) - (Currentfriction * g * vx) ;
-        System.out.println(Fx);
-        System.out.println(g);
-        System.out.println(currentHeight);
-        System.out.println(Currentfriction);
-        System.out.println(vx);
-        System.out.println(vy);
-        System.out.println("Ball position : "+ ball.position);
         return Fx;
     }
     public static double forceY()
     {
         double Fy = ((-g) * (0)) - (Currentfriction * g * vy) ;
         return Fy;
+    }
+
+    public static boolean touchedWater() {
+        boolean result = false;
+        for()
     }
 }
