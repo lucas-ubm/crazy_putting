@@ -47,7 +47,7 @@ public class Game implements Screen {
 
 		game.batch.setProjectionMatrix(camera.combined);
 		game.batch.begin();
-        course = "waterslope";
+        course = "sinx+siny";
         Field field = new Field(800, 480, new Vector3(0, 0, 0), 3, course);
         Pixmap pixmap = new Pixmap((int) Gdx.graphics.getWidth(), (int) Gdx.graphics.getHeight(), Pixmap.Format.RGBA8888);
 
@@ -138,7 +138,6 @@ public class Game implements Screen {
 
         if(ball.velocity.len() >= 0.02) {
 		    condition = false;
-            //Makes sure the bucket doesn't get out of the window
             Engine.calculate(ball, field);
             if(ball.position.x < 60){
                 ball.position.x = 60;
