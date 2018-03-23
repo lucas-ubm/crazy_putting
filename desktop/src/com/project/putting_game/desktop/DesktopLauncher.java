@@ -6,6 +6,7 @@ import com.project.putting_game.Project2;
 
 public class DesktopLauncher {
 	public static void main (String[] arg) {
+
 		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
 		config.title = "Drop";
 		config.width = 800;

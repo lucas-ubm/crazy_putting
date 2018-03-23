@@ -16,7 +16,7 @@ public class Game implements Screen {
 	private Rectangle fieldShape;
 	private Hole hole;
 	private Project2 game;
-	boolean condition = true;
+	private boolean condition = true;
 	private String course;
 
 
@@ -136,6 +136,7 @@ public class Game implements Screen {
 
         }
 
+
         if(ball.velocity.len() >= 0.02) {
 		    condition = false;
             //Makes sure the bucket doesn't get out of the window
@@ -205,6 +206,4 @@ public class Game implements Screen {
 	    return (float) (0 - (max-x)/(max-min));
 
     }
-
-
 }

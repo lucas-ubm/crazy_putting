@@ -30,7 +30,6 @@ public class WinScreen implements Screen
 
     public WinScreen(final Project2 game)
     {
-        System.out.println("WORKS");
         this.game = game;
         camera = new OrthographicCamera();
         camera.setToOrtho(false, 800,480);
@@ -50,17 +49,16 @@ public class WinScreen implements Screen
         backgroundButton.setColor(Color.WHITE);
         backgroundButton.fill();
         skin.add("background",new Texture(backgroundButton));
-        System.out.println("WORKS2");
 
 
         textButtonStyle = new TextButton.TextButtonStyle();
+        textButtonStyle.up = skin.newDrawable("background", Color.FOREST); //standard color of the button (no special action)
         textButtonStyle.down = skin.newDrawable("background", Color.BLACK); //let the button turn black if you press your mouse when standing on the button
         textButtonStyle.checked = skin.newDrawable("background", Color.BLACK);
         textButtonStyle.over = skin.newDrawable("background", Color.BROWN); //let the button turn brown when the mouse is standing on the button
         textButtonStyle.font = skin.getFont("default");
         skin.add("default", textButtonStyle);
         backgroundButton.dispose();
-        System.out.println("WORKS3");
 
 
         stage = new Stage(new ScreenViewport());
@@ -74,8 +72,6 @@ public class WinScreen implements Screen
             }
         });
         stage.addActor(playAgain);
-        dispose();
-        System.out.println("WORKS4");
 
 
     }
@@ -90,7 +86,7 @@ public class WinScreen implements Screen
         stage.getBatch().draw(golfImg, golf.x, golf.y, golf.width, golf.height);//draw background picture
         stage.getBatch().end();
         stage.draw();//draw stage (so the elements of the stage)
-        System.out.println("WORKS5");
+
 
 
     }
@@ -111,7 +107,6 @@ public class WinScreen implements Screen
     }
     @Override
     public void dispose(){
-        golfImg.dispose();
         stage.dispose();
 
     }
