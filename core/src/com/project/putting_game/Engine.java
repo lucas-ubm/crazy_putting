@@ -17,7 +17,7 @@ public class Engine
     public static double vy;
 
 
-    public static void calculate(Ball ball, Field fields)
+    public static void calculate(Ball ball, Field fields, String course)
     {
          double x =  ball.position.x;
          double y =  ball.position.y;
@@ -28,14 +28,11 @@ public class Engine
          xh = x + h * vx;
          yh = y + h * vy;
 
-         vx_h = vx + h * forceX(ball);
-         vy_h = vy + h * forceY();
+         vx_h = vx + h * forceX(course);
+         vy_h = vy + h * forceY(course);
 
          ball.velocity.x = (float)vx_h;
-         System.out.println(ball.velocity.x + "XXXXXX");
-
          ball.velocity.y = (float)vy_h;
-         System.out.println(ball.velocity.y + "YYYYYY");
 
          ball.position.x = (float)xh;
          ball.position.y = (float)yh;
@@ -43,30 +40,50 @@ public class Engine
         Currentfriction = fields.matrix[(int)ball.position.y][(int)ball.position.x].friction;
         currentHeight = fields.matrix[(int)ball.position.y][(int)ball.position.x].height;
 
-         if(ball.position.x <= 60 || ball.position.y <= 60 || ball.position.x >= 800-92 || ball.position.y >= 480-92 || currentHeight < 0) {
-             System.out.println("Previous " + ball.prevPosition);
-             ball.position = ball.prevPosition;
-             ball.velocity = new Vector3(0,0,0);
-         }
+        if(ball.position.x <= 60 || ball.position.y <= 60 || ball.position.x >= 800-92 || ball.position.y >=480-92|| currentHeight < 0) {
+            System.out.println("Previous " + ball.prevPosition);
+            ball.position = ball.prevPosition;
+            ball.velocity = new Vector3(0,0,0);
+        }
 
-         System.out.println(ball.velocity);
     }
 
-    public static double forceX(Ball ball)
+    public static double forceX(String course)
     {
-        double Fx = ((-g) * (0)) - (Currentfriction * g * vx) ;
-        System.out.println(Fx);
-        System.out.println(g);
-        System.out.println(currentHeight);
-        System.out.println(Currentfriction);
-        System.out.println(vx);
-        System.out.println(vy);
-        System.out.println("Ball position : "+ ball.position);
+        double Fx =0;
+        if(course.equals("flat")) {
+            Fx = ((-g) * (0)) - (Currentfriction * g * vx) ;
+        }
+        else if(course.equals("sinx+siny")) {
+            Fx = ((-g) * (Math.cos(xh))) - (Currentfriction * g * vx);
+        }
+        else if(course.equals("slope")) {
+            Fx = ((-g) * (xh)) - (Currentfriction * g * vx);
+        }
+        else if(course.equals("parabola")){
+            Fx = ((-g) * (0.1+0.06*xh)) - (Currentfriction * g * vx);
+        }
+
         return Fx;
     }
-    public static double forceY()
+    public static double forceY(String course)
     {
-        double Fy = ((-g) * (0)) - (Currentfriction * g * vy) ;
+        double Fy = 0;
+        if(course.equals("flat")) {
+            Fy = ((-g) * (0)) - (Currentfriction * g * vy);
+        }
+        else if(course.equals("sinx+siny")) {
+            Fy = ((-g) * (Math.cos(yh))) - (Currentfriction * g * vy);
+        }
+        else if(course.equals("slope")) {
+            Fy = ((-g) * (yh)) - (Currentfriction * g * vy);
+        }
+        else if(course.equals("parabola")){
+            Fy = ((-g) * (0.2)) - (Currentfriction * g * vx);
+        }
+
         return Fy;
     }
+
+
 }

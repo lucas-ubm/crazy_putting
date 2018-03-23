@@ -41,10 +41,12 @@ public class Field {
         else if(course.equals("parabola")) {
             for(int i = 0; i < matrix.length; i++) {
                 for(int j = 0; j < matrix[0].length; j++) {
-                    matrix[i][j].height = i+j;
+                    matrix[i][j].height = 0.1*i+0.03*Math.pow(i, 2)+0.2*j;
                 }
             }
         }
+
+
 
         for(int i = 0; i < matrix.length; i++) {
             for(int j = 0; j < matrix[0].length; j++) {
