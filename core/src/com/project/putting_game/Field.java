@@ -48,7 +48,7 @@ public class Field {
         else if(course.equals("waterslope")) {
             for(int i = 0; i < matrix.length; i++) {
                 for(int j = 0; j < matrix[0].length; j++) {
-                    if(Math.pow((i-250), 2) + Math.pow((j-400),2) <= Math.pow(50, 2)){
+                    if((i>300 && i < 750)&& (j>300 && j <750)){
                         matrix[i][j].height = -1;
                     }
                     else {

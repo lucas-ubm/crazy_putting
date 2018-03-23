@@ -13,6 +13,7 @@ public class Ball {
     public Texture ballImage;
     public Rectangle shape;
     public Queue<Vector3> moveHistory;
+    public double radius;
 
 
     public Ball(Vector3 velocity, Vector3 position, String path, int width, int height) {
@@ -30,6 +31,7 @@ public class Ball {
         shape.width = width;
 
         this.ballCenter = new Vector3(position.x+shape.width/2, position.y+shape.height/2, 0);
+        this.radius = shape.height/2;
 
     }
 
