@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 public class Project2 extends Game {
 	public SpriteBatch batch;
 	public BitmapFont font;
+	public boolean gameMode1;
 	
 	@Override
 	/** Gets called when 'run' is clicked.
@@ -32,5 +33,9 @@ public class Project2 extends Game {
 		batch.dispose();
 		font.dispose();
 		//GameScreen.dispose();
+	}
+
+	public void setGameMode(boolean gameMode) {
+		this.gameMode1 = gameMode;
 	}
 }

@@ -75,8 +75,8 @@ public class MenuScreen implements Screen {
 		//When button 'Play!' is clicked set the screen to the GameScreen (and close MenuScreen)
 		startButton.addListener(new ClickListener(){
 			public void clicked(InputEvent event,float x, float y){
+				game.setGameMode(gameMode1);
 				game.setScreen(new com.project.putting_game.Game(game));
-//				game.setGameMode(gameMode1);
 				dispose();
 			}
 		});

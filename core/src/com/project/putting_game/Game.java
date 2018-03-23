@@ -13,17 +13,19 @@ public class Game implements Screen {
 	private Texture ballImage;
 	private Texture fieldTexture;
 	private Ball ball;
+	public int i =0;
 	private Rectangle fieldShape;
 	private Hole hole;
 	private Project2 game;
 	boolean condition = true;
 	private String course;
-	private boolean gameMode1 = true;
+	private boolean gameMode1;
 
 
 	public Game (Project2 game) {
 	    //Creation of camera
         this.game = game;
+        this.gameMode1 = game.gameMode1;
         camera = new OrthographicCamera();
         camera.setToOrtho(false, 800, 480);
 
@@ -120,7 +122,7 @@ public class Game implements Screen {
         Vector3 ballPos = new Vector3();
 
 
-		if(Gdx.input.justTouched() && condition) {
+		if(Gdx.input.justTouched() && condition && gameMode1) {
 		    boolean condition = true;
 
             Vector3 touchPos = new Vector3();
@@ -141,7 +143,6 @@ public class Game implements Screen {
         {
             Moves Course1 = new Moves("Input.txt");
             Vector3[] data = Course1.getData();
-            int i =0;
             if(data[i] != null && i < data.length)
             {
                 ball.velocity = data[i];
@@ -149,6 +150,7 @@ public class Game implements Screen {
             }
             else{
                 System.out.println("No velocities left");
+                System.exit(0);
             }
         }
 
@@ -175,6 +177,7 @@ public class Game implements Screen {
 		    ball.velocity.y = 0;
 		    condition = true;
         }
+
         if(ball.velocity.len() <= 0.2 && checkRadius())
         {
             game.setScreen(new com.project.putting_game.WinScreen(game));
