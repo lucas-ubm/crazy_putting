@@ -45,7 +45,7 @@ public class ControlsScreen implements Screen {
 		description.setSize(Gdx.graphics.getWidth(), description.getPrefHeight());
 		description.setWrap(true);//make text fit on screen by automatic newlines
 		stage.addActor(description);//add label to stage
-		mode1Descr = "Mode 1: Click behind the ball in the opposite direction as you want the ball to go. The further you click from the ball, the harder you hit the ball and the further the ball will move."+"\n";
+		mode1Descr = "Mode 1: Click behind the ball on the opposite side as you want the ball to go. The further you click from the ball, the harder you hit the ball and the further the ball will move."+"\n";
 		mode1 = new Label(mode1Descr, labelStyle);
 		mode1.setPosition(0, description.getY()-description.getPrefHeight()-mode1.getHeight());
 		mode1.setSize(Gdx.graphics.getWidth(), mode1.getPrefHeight());
