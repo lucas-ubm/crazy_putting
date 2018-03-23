@@ -32,10 +32,7 @@ public class Engine
          vy_h = vy + h * forceY();
 
          ball.velocity.x = (float)vx_h;
-         System.out.println(ball.velocity.x + "XXXXXX");
-
          ball.velocity.y = (float)vy_h;
-         System.out.println(ball.velocity.y + "YYYYYY");
 
          ball.position.x = (float)xh;
          ball.position.y = (float)yh;
@@ -65,5 +62,6 @@ public class Engine
     public static boolean touchedWater() {
         boolean result = false;
         for()
+        return result;
     }
 }

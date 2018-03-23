@@ -10,6 +10,8 @@ public class Hole
     public Ellipse holeShape;
     //height, width, x, y (floats)
     public Texture holeImage;
+    public Vector3 holeCenter;
+    public double radius;
 
     public Hole(Vector3 position, String path, int height, int width)
     {
@@ -20,7 +22,15 @@ public class Hole
         holeShape.y = position.y;
         holeShape.height = height;
         holeShape.width = width;
-
+        this.holeCenter = new Vector3(position.x+holeShape.width/2, position.y+holeShape.height/2,0);
+        this.radius = holeShape.height/2;
     }
+
+    public Vector3 getHoleCenter(){
+        holeCenter = new Vector3(position.x+holeShape.width/2, position.y+holeShape.height/2,0);
+        return holeCenter;
+    }
+
+
 
 }

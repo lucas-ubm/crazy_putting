@@ -77,7 +77,7 @@ public class Game implements Screen {
             fieldTexture = new Texture(pixmap);
             pixmap.dispose();
         }
-        else if(course.equals("slope")) {
+        else if(course.equals("slope") || course.equals("waterslope")) {
             for (int x = 0; x < Gdx.graphics.getWidth(); x++) {
                 for (int y = 0; y < Gdx.graphics.getHeight(); y++) {
                     if(field.matrix[y][x].height >=0) {
@@ -109,22 +109,22 @@ public class Game implements Screen {
             fieldTexture = new Texture(pixmap);
             pixmap.dispose();
         }
-        else if(course.equals("waterslope")) {
-            for (int x = 0; x < Gdx.graphics.getWidth(); x++) {
-                for (int y = 0; y < Gdx.graphics.getHeight(); y++) {
-                    if(field.matrix[y][x].height >=0) {
-                        float value = -1*map(x+y, 1280,0);
-                        pixmap.setColor(new Color(0,  value, 0, 1f));// set color White with Alpha=0.5
-                    }
-                    else{
-                        pixmap.setColor(new Color(0,0,0.4f,1f));
-                    }
-                    pixmap.drawPixel(x, y);
-                }
-            }
-            fieldTexture = new Texture(pixmap);
-            pixmap.dispose();
-        }
+//        else if(course.equals("waterslope")) {
+//            for (int x = 0; x < Gdx.graphics.getWidth(); x++) {
+//                for (int y = 0; y < Gdx.graphics.getHeight(); y++) {
+//                    if(field.matrix[y][x].height >=0) {
+//                        float value = -1*map(x+y, 1280,0);
+//                        pixmap.setColor(new Color(0,  value, 0, 1f));// set color White with Alpha=0.5
+//                    }
+//                    else{
+//                        pixmap.setColor(new Color(0,0,0.4f,1f));
+//                    }
+//                    pixmap.drawPixel(x, y);
+//                }
+//            }
+//            fieldTexture = new Texture(pixmap);
+//            pixmap.dispose();
+//        }
 
 
         game.batch.draw(fieldTexture, fieldShape.x, fieldShape.y, fieldShape.width, fieldShape.height);
@@ -187,7 +187,7 @@ public class Game implements Screen {
 	public boolean checkRadius()
     {
         boolean result = false;
-        if(Math.pow((ball.position.x+ball.shape.width/2-(hole.position.x+hole.holeShape.width/2)), 2) + Math.pow((ball.position.y+ball.shape.height/2-(hole.position.y+hole.holeShape.height/2)), 2) <= Math.pow(hole.holeShape.height/2-ball.shape.width/2,2)){
+        if(Math.pow(ball.getCenter().x-hole.getHoleCenter().x, 2) + Math.pow(ball.getCenter().y-hole.getHoleCenter().y, 2) <= Math.pow(hole.radius,2)){
             result = true;
         }
         return result;
