@@ -27,14 +27,16 @@ public class WinScreen implements Screen
     private Rectangle golf;
 
 
-
+    /**Constructor of WinScreen. Same as create() if extending ApplicationAdapter. 
+	 * Instantiating all variables defined above and its components (such as position and size).
+	 * @param game - game created when 'run' was clicked (parent of all screens)
+	 */
     public WinScreen(final Project2 game)
     {
-        System.out.println("WORKS");
         this.game = game;
         camera = new OrthographicCamera();
         camera.setToOrtho(false, 800,480);
-
+        //create a nice picture for the background of the WinScreen
         golfImg = new Texture(Gdx.files.internal("Golf.jpg"));
         golf = new Rectangle(); //create a Rectangle which can contain the picture
         golf.width = Gdx.graphics.getWidth(); //set it to cover the entire width of the screen
@@ -42,17 +44,13 @@ public class WinScreen implements Screen
         golf.x = 0;
         golf.y = Gdx.graphics.getHeight() - golf.height;
 
-
-
         skin = new Skin();
         skin.add("default", game.font);
         Pixmap backgroundButton = new Pixmap((int)Gdx.graphics.getWidth()/2,(int)Gdx.graphics.getHeight()/10,Pixmap.Format.RGB888);//format is enum: how to store color values
         backgroundButton.setColor(Color.WHITE);
         backgroundButton.fill();
         skin.add("background",new Texture(backgroundButton));
-        System.out.println("WORKS2");
-
-
+        //Create a button style
         textButtonStyle = new TextButton.TextButtonStyle();
         textButtonStyle.down = skin.newDrawable("background", Color.BLACK); //let the button turn black if you press your mouse when standing on the button
         textButtonStyle.checked = skin.newDrawable("background", Color.BLACK);
@@ -60,13 +58,12 @@ public class WinScreen implements Screen
         textButtonStyle.font = skin.getFont("default");
         skin.add("default", textButtonStyle);
         backgroundButton.dispose();
-        System.out.println("WORKS3");
-
 
         stage = new Stage(new ScreenViewport());
         Gdx.input.setInputProcessor(stage);
         playAgain = new TextButton("Play again!", skin);
         playAgain.setPosition(Gdx.graphics.getWidth()/2 - playAgain.getWidth()/2,2*Gdx.graphics.getHeight()/6);
+        //When button 'Play again!' is clicked, set the screen to the Game (and close WinScreen)
         playAgain.addListener(new ClickListener(){
             public void clicked(InputEvent event,float x, float y){
                 game.setScreen(new com.project.putting_game.Game(game));
@@ -74,11 +71,11 @@ public class WinScreen implements Screen
             }
         });
         stage.addActor(playAgain);
-        dispose();
-        System.out.println("WORKS4");
-
 
     }
+    /** Called many times a second. Draws all textures and elements of the stage, such as buttons and labels, on the screen.
+	 * @param delta -  time elapsed since rendering the last frame
+	 */
     public void render(float delta)
     {
         Gdx.gl.glClearColor(0, 0.7f, 0, 0); //set color of screen/background
@@ -90,8 +87,6 @@ public class WinScreen implements Screen
         stage.getBatch().draw(golfImg, golf.x, golf.y, golf.width, golf.height);//draw background picture
         stage.getBatch().end();
         stage.draw();//draw stage (so the elements of the stage)
-        System.out.println("WORKS5");
-
 
     }
     @Override
@@ -110,10 +105,11 @@ public class WinScreen implements Screen
     public void resume() {
     }
     @Override
+    /**Will be called when a button is clicked and we move to another screen, as specified in the listeners. 
+	 * Deletes elements of the WinScreen
+	 */
     public void dispose(){
         golfImg.dispose();
         stage.dispose();
-
     }
-
 }
