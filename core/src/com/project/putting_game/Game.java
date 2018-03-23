@@ -18,6 +18,7 @@ public class Game implements Screen {
 	private Project2 game;
 	boolean condition = true;
 	private String course;
+	private boolean gameMode1 = true;
 
 
 	public Game (Project2 game) {
@@ -47,7 +48,7 @@ public class Game implements Screen {
 
 		game.batch.setProjectionMatrix(camera.combined);
 		game.batch.begin();
-        course = "sinx+siny";
+        course = "flat";
         Field field = new Field(800, 480, new Vector3(0, 0, 0), 3, course);
         Pixmap pixmap = new Pixmap((int) Gdx.graphics.getWidth(), (int) Gdx.graphics.getHeight(), Pixmap.Format.RGBA8888);
 
@@ -136,7 +137,20 @@ public class Game implements Screen {
 
         }
 
-
+        if(!gameMode1 && condition)
+        {
+            Moves Course1 = new Moves("Input.txt");
+            Vector3[] data = Course1.getData();
+            int i =0;
+            if(data[i] != null && i < data.length)
+            {
+                ball.velocity = data[i];
+                i++;
+            }
+            else{
+                System.out.println("No velocities left");
+            }
+        }
 
         if(ball.velocity.len() >= 0.02) {
 		    condition = false;
@@ -205,6 +219,11 @@ public class Game implements Screen {
     public static float map (double x, double max, double min) {
 	    return (float) (0 - (max-x)/(max-min));
 
+    }
+
+    public void setGameMode(boolean gameMode1)
+    {
+        this.gameMode1 = gameMode1;
     }
 
 

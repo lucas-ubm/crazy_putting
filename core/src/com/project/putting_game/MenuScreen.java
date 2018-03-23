@@ -17,6 +17,7 @@ public class MenuScreen implements Screen {
 	final com.project.putting_game.Project2 game;
 	OrthographicCamera camera;
 	Skin skin;
+	private boolean gameMode1 = true;
 	private Stage stage;
 	private TextButton startButton;
 	private TextButton controlsButton;
@@ -75,6 +76,7 @@ public class MenuScreen implements Screen {
 		startButton.addListener(new ClickListener(){
 			public void clicked(InputEvent event,float x, float y){
 				game.setScreen(new com.project.putting_game.Game(game));
+//				game.setGameMode(gameMode1);
 				dispose();
 			}
 		});
@@ -112,6 +114,16 @@ public class MenuScreen implements Screen {
 		radioButtons= new ButtonGroup();
 		radioButtons.add(checkBox1);
 		radioButtons.add(checkBox2);
+		checkBox1.addListener(new ClickListener(){
+			public void clicked(InputEvent event,float x, float y){
+				gameMode1 = true;
+			}
+		});
+		checkBox2.addListener(new ClickListener(){
+			public void clicked(InputEvent event,float x, float y){
+				gameMode1 = false;
+			}
+		});
 		radioButtons.setMaxCheckCount(1);
 		checkBox1.setChecked(true);
 		stage.addActor(mode1Label);
