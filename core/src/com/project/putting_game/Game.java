@@ -134,7 +134,7 @@ public class Game implements Screen {
             Vector3 direction = new Vector3();
 
             direction.set((ballPos.x-origin.x), (ballPos.y-origin.y), 0);
-            ball.velocity = direction.scl(3f);
+            ball.setUserVelocity(direction.scl(3f));
             ball.prevPosition = ballPos;
 
         }
@@ -145,11 +145,14 @@ public class Game implements Screen {
             Vector3[] data = Course1.getData();
             if(data[i] != null && i < data.length)
             {
-                ball.velocity = data[i];
+                ball.setUserVelocity(data[i]);
                 i++;
             }
             else{
                 System.out.println("No velocities left");
+                while(!ball.moveHistory.isEmpty()) {
+                    System.out.println(ball.moveHistory.dequeue());
+                }
                 System.exit(0);
             }
         }
@@ -180,7 +183,11 @@ public class Game implements Screen {
 
         if(ball.velocity.len() <= 0.2 && checkRadius())
         {
+            while(!ball.moveHistory.isEmpty()) {
+                System.out.println(ball.moveHistory.dequeue());
+            }
             game.setScreen(new com.project.putting_game.WinScreen(game));
+
         }
 
 	}
