@@ -19,7 +19,6 @@ public class Ball {
     public Ball(Vector3 velocity, Vector3 position, String path, int width, int height) {
         this.velocity = velocity;
         moveHistory = new Queue<Vector3>();
-        moveHistory.enqueue(velocity);
 
         this.position = position;
         this.ballImage = new Texture(Gdx.files.internal(path));
@@ -37,7 +36,7 @@ public class Ball {
 
     public void setUserVelocity(Vector3 newVelocity) {
         this.velocity = newVelocity;
-        moveHistory.enqueue(newVelocity);
+        moveHistory.enqueue(newVelocity.cpy());
     }
 
     public Vector3 getCenter() {

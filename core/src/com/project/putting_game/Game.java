@@ -13,16 +13,19 @@ public class Game implements Screen {
 	private Texture ballImage;
 	private Texture fieldTexture;
 	private Ball ball;
+	public int i =0;
 	private Rectangle fieldShape;
 	private Hole hole;
 	private Project2 game;
 	boolean condition = true;
 	private String course;
+	private boolean gameMode1;
 
 
 	public Game (Project2 game) {
 	    //Creation of camera
         this.game = game;
+        this.gameMode1 = game.gameMode1;
         camera = new OrthographicCamera();
         camera.setToOrtho(false, 800, 480);
 
@@ -47,7 +50,7 @@ public class Game implements Screen {
 
 		game.batch.setProjectionMatrix(camera.combined);
 		game.batch.begin();
-        course = "sinx+siny";
+        course = "flat";
         Field field = new Field(800, 480, new Vector3(0, 0, 0), 3, course);
         Pixmap pixmap = new Pixmap((int) Gdx.graphics.getWidth(), (int) Gdx.graphics.getHeight(), Pixmap.Format.RGBA8888);
 
@@ -119,7 +122,7 @@ public class Game implements Screen {
         Vector3 ballPos = new Vector3();
 
 
-		if(Gdx.input.justTouched() && condition) {
+		if(Gdx.input.justTouched() && condition && gameMode1) {
 		    boolean condition = true;
 
             Vector3 touchPos = new Vector3();
@@ -131,12 +134,28 @@ public class Game implements Screen {
             Vector3 direction = new Vector3();
 
             direction.set((ballPos.x-origin.x), (ballPos.y-origin.y), 0);
-            ball.velocity = direction.scl(3f);
+            ball.setUserVelocity(direction.scl(3f));
             ball.prevPosition = ballPos;
 
         }
 
-
+        if(!gameMode1 && condition)
+        {
+            Moves Course1 = new Moves("Input.txt");
+            Vector3[] data = Course1.getData();
+            if(data[i] != null && i < data.length)
+            {
+                ball.setUserVelocity(data[i]);
+                i++;
+            }
+            else{
+                System.out.println("No velocities left");
+                while(!ball.moveHistory.isEmpty()) {
+                    System.out.println(ball.moveHistory.dequeue());
+                }
+                System.exit(0);
+            }
+        }
 
         if(ball.velocity.len() >= 0.02) {
 		    condition = false;
@@ -161,9 +180,14 @@ public class Game implements Screen {
 		    ball.velocity.y = 0;
 		    condition = true;
         }
+
         if(ball.velocity.len() <= 0.2 && checkRadius())
         {
+            while(!ball.moveHistory.isEmpty()) {
+                System.out.println(ball.moveHistory.dequeue());
+            }
             game.setScreen(new com.project.putting_game.WinScreen(game));
+
         }
 
 	}
@@ -205,6 +229,11 @@ public class Game implements Screen {
     public static float map (double x, double max, double min) {
 	    return (float) (0 - (max-x)/(max-min));
 
+    }
+
+    public void setGameMode(boolean gameMode1)
+    {
+        this.gameMode1 = gameMode1;
     }
 
 

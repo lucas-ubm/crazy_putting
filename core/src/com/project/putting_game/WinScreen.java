@@ -3,13 +3,12 @@ package com.project.putting_game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.*;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.*;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
 
@@ -27,7 +26,7 @@ public class WinScreen implements Screen
     private Rectangle golf;
 
 
-    /**Constructor of WinScreen. Same as create() if extending ApplicationAdapter. 
+    /**Constructor of WinScreen. Same as create() if extending ApplicationAdapter.
 	 * Instantiating all variables defined above and its components (such as position and size).
 	 * @param game - game created when 'run' was clicked (parent of all screens)
 	 */
@@ -50,14 +49,17 @@ public class WinScreen implements Screen
         backgroundButton.setColor(Color.WHITE);
         backgroundButton.fill();
         skin.add("background",new Texture(backgroundButton));
-        //Create a button style
+
+
         textButtonStyle = new TextButton.TextButtonStyle();
+        textButtonStyle.up = skin.newDrawable("background", Color.FOREST);
         textButtonStyle.down = skin.newDrawable("background", Color.BLACK); //let the button turn black if you press your mouse when standing on the button
         textButtonStyle.checked = skin.newDrawable("background", Color.BLACK);
         textButtonStyle.over = skin.newDrawable("background", Color.BROWN); //let the button turn brown when the mouse is standing on the button
         textButtonStyle.font = skin.getFont("default");
         skin.add("default", textButtonStyle);
         backgroundButton.dispose();
+
 
         stage = new Stage(new ScreenViewport());
         Gdx.input.setInputProcessor(stage);
@@ -71,6 +73,7 @@ public class WinScreen implements Screen
             }
         });
         stage.addActor(playAgain);
+
 
     }
     /** Called many times a second. Draws all textures and elements of the stage, such as buttons and labels, on the screen.
@@ -87,6 +90,7 @@ public class WinScreen implements Screen
         stage.getBatch().draw(golfImg, golf.x, golf.y, golf.width, golf.height);//draw background picture
         stage.getBatch().end();
         stage.draw();//draw stage (so the elements of the stage)
+
 
     }
     @Override
@@ -105,11 +109,10 @@ public class WinScreen implements Screen
     public void resume() {
     }
     @Override
-    /**Will be called when a button is clicked and we move to another screen, as specified in the listeners. 
+    /**Will be called when a button is clicked and we move to another screen, as specified in the listeners.
 	 * Deletes elements of the WinScreen
 	 */
     public void dispose(){
-        golfImg.dispose();
         stage.dispose();
     }
 }
