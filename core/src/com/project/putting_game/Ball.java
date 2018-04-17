@@ -34,6 +34,7 @@ public class Ball {
 
     }
 
+
     public void setUserVelocity(Vector3 newVelocity) {
         this.velocity = newVelocity;
         moveHistory.enqueue(newVelocity.cpy());

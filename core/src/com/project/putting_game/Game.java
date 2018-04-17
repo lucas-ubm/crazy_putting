@@ -7,6 +7,14 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector3;
 
+import java.io.IOException;
+import java.nio.charset.Charset;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
+import java.util.ArrayList;
+
 public class Game implements Screen {
 	private SpriteBatch batch;
 	private OrthographicCamera camera;
@@ -141,18 +149,18 @@ public class Game implements Screen {
 
         if(!gameMode1 && condition)
         {
+
             Moves Course1 = new Moves("Input.txt");
             Vector3[] data = Course1.getData();
             if(data[i] != null && i < data.length)
             {
+                ball.prevPosition = ball.position;
                 ball.setUserVelocity(data[i]);
                 i++;
             }
             else{
                 System.out.println("No velocities left");
-                while(!ball.moveHistory.isEmpty()) {
-                    System.out.println(ball.moveHistory.dequeue());
-                }
+                outputGame(ball);
                 System.exit(0);
             }
         }
@@ -183,9 +191,7 @@ public class Game implements Screen {
 
         if(ball.velocity.len() <= 0.2 && checkRadius())
         {
-            while(!ball.moveHistory.isEmpty()) {
-                System.out.println(ball.moveHistory.dequeue());
-            }
+            outputGame(ball);
             game.setScreen(new com.project.putting_game.WinScreen(game));
 
         }
@@ -234,6 +240,26 @@ public class Game implements Screen {
     public void setGameMode(boolean gameMode1)
     {
         this.gameMode1 = gameMode1;
+    }
+
+    public static void outputGame(Ball ball) {
+        String move;
+        ArrayList<String> lines = new ArrayList<String>();
+        while(!ball.moveHistory.isEmpty()) {
+            move = ball.moveHistory.dequeue().toString();
+            System.out.println(move);
+            lines.add(move);
+
+        }
+        try {
+            lines.add("");
+            Path file = Paths.get("Games.txt");
+            Files.write(file, lines, Charset.forName("UTF-8"), StandardOpenOption.APPEND);
+        }
+        catch(IOException e) {
+            System.out.println("You fucked up");
+        }
+
     }
 
 
