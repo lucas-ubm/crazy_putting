@@ -54,17 +54,17 @@ public class Engine
     }
 
 
-    //*Method to calculate the force on the ball at the x-axis. This method is used when calculating the new velocity*//
+    /*Method to calculate the force on the ball at the x-axis. This method is used when calculating the new velocity*/
     public static double forceX(Ball ball)
     {
-        double Fx = ((-g) * (0)) - (CurrentFriction * g * vx) ;
+        double Fx =  -(CurrentFriction * g * vx) ;
         return Fx;
     }
 
     //*Method to calculate the force on the ball at the y-axis. This method is used when calculating the new velocity*//
     public static double forceY()
     {
-        double Fy = ((-g) * (0)) - (CurrentFriction * g * vy) ;
+        double Fy =  -(CurrentFriction * g * vy) ;
         return Fy;
     }
 
