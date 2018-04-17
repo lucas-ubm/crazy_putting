@@ -18,7 +18,6 @@ public class MenuScreen implements Screen {
 	public static boolean gameMode1 = true;
 	OrthographicCamera camera;
 	Skin skin;
-	private boolean gameMode1 = true;
 	private Stage stage;
 	private TextButton startButton;
 	private TextButton controlsButton;
