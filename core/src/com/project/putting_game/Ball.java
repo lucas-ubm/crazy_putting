@@ -18,6 +18,7 @@ public class Ball {
         this.velocity = velocity;
 //        moveHistory = new Queue<Vector3>();
 //        moveHistory.enqueue(velocity);
+        moveHistory = new Queue<Vector3>();
 
         this.position = position;
         this.ballImage = new Texture(Gdx.files.internal(path));
@@ -33,7 +34,7 @@ public class Ball {
     public void setUserVelocity(Vector3 newVelocity) {
         this.velocity = newVelocity;
 //        moveHistory.enqueue(newVelocity);
-
+        moveHistory.enqueue(newVelocity.cpy());
     }
 
-}
+    }

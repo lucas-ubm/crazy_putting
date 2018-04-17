@@ -18,6 +18,7 @@ public class MenuScreen implements Screen {
 	public static boolean gameMode1 = true;
 	OrthographicCamera camera;
 	Skin skin;
+	private boolean gameMode1 = true;
 	private Stage stage;
 	private TextButton startButton;
 	private TextButton controlsButton;
@@ -75,6 +76,7 @@ public class MenuScreen implements Screen {
 		//When button 'Play!' is clicked set the screen to the GameScreen (and close MenuScreen)
 		startButton.addListener(new ClickListener(){
 			public void clicked(InputEvent event,float x, float y){
+				game.setGameMode(gameMode1);
 				game.setScreen(new com.project.putting_game.Game(game));
 				dispose();
 			}
@@ -127,6 +129,16 @@ public class MenuScreen implements Screen {
 		radioButtons= new ButtonGroup();
 		radioButtons.add(checkBox1);
 		radioButtons.add(checkBox2);
+		checkBox1.addListener(new ClickListener(){
+			public void clicked(InputEvent event,float x, float y){
+				gameMode1 = true;
+			}
+		});
+		checkBox2.addListener(new ClickListener(){
+			public void clicked(InputEvent event,float x, float y){
+				gameMode1 = false;
+			}
+		});
 		radioButtons.setMaxCheckCount(1);
 		checkBox1.setChecked(true);
 
