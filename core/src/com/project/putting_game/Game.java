@@ -58,7 +58,7 @@ public class Game implements Screen {
 
 		game.batch.setProjectionMatrix(camera.combined);
 		game.batch.begin();
-        course = "flat";
+        course = "sinx+siny";
         Field field = new Field(800, 480, new Vector3(0, 0, 0), 3, course);
         Pixmap pixmap = new Pixmap((int) Gdx.graphics.getWidth(), (int) Gdx.graphics.getHeight(), Pixmap.Format.RGBA8888);
 
@@ -66,7 +66,7 @@ public class Game implements Screen {
             for (int x = 0; x < Gdx.graphics.getWidth(); x++) {
                 for (int y = 0; y < Gdx.graphics.getHeight(); y++) {
                     if(field.matrix[y][x].height >=0) {
-                        float value = -1*map(Math.sin(x/(400/5.1))+Math.sin(y/(240/5.1)), 2,-2);
+                        float value = -1*map(Math.sin((double)(x)/(400/5.1))+Math.sin((double)(y)/(240/5.1)), 2,-2);
                         pixmap.setColor(new Color(0,  value, 0, 1f));// set color White with Alpha=0.5
                     }
                     else{
@@ -154,8 +154,9 @@ public class Game implements Screen {
             Vector3[] data = Course1.getData();
             if(data[i] != null && i < data.length)
             {
-                ball.prevPosition = ball.position;
                 ball.setUserVelocity(data[i]);
+                ballPos.set((int)ball.position.x, (int)ball.position.y, 0);
+                ball.prevPosition = ballPos;
                 i++;
             }
             else{
