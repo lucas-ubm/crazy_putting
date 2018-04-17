@@ -46,7 +46,7 @@ public class Engine
         //Checks whether the ball has touched the walls or touched the water. If it did, return to the previous position and set velocity to 0.
          if(ball.position.x <= 60 || ball.position.y <= 60 || ball.position.x >= 800-92 || ball.position.y >= 480-92 || currentHeight < 0)
          {
-             System.out.println("Previous " + ball.prevPosition);
+//             System.out.println("Previous " + ball.prevPosition);
              ball.position = ball.prevPosition;
              ball.velocity = new Vector3(0,0,0);
          }
