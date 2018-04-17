@@ -52,6 +52,7 @@ public class WinScreen implements Screen
 
 
         textButtonStyle = new TextButton.TextButtonStyle();
+        textButtonStyle.up = skin.newDrawable("background", Color.FOREST); //standard color of the button (no special action)
         textButtonStyle.up = skin.newDrawable("background", Color.FOREST);
         textButtonStyle.down = skin.newDrawable("background", Color.BLACK); //let the button turn black if you press your mouse when standing on the button
         textButtonStyle.checked = skin.newDrawable("background", Color.BLACK);

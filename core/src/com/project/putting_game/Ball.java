@@ -9,15 +9,15 @@ public class Ball {
     public Vector3 velocity;
     public Vector3 position;
     public Vector3 prevPosition;
-    public Vector3 ballCenter;
     public Texture ballImage;
     public Rectangle shape;
-    public Queue<Vector3> moveHistory;
-    public double radius;
+//    public Queue<Vector3> moveHistory;
 
 
     public Ball(Vector3 velocity, Vector3 position, String path, int width, int height) {
         this.velocity = velocity;
+//        moveHistory = new Queue<Vector3>();
+//        moveHistory.enqueue(velocity);
         moveHistory = new Queue<Vector3>();
 
         this.position = position;
@@ -29,20 +29,13 @@ public class Ball {
         shape.height = height;
         shape.width = width;
 
-        this.ballCenter = new Vector3(position.x+shape.width/2, position.y+shape.height/2, 0);
-        this.radius = shape.height/2;
-
     }
 
 
     public void setUserVelocity(Vector3 newVelocity) {
         this.velocity = newVelocity;
+//        moveHistory.enqueue(newVelocity);
         moveHistory.enqueue(newVelocity.cpy());
     }
 
-    public Vector3 getCenter() {
-        ballCenter = new Vector3(position.x+shape.width/2, position.y+shape.height/2, 0);
-        return ballCenter;
     }
-
-}

@@ -25,7 +25,7 @@ public class Game implements Screen {
 	private Rectangle fieldShape;
 	private Hole hole;
 	private Project2 game;
-	boolean condition = true;
+	private boolean condition = true;
 	private String course;
 	private boolean gameMode1;
 
@@ -41,7 +41,7 @@ public class Game implements Screen {
 
         //Create bucket Rectangle
         ball = new Ball(new Vector3(0,0,0), new Vector3(80, 80, 0), "golfball.png", 32, 32);
-        hole = new Hole(new Vector3(100,300,0), "hole.png", 50, 50);
+        hole = new Hole(new Vector3(300,300,0), "hole.png", 50, 50);
         //Create field
         fieldShape = new Rectangle();
         fieldShape.x = 60;
@@ -108,7 +108,7 @@ public class Game implements Screen {
             for (int x = 0; x < Gdx.graphics.getWidth(); x++) {
                 for (int y = 0; y < Gdx.graphics.getHeight(); y++) {
                     if(field.matrix[y][x].height >=0) {
-                        float value = -1*map(0.1*x+0.03*Math.pow(x, 2)+0.2*y, 19376,0);
+                        float value = -1*map(x*y, 384000,0);
                         pixmap.setColor(new Color(0,  value, 0, 1f));// set color White with Alpha=0.5
                     }
                     else{
@@ -167,7 +167,8 @@ public class Game implements Screen {
 
         if(ball.velocity.len() >= 0.02) {
 		    condition = false;
-            Engine.calculate(ball, field, course);
+            //Makes sure the bucket doesn't get out of the window
+            Engine.calculate(ball, field);
             if(ball.position.x < 60){
                 ball.position.x = 60;
             }
@@ -201,7 +202,7 @@ public class Game implements Screen {
 	public boolean checkRadius()
     {
         boolean result = false;
-        if(Math.pow(ball.getCenter().x-hole.getHoleCenter().x, 2) + Math.pow(ball.getCenter().y-hole.getHoleCenter().y, 2) <= Math.pow(hole.radius,2)){
+        if(Math.pow((ball.position.x+ball.shape.width/2-(hole.position.x+hole.holeShape.width/2)), 2) + Math.pow((ball.position.y+ball.shape.height/2-(hole.position.y+hole.holeShape.height/2)), 2) <= Math.pow(hole.holeShape.height/2-ball.shape.width/2,2)){
             result = true;
         }
         return result;

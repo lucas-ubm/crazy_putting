@@ -15,6 +15,7 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
 public class MenuScreen implements Screen {
 	final com.project.putting_game.Project2 game;
+	public static boolean gameMode1 = true;
 	OrthographicCamera camera;
 	Skin skin;
 	private boolean gameMode1 = true;
@@ -80,6 +81,7 @@ public class MenuScreen implements Screen {
 				dispose();
 			}
 		});
+
 		stage.addActor(startButton);
 		controlsButton = new TextButton("Controls", skin);
 		controlsButton.setPosition(Gdx.graphics.getWidth()/2 - controlsButton.getWidth()/2,Gdx.graphics.getHeight()/6);
@@ -111,6 +113,19 @@ public class MenuScreen implements Screen {
 		checkBox2.setSize(mode2Label.getHeight(),mode2Label.getHeight());
 		checkBox1.setPosition(mode1Label.getX()-checkBox1.getWidth(), mode1Label.getY());
 		checkBox2.setPosition(mode2Label.getX()-checkBox2.getWidth(), mode2Label.getY());
+		checkBox1.addListener(new ClickListener(){
+			public void clicked(InputEvent event,float x, float y){
+				gameMode1 = true;
+
+			}
+		});
+		checkBox2.addListener(new ClickListener(){
+			public void clicked(InputEvent event,float x, float y){
+				gameMode1 = false;
+			}
+		});
+
+
 		radioButtons= new ButtonGroup();
 		radioButtons.add(checkBox1);
 		radioButtons.add(checkBox2);
@@ -126,6 +141,7 @@ public class MenuScreen implements Screen {
 		});
 		radioButtons.setMaxCheckCount(1);
 		checkBox1.setChecked(true);
+
 		stage.addActor(mode1Label);
 		stage.addActor(mode2Label);
 		stage.addActor(checkBox1);
