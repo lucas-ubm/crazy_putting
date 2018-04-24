@@ -1,3 +1,8 @@
+/** A class to represent a Ball
+ * @author Lucas Uberti-Bona
+ * @version 0.1, 09-03-2018
+ *
+ */
 package com.project.putting_game;
 
 import com.badlogic.gdx.Gdx;
