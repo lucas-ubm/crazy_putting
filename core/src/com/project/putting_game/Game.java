@@ -59,13 +59,14 @@ public class Game implements Screen {
 
 		game.batch.setProjectionMatrix(camera.combined);
 		game.batch.begin();
-        course = "flat";
-        Field field = new Field((int)fieldShape.x, (int)fieldShape.y, 3, course);
-        Pixmap pixmap = new Pixmap((int)fieldShape.x, (int)fieldShape.y, Pixmap.Format.RGBA8888);
+        course = "sinx+siny";
+        Field field = new Field((int)fieldShape.width, (int)fieldShape.height, 3, course);
+
+        Pixmap pixmap = new Pixmap((int)fieldShape.width, (int)fieldShape.height, Pixmap.Format.RGBA8888);
 
 		if(course.equals("sinx+siny")) {
-            for (int x = 0; x < (int)fieldShape.y; x++) {
-                for (int y = 0; y < (int)fieldShape.x; y++) {
+            for (int x = 0; x < (int)fieldShape.width; x++) {
+                for (int y = 0; y < (int)fieldShape.height; y++) {
                     if(field.matrix[y][x].height >=0) {
                         float value = -1*map(Math.sin((double)(x)/(400/5.1))+Math.sin((double)(y)/(240/5.1)), 2,-2);
                         pixmap.setColor(new Color(0,  value, 0, 1f));// set color White with Alpha=0.5
