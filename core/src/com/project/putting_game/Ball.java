@@ -19,7 +19,7 @@ public class Ball {
     public Queue<Vector3> moveHistory;
 
 
-    public Ball(Vector3 position, String path, int width, int height) {
+    public Ball(Vector3 position, String path, int side) {
         this.velocity = new Vector3(0,0,0);
         moveHistory = new Queue<Vector3>();
         moveHistory.enqueue(velocity);
@@ -31,8 +31,8 @@ public class Ball {
         this.shape = new Rectangle();
         shape.x = position.x;
         shape.y = position.y;
-        shape.height = height;
-        shape.width = width;
+        shape.height = side;
+        shape.width = side;
 
     }
 

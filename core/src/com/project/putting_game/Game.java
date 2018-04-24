@@ -14,6 +14,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
+import java.util.Set;
 
 public class Game implements Screen {
 	private SpriteBatch batch;
@@ -35,19 +36,19 @@ public class Game implements Screen {
         this.game = game;
         this.gameMode1 = game.gameMode1;
         camera = new OrthographicCamera();
-        camera.setToOrtho(false, 800, 480);
+        camera.setToOrtho(false, Settings.windowWidth, Settings.windowHeight);
 
 
 
         //Create bucket Rectangle
-        ball = new Ball(Settings.ballPosition, "golfball.png", Settings.ballWidth, Settings.ballHeight);
-        hole = new Hole(Settings.holePosition, "hole.png", 50, 50);
+        ball = new Ball(Settings.ballPosition, "golfball.png", Settings.ballSide);
+        hole = new Hole(Settings.holePosition, "hole.png", Settings.holeSide);
         //Create field
         fieldShape = new Rectangle();
-        fieldShape.x = 60;
-        fieldShape.y = 60;
-        fieldShape.width = 800 - 120;
-        fieldShape.height = 480 - 120;
+        fieldShape.x = Settings.borderLength;
+        fieldShape.y = Settings.borderLength;
+        fieldShape.width = Settings.windowWidth - 2*Settings.borderLength;
+        fieldShape.height = Settings.windowHeight - 2*Settings.borderLength;
 
 	}
 
@@ -58,13 +59,13 @@ public class Game implements Screen {
 
 		game.batch.setProjectionMatrix(camera.combined);
 		game.batch.begin();
-        course = "sinx+siny";
-        Field field = new Field(800, 480, new Vector3(0, 0, 0), 3, course);
-        Pixmap pixmap = new Pixmap((int) Gdx.graphics.getWidth(), (int) Gdx.graphics.getHeight(), Pixmap.Format.RGBA8888);
+        course = "flat";
+        Field field = new Field((int)fieldShape.x, (int)fieldShape.y, 3, course);
+        Pixmap pixmap = new Pixmap((int)fieldShape.x, (int)fieldShape.y, Pixmap.Format.RGBA8888);
 
 		if(course.equals("sinx+siny")) {
-            for (int x = 0; x < Gdx.graphics.getWidth(); x++) {
-                for (int y = 0; y < Gdx.graphics.getHeight(); y++) {
+            for (int x = 0; x < (int)fieldShape.y; x++) {
+                for (int y = 0; y < (int)fieldShape.x; y++) {
                     if(field.matrix[y][x].height >=0) {
                         float value = -1*map(Math.sin((double)(x)/(400/5.1))+Math.sin((double)(y)/(240/5.1)), 2,-2);
                         pixmap.setColor(new Color(0,  value, 0, 1f));// set color White with Alpha=0.5
