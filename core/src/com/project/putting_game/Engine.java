@@ -77,11 +77,10 @@ public class Engine {
 
     public static boolean water(Ball ball, Field field) {
         Vector2 topLeft = new Vector2(ball.position.x - ball.shape.width / 2, ball.position.y - ball.shape.height / 2);
-        for (int i = 0; i < topLeft.x + Settings.ballSide * 2; i++) {
-            for (int j = 0; j < topLeft.y + Settings.ballSide * 2; j++) {
+        for (int i = (int)topLeft.x; i < topLeft.x + Settings.ballSide * 2; i++) {
+            for (int j = (int)topLeft.y; j < topLeft.y + Settings.ballSide * 2; j++) {
                 if (ball.shape.contains(new Vector2(i, j))) {
-                    System.out.println("Hey " + i);
-                    if(field.matrix[j][i].height < 0){
+                    if(field.matrix[i][j].height < 0){
                         return true;
                     }
                 }

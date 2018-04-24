@@ -67,12 +67,12 @@ public class Game implements Screen {
 		if(course.equals("sinx+siny")) {
             for (int x = 0; x < (int)fieldShape.width; x++) {
                 for (int y = 0; y < (int)fieldShape.height; y++) {
-                    if(field.matrix[y][x].height >=0) {
-                        float value = -1*map(Math.sin((double)(x)/(400/5.1))+Math.sin((double)(y)/(240/5.1)), 2,-2);
-                        pixmap.setColor(new Color(0,  value, 0, 1f));// set color White with Alpha=0.5
+                    if(field.matrix[y][x].height < 0) {
+                        pixmap.setColor(new Color(0,0,0.4f,1f));
                     }
                     else{
-                        pixmap.setColor(new Color(0,0,0.4f,1f));
+                        float value = -1*map(field.matrix[y][x].height, 2,-2);
+                        pixmap.setColor(new Color(value,  0, 0, 1f));// set color White with Alpha=0.5
                     }
                     pixmap.drawPixel(x, y);
                 }
@@ -236,8 +236,8 @@ public class Game implements Screen {
     public void resume() {
     }
 
-    public static float map (double x, double max, double min) {
-	    return (float) (0 - (max-x)/(max-min));
+    public static float map (double height, double max, double min) {
+	    return (float) (0 - (max-height)/(max-min));
 
     }
 

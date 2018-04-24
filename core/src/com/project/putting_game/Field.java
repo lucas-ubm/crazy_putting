@@ -20,7 +20,7 @@ public class Field {
         if(course.equals("sinx+siny")) {
             for(int i = 0; i < matrix.length; i++) {
                 for(int j = 0; j < matrix[0].length; j++) {
-                    matrix[i][j].height = Math.sin((double)(j)/(400/5.1))+Math.sin((double)(i)/(240/5.1));
+                    matrix[i][j].height = Math.sin((double)j/78.43)+Math.cos((double)i/78.43);
                 }
             }
         }
