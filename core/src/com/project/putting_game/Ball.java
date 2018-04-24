@@ -14,8 +14,8 @@ public class Ball {
     public Queue<Vector3> moveHistory;
 
 
-    public Ball(Vector3 velocity, Vector3 position, String path, int width, int height) {
-        this.velocity = velocity;
+    public Ball(Vector3 position, String path, int width, int height) {
+        this.velocity = new Vector3(0,0,0);
         moveHistory = new Queue<Vector3>();
         moveHistory.enqueue(velocity);
         moveHistory = new Queue<Vector3>();
