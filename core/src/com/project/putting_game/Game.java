@@ -51,11 +51,11 @@ public class Game implements Screen {
 		game.batch.begin();
         course = "slope";
 
-        Field field = new Field(800, 480, new Vector3(0, 0, 0), 3, course);
+        Field field = new Field(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), new Vector3(0, 0, 0), 3, course);
         Pixmap pixmap = new Pixmap((int) Gdx.graphics.getWidth(), (int) Gdx.graphics.getHeight(), Pixmap.Format.RGBA8888);
 		for (int y = 0; y < Gdx.graphics.getHeight(); y++) {
         for (int x = 0; x < Gdx.graphics.getWidth(); x++) {
-                if(field.matrix[y][x].height >=0) {
+                if(field.matrix[x][y].height >=0) {
                     float value = 0.8f; //flat
                     if(course.equals("sinx+siny")) {
                         value = -1 * map(Math.sin((double) (x) / (400 / 5.1)) + Math.sin((double) (y) / (240 / 5.1)), 2, -2);
@@ -125,17 +125,17 @@ public class Game implements Screen {
             //Makes sure the bucket doesn't get out of the window
             Engine.calculate(ball, field);
             if(ball.position.x < 60){
-                ball.position.x = 60;
+                ball.position = ball.prevPosition;
             }
             if(ball.position.x > 800 - 92) {
-                ball.position.x = 800 - 92;
+                ball.position = ball.prevPosition;
 
             }
             if(ball.position.y < 60) {
-                ball.position.y = 60;
+                ball.position = ball.prevPosition;
             }
             if(ball.position.y > 480 - 92) {
-                ball.position.y = 480- 92;
+                ball.position = ball.prevPosition;
             }
 
         }

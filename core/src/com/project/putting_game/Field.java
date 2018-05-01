@@ -8,7 +8,7 @@ public class Field {
     public int holeRadius;
 
     public Field (int x, int y, Vector3 hole, int holeRadius, String course) {
-        matrix = new Properties[y][x];
+        matrix = new Properties[x][y];
 
         for(int i = 0; i < matrix.length; i++) {
             for(int j = 0; j < matrix[0].length; j++) {

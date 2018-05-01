@@ -39,10 +39,10 @@ public class Engine {
         ball.velocity.y = (float) vy_h;
 
         //Get the friction of the surface at current location ball
-        CurrentFriction = fields.matrix[(int) ball.position.y][(int) ball.position.x].friction;
+        CurrentFriction = fields.matrix[(int) ball.position.x][(int) ball.position.y].friction;
 
         //Get the height of the field at current location ball
-        currentHeight = fields.matrix[(int) ball.position.y][(int) ball.position.x].height;
+        currentHeight = fields.matrix[(int) ball.position.x][(int) ball.position.y].height;
 
 
         //Checks whether the ball has touched the walls or touched the water. If it did, return to the previous position and set velocity to 0.
