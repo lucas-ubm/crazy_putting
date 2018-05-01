@@ -3,10 +3,8 @@ package com.project.putting_game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.*;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector3;
-
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
@@ -16,9 +14,7 @@ import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 
 public class Game implements Screen {
-	private SpriteBatch batch;
 	private OrthographicCamera camera;
-	private Texture ballImage;
 	private Texture fieldTexture;
 	private Ball ball;
 	public int i =0;
@@ -29,15 +25,12 @@ public class Game implements Screen {
 	private String course;
 	private boolean gameMode1;
 
-
 	public Game (Project2 game) {
 	    //Creation of camera
         this.game = game;
         this.gameMode1 = game.gameMode1;
         camera = new OrthographicCamera();
         camera.setToOrtho(false, 800, 480);
-
-
 
         //Create bucket Rectangle
         ball = new Ball(new Vector3(0,0,0), new Vector3(80, 80, 0), "golfball.png", 32, 32);
@@ -48,78 +41,41 @@ public class Game implements Screen {
         fieldShape.y = 60;
         fieldShape.width = 800 - 120;
         fieldShape.height = 480 - 120;
-
 	}
 
 	public void render (float delta) {
 		Gdx.gl.glClearColor(0, 0, 0.2f, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		camera.update();
-
 		game.batch.setProjectionMatrix(camera.combined);
 		game.batch.begin();
-        course = "flat";
+        course = "slope";
+
         Field field = new Field(800, 480, new Vector3(0, 0, 0), 3, course);
         Pixmap pixmap = new Pixmap((int) Gdx.graphics.getWidth(), (int) Gdx.graphics.getHeight(), Pixmap.Format.RGBA8888);
-
-		if(course.equals("sinx+siny")) {
-            for (int x = 0; x < Gdx.graphics.getWidth(); x++) {
-                for (int y = 0; y < Gdx.graphics.getHeight(); y++) {
-                    if(field.matrix[y][x].height >=0) {
-                        float value = -1*map(Math.sin((double)(x)/(400/5.1))+Math.sin((double)(y)/(240/5.1)), 2,-2);
-                        pixmap.setColor(new Color(0,  value, 0, 1f));// set color White with Alpha=0.5
+		for (int y = 0; y < Gdx.graphics.getHeight(); y++) {
+        for (int x = 0; x < Gdx.graphics.getWidth(); x++) {
+                if(field.matrix[y][x].height >=0) {
+                    float value = 0.8f; //flat
+                    if(course.equals("sinx+siny")) {
+                        value = -1 * map(Math.sin((double) (x) / (400 / 5.1)) + Math.sin((double) (y) / (240 / 5.1)), 2, -2);
                     }
-                    else{
-                        pixmap.setColor(new Color(0,0,0.4f,1f));
+                    else if (course.equals("slope")){
+                        value = -1*map(x+y, 1280,0);
                     }
-                    pixmap.drawPixel(x, y);
+                    else if(course.equals("parabola")) {
+                        value = -1*map(x*y, 384000,0);
+                    }
+                    pixmap.setColor(new Color(0,  value, 0, 1f));// set color White with Alpha=0.5
                 }
-            }
-            fieldTexture = new Texture(pixmap);
-            pixmap.dispose();
-        }
-        else if(course.equals("flat")) {
-		    for (int x = 0; x < Gdx.graphics.getWidth(); x++) {
-                for (int y = 0; y < Gdx.graphics.getHeight(); y++) {
-                    pixmap.setColor(new Color(0,  0.8f, 0, 1f));// set color White with Alpha=0.5
-                    pixmap.drawPixel(x, y);
+                else{
+                    pixmap.setColor(new Color(0,0,0.4f,1f));
                 }
+                pixmap.drawPixel(x, y);
             }
-            fieldTexture = new Texture(pixmap);
-            pixmap.dispose();
         }
-        else if(course.equals("slope")) {
-            for (int x = 0; x < Gdx.graphics.getWidth(); x++) {
-                for (int y = 0; y < Gdx.graphics.getHeight(); y++) {
-                    if(field.matrix[y][x].height >=0) {
-                        float value = -1*map(x+y, 1280,0);
-                        pixmap.setColor(new Color(0,  value, 0, 1f));// set color White with Alpha=0.5
-                    }
-                    else{
-                        pixmap.setColor(new Color(0,0,0.4f,1f));
-                    }
-                    pixmap.drawPixel(x, y);
-                }
-            }
-            fieldTexture = new Texture(pixmap);
-            pixmap.dispose();
-        }
-        else if(course.equals("parabola")) {
-            for (int x = 0; x < Gdx.graphics.getWidth(); x++) {
-                for (int y = 0; y < Gdx.graphics.getHeight(); y++) {
-                    if(field.matrix[y][x].height >=0) {
-                        float value = -1*map(x*y, 384000,0);
-                        pixmap.setColor(new Color(0,  value, 0, 1f));// set color White with Alpha=0.5
-                    }
-                    else{
-                        pixmap.setColor(new Color(0,0,0.4f,1f));
-                    }
-                    pixmap.drawPixel(x, y);
-                }
-            }
-            fieldTexture = new Texture(pixmap);
-            pixmap.dispose();
-        }
+        fieldTexture = new Texture(pixmap);
+        pixmap.dispose();
 
         game.batch.draw(fieldTexture, fieldShape.x, fieldShape.y, fieldShape.width, fieldShape.height);
 		game.batch.draw(ball.ballImage, ball.position.x, ball.position.y, ball.shape.width, ball.shape.height);
@@ -128,7 +84,6 @@ public class Game implements Screen {
 		game.batch.end();
         Vector3 origin = new Vector3();
         Vector3 ballPos = new Vector3();
-
 
 		if(Gdx.input.justTouched() && condition && gameMode1) {
 		    boolean condition = true;
@@ -149,8 +104,7 @@ public class Game implements Screen {
 
         if(!gameMode1 && condition)
         {
-
-            Moves Course1 = new Moves("Input.txt");
+            Moves Course1 = new Moves(game.inputfile);
             Vector3[] data = Course1.getData();
             if(data[i] != null && i < data.length)
             {
@@ -195,9 +149,7 @@ public class Game implements Screen {
         {
             outputGame(ball);
             game.setScreen(new com.project.putting_game.WinScreen(game));
-
         }
-
 	}
 
 	public boolean checkRadius()
@@ -207,14 +159,11 @@ public class Game implements Screen {
             result = true;
         }
         return result;
-
     }
 
 	@Override
 	public void dispose () {
-        ballImage.dispose();
         fieldTexture.dispose();
-		batch.dispose();
 	}
 
     @Override
