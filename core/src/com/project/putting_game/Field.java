@@ -7,53 +7,26 @@ public class Field {
     public Vector3 hole;
     public int holeRadius;
 
-    public Field (int x, int y, int holeRadius, String course) {
+    public Field (int x, int y, Vector3 hole, int holeRadius, String course) {
         matrix = new Properties[y][x];
 
         for(int i = 0; i < matrix.length; i++) {
             for(int j = 0; j < matrix[0].length; j++) {
                 matrix[i][j] = new Properties();
-            }
-        }
-
-
-        if(course.equals("sinx+siny")) {
-            for(int i = 0; i < matrix.length; i++) {
-                for(int j = 0; j < matrix[0].length; j++) {
-                    matrix[i][j].height = Math.sin((double)j/78.43)+Math.cos((double)i/78.43);
-                }
-            }
-        }
-        else if(course.equals("flat")) {
-            for(int i = 0; i < matrix.length; i++) {
-                for(int j = 0; j < matrix[0].length; j++) {
+                if(course.equals("flat")){
                     matrix[i][j].height = 1;
                 }
-            }
-        }
-        else if(course.equals("slope")) {
-            for(int i = 0; i < matrix.length; i++) {
-                for(int j = 0; j < matrix[0].length; j++) {
-                    matrix[i][j].height = i+j;
+                else if(course.equals("slope")||course.equals("parabola")){
+                    matrix[i][j].height = i + j;
                 }
-            }
-        }
-        else if(course.equals("parabola")) {
-            for(int i = 0; i < matrix.length; i++) {
-                for(int j = 0; j < matrix[0].length; j++) {
-                    matrix[i][j].height = i+j;
+                else if(course.equals("sinx+siny")){
+                    matrix[i][j].height = Math.sin((double)(j)/(400/5.1))+Math.sin((double)(i)/(240/5.1));
                 }
-            }
-        }
-
-        for(int i = 0; i < matrix.length; i++) {
-            for(int j = 0; j < matrix[0].length; j++) {
                 matrix[i][j].friction = 0.4;
             }
         }
 
-        this.hole = new Vector3(0,0,0);
+        this.hole = hole;
         this.holeRadius = holeRadius;
-
     }
 }
