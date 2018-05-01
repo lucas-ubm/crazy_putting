@@ -1,5 +1,6 @@
 package com.project.putting_game;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector3;
 
 public class Field {
@@ -16,11 +17,14 @@ public class Field {
                 if(course.equals("flat")){
                     matrix[i][j].height = 1;
                 }
-                else if(course.equals("slope")||course.equals("parabola")){
+                else if(course.equals("slope")){
                     matrix[i][j].height = i + j;
                 }
                 else if(course.equals("sinx+siny")){
-                    matrix[i][j].height = Math.sin((double)(j)/(400/5.1))+Math.sin((double)(i)/(240/5.1));
+                    matrix[i][j].height = Math.sin((double)(j)/(Gdx.graphics.getWidth()/2/5.1))+Math.sin((double)(i)/(Gdx.graphics.getHeight()/2/5.1));
+                }
+                else if(course.equals("parabola")){
+                    matrix[i][j].height = i*j;
                 }
                 matrix[i][j].friction = 0.4;
             }

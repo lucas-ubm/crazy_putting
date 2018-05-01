@@ -58,13 +58,13 @@ public class Game implements Screen {
                 if(field.matrix[x][y].height >=0) {
                     float value = 0.8f; //flat
                     if(course.equals("sinx+siny")) {
-                        value = -1 * map(Math.sin((double) (x) / (400 / 5.1)) + Math.sin((double) (y) / (240 / 5.1)), 2, -2);
+                        value = -1 * map(field.matrix[x][y].height, 2, -2);
                     }
                     else if (course.equals("slope")){
-                        value = -1*map(x+y, 1280,0);
+                        value = -1*map(field.matrix[x][y].height, Gdx.graphics.getWidth()+Gdx.graphics.getHeight(),0);
                     }
                     else if(course.equals("parabola")) {
-                        value = -1*map(x*y, 384000,0);
+                        value = -1*map(field.matrix[x][y].height, Gdx.graphics.getWidth()*Gdx.graphics.getHeight(),0);
                     }
                     pixmap.setColor(new Color(0,  value, 0, 1f));// set color White with Alpha=0.5
                 }
