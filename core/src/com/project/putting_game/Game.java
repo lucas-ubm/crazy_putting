@@ -33,8 +33,8 @@ public class Game implements Screen {
         camera.setToOrtho(false, 800, 480);
 
         //Create bucket Rectangle
-        ball = new Ball(new Vector3(0,0,0), new Vector3(80, 80, 0), "golfball.png", 32, 32);
-        hole = new Hole(new Vector3(300,300,0), "hole.png", 50, 50);
+        ball = new Ball(new Vector3(80, 80, 0), "golfball.png", 32);
+        hole = new Hole(new Vector3(300,300,0), "hole.png", 50);
         //Create field
         fieldShape = new Rectangle();
         fieldShape.x = 60;
