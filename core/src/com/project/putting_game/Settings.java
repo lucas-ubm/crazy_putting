@@ -9,11 +9,16 @@ package com.project.putting_game;
 import com.badlogic.gdx.math.Vector3;
 
 public interface Settings {
+    int windowWidth = 800;
+    int windowHeight = 480;
+
     Vector3 ballPosition = new Vector3(80,80,0);
-    int ballWidth = 32;
-    int ballHeight = 32;
+    int ballSide = 32;
 
     Vector3 holePosition = new Vector3(300,300,0);
+    int holeSide = 60;
+
+    int borderLength = 60;
 
 
 

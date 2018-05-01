@@ -7,7 +7,7 @@ package com.project.putting_game;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.Ellipse;
 import com.badlogic.gdx.math.Vector3;
 
 public class Ball {
@@ -15,12 +15,12 @@ public class Ball {
     public Vector3 position;
     public Vector3 prevPosition;
     public Texture ballImage;
-    public Rectangle shape;
+    public Ellipse shape;
     public Queue<Vector3> moveHistory;
 
 
-    public Ball(Vector3 velocity, Vector3 position, String path, int width, int height) {
-        this.velocity = velocity;
+    public Ball(Vector3 position, String path, int side) {
+        this.velocity = new Vector3(0,0,0);
         moveHistory = new Queue<Vector3>();
         moveHistory.enqueue(velocity);
         moveHistory = new Queue<Vector3>();
@@ -28,11 +28,11 @@ public class Ball {
         this.position = position;
         this.ballImage = new Texture(Gdx.files.internal(path));
         this.prevPosition = null;
-        this.shape = new Rectangle();
+        this.shape = new Ellipse();
         shape.x = position.x;
         shape.y = position.y;
-        shape.height = height;
-        shape.width = width;
+        shape.height = side;
+        shape.width = side;
 
     }
 

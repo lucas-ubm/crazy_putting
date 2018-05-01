@@ -11,15 +11,15 @@ public class Hole
     //height, width, x, y (floats)
     public Texture holeImage;
 
-    public Hole(Vector3 position, String path, int height, int width)
+    public Hole(Vector3 position, String path, int side)
     {
         this.position = position;
         this.holeImage = new Texture(Gdx.files.internal(path));
         this.holeShape = new Ellipse();
         holeShape.x = position.x;
         holeShape.y = position.y;
-        holeShape.height = height;
-        holeShape.width = width;
+        holeShape.height = side;
+        holeShape.width = side;
 
     }
 
