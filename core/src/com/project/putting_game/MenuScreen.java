@@ -52,16 +52,17 @@ public class MenuScreen implements Screen {
 		Gdx.input.setInputProcessor(stage);//let game take input from the stage
 		startButton = new TextButton("Play!", game.skin);
 		startButton.setPosition(Gdx.graphics.getWidth() / 2 - startButton.getWidth() / 2, 2 * Gdx.graphics.getHeight() / 6);
-		//When button 'Play!' is clicked set the screen to the GameScreen (and close MenuScreen)
+		//When button 'Play!' is clicked set the screen to the Game screen (and close MenuScreen)
 		startButton.addListener(new ClickListener() {
 			public void clicked(InputEvent event, float x, float y) {
 				if (checkBox2.isChecked()) {
 					game.setGameMode(false);
-					game.setScreen(new com.project.putting_game.SelectInputScreen(game));
+					game.setScreen(new com.project.putting_game.LoadInputScreen(game));
 				} else{
 					game.setGameMode(true);
-					game.setScreen(new com.project.putting_game.Game(game));
+					game.setScreen(new com.project.putting_game.SelectInputScreen(game));
 				}
+
 				dispose();
 			}
 		});

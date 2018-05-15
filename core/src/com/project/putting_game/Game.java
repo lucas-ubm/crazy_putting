@@ -5,6 +5,9 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector3;
+
+import java.io.BufferedReader;
+import java.io.FileReader;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
@@ -12,6 +15,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
+import java.util.StringTokenizer;
 
 public class Game implements Screen {
 	private OrthographicCamera camera;
@@ -20,27 +24,31 @@ public class Game implements Screen {
 	public int i =0;
 	private Rectangle fieldShape;
 	private Hole hole;
-	private Project2 game;
+	final Project2 game;
+	final private String filePath;
 	private boolean condition = true;
 	private String course;
 	private boolean gameMode1;
 
-	public Game (Project2 game) {
+	public Game (Project2 game, String filePath) {
 	    //Creation of camera
         this.game = game;
-        this.gameMode1 = game.gameMode1;
+        this.gameMode1 = game.getGameMode();
+        this.filePath = filePath;
         camera = new OrthographicCamera();
         camera.setToOrtho(false, 800, 480);
-
+		//TODO take input from file
+        Settings fieldVariables = textToSettings();
         //Create bucket Rectangle
-        ball = new Ball(new Vector3(80, 80, 0), "golfball.png", 32);
-        hole = new Hole(new Vector3(300,300,0), "hole.png", 50);
+        ball = new Ball(fieldVariables.startPosition, "golfball.png", 32);
+        hole = new Hole(fieldVariables.goalPosition, "hole.png", fieldVariables.goalRadius);
+        this.course = fieldVariables.courseFunction;
         //Create field
         fieldShape = new Rectangle();
         fieldShape.x = 60;
         fieldShape.y = 60;
-        fieldShape.width = 800 - 120;
-        fieldShape.height = 480 - 120;
+        fieldShape.width = Gdx.graphics.getWidth() - 60*2;
+        fieldShape.height = Gdx.graphics.getHeight() - 60*2;
 	}
 
 	public void render (float delta) {
@@ -49,23 +57,13 @@ public class Game implements Screen {
 		camera.update();
 		game.batch.setProjectionMatrix(camera.combined);
 		game.batch.begin();
-        course = "slope";
-
-        Field field = new Field(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), new Vector3(0, 0, 0), 3, course);
+        Field field = new Field(course);
+        System.out.println("Gothere");
         Pixmap pixmap = new Pixmap((int) Gdx.graphics.getWidth(), (int) Gdx.graphics.getHeight(), Pixmap.Format.RGBA8888);
 		for (int y = 0; y < Gdx.graphics.getHeight(); y++) {
-        for (int x = 0; x < Gdx.graphics.getWidth(); x++) {
-                if(field.matrix[x][y].height >=0) {
-                    float value = 0.8f; //flat
-                    if(course.equals("sinx+siny")) {
-                        value = -1 * map(Math.sin((double) (x) / (400 / 5.1)) + Math.sin((double) (y) / (240 / 5.1)), 2, -2);
-                    }
-                    else if (course.equals("slope")){
-                        value = -1*map(x+y, 1280,0);
-                    }
-                    else if(course.equals("parabola")) {
-                        value = -1*map(x*y, 384000,0);
-                    }
+            for (int x = 0; x < Gdx.graphics.getWidth(); x++) {
+                if(field.getMatrix()[x][y].height >=0) {
+                	float  value = -1*map(field.getMatrix()[x][y].height, field.getMax(),field.getMin());
                     pixmap.setColor(new Color(0,  value, 0, 1f));// set color White with Alpha=0.5
                 }
                 else{
@@ -74,6 +72,7 @@ public class Game implements Screen {
                 pixmap.drawPixel(x, y);
             }
         }
+
         fieldTexture = new Texture(pixmap);
         pixmap.dispose();
 
@@ -129,7 +128,6 @@ public class Game implements Screen {
             }
             if(ball.position.x > 800 - 92) {
                 ball.position = ball.prevPosition;
-
             }
             if(ball.position.y < 60) {
                 ball.position = ball.prevPosition;
@@ -193,6 +191,36 @@ public class Game implements Screen {
         this.gameMode1 = gameMode1;
     }
 
+    public Settings textToSettings() {
+	    try{
+            FileReader reader = new FileReader(filePath);
+            BufferedReader in = new BufferedReader(reader);
+            String line = in.readLine();
+            ArrayList<String> fileString = new ArrayList<String>();
+            int i = 0;
+            while (line!=null){
+                StringTokenizer st = new StringTokenizer(line);
+
+                while (st.hasMoreTokens() && i!=0)
+                        fileString.add(st.nextToken());
+                if(i == 0) fileString.add(line);
+                line = in.readLine();
+                i++;
+            }
+            in.close();
+            reader.close();
+            System.out.println(fileString);
+            Settings result = new Settings(fileString.get(0),new Vector3(Integer.parseInt(fileString.get(1)),
+                    Integer.parseInt(fileString.get(2)),0), new Vector3(Integer.parseInt(fileString.get(3)),
+                    Integer.parseInt(fileString.get(4)),0), Integer.parseInt(fileString.get(5)));
+            return result;
+        }
+        catch(IOException i){
+	        System.out.println("File mistake, probably");
+        }
+        return null;
+    }
+
     public static void outputGame(Ball ball) {
         String move;
         ArrayList<String> lines = new ArrayList<String>();
@@ -200,7 +228,6 @@ public class Game implements Screen {
             move = ball.moveHistory.dequeue().toString();
             System.out.println(move);
             lines.add(move);
-
         }
         try {
             lines.add("");
@@ -210,7 +237,6 @@ public class Game implements Screen {
         catch(IOException e) {
             System.out.println("You fucked up");
         }
-
     }
 
 

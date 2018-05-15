@@ -43,7 +43,7 @@ public class WinScreen implements Screen {
         //When button 'Play again!' is clicked, set the screen to the Game (and close WinScreen)
         playAgain.addListener(new ClickListener(){
             public void clicked(InputEvent event,float x, float y){
-                game.setScreen(new com.project.putting_game.Game(game));
+                game.setScreen(new com.project.putting_game.Game(game,"course.txt"));
                 dispose();
             }
         });

@@ -1,0 +1,4 @@
+course:
+start position:
+goal position:
+goal radius:

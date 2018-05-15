@@ -1,5 +1,6 @@
 package com.project.putting_game;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 
@@ -39,17 +40,17 @@ public class Engine {
         ball.velocity.y = (float) vy_h;
 
         //Get the friction of the surface at current location ball
-        CurrentFriction = fields.matrix[(int) ball.position.x][(int) ball.position.y].friction;
+        CurrentFriction = fields.getMatrix()[(int) ball.position.x][(int) ball.position.y].friction;
 
         //Get the height of the field at current location ball
-        currentHeight = fields.matrix[(int) ball.position.x][(int) ball.position.y].height;
-
+        currentHeight = fields.getMatrix()[(int) ball.position.x][(int) ball.position.y].height;
 
         //Checks whether the ball has touched the walls or touched the water. If it did, return to the previous position and set velocity to 0.
-        int border = Settings.borderLength;
-        int ballSide = Settings.ballSide;
+        int border = 60;
+        int ballSide =(int) ball.shape.height;
         int side = border + ballSide;
-        if (ball.position.x <= border || ball.position.y <= border || ball.position.x >= Settings.windowWidth - side || ball.position.y >= Settings.windowHeight - side || water(ball, fields)) {
+        if (ball.position.x <= border || ball.position.y <= border || ball.position.x >= Gdx.graphics.getWidth() - side ||
+                ball.position.y >= Gdx.graphics.getHeight() - side || water(ball, fields)) {
 //             System.out.println("Previous " + ball.prevPosition);
             ball.position = ball.prevPosition;
             ball.velocity = new Vector3(0, 0, 0);
@@ -77,10 +78,10 @@ public class Engine {
 
     public static boolean water(Ball ball, Field field) {
         Vector2 topLeft = new Vector2(ball.position.x - ball.shape.width / 2, ball.position.y - ball.shape.height / 2);
-        for (int i = (int)topLeft.x; i < topLeft.x + Settings.ballSide * 2; i++) {
-            for (int j = (int)topLeft.y; j < topLeft.y + Settings.ballSide * 2; j++) {
+        for (int i = (int)topLeft.x; i < topLeft.x + ball.shape.height * 2; i++) {
+            for (int j = (int)topLeft.y; j < topLeft.y + ball.shape.height * 2; j++) {
                 if (ball.shape.contains(new Vector2(i, j))) {
-                    if(field.matrix[i][j].height < 0){
+                    if(field.getMatrix()[i][j].height < 0){
                         return true;
                     }
                 }

@@ -13,7 +13,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.*;
 public class Project2 extends Game {
 	public SpriteBatch batch;
 	public BitmapFont font;
-	public boolean gameMode1;
+	private boolean gameMode1;
 	public String inputfile = "Input.txt";
 	public Skin uiskin;
 	public Skin skin;
@@ -75,10 +75,13 @@ public class Project2 extends Game {
 	public void dispose () {
 		batch.dispose();
 		font.dispose();
-		//GameScreen.dispose();
+		//Game.dispose();
 	}
 
 	public void setGameMode(boolean gameMode) {
 		this.gameMode1 = gameMode;
+	}
+	public boolean getGameMode() {
+		return gameMode1;
 	}
 }
