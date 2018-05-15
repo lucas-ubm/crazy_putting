@@ -37,17 +37,9 @@ public class SelectInputScreen implements Screen {
 
 		stage = new Stage(new ScreenViewport());
 		Gdx.input.setInputProcessor(stage);
-		load = new TextButton("Load course from file", game.skin);
-		load.setPosition(Gdx.graphics.getWidth()/2-load.getWidth()/2,7*Gdx.graphics.getHeight()/8);
-		load.addListener(new ClickListener(){
-			public void clicked(InputEvent event, float x, float y) {
-				game.setScreen(new com.project.putting_game.LoadInputScreen(game));
-			}
-		});
-		stage.addActor(load);
 
 		Label courseLabel = new Label("course function:",game.skin);
-		courseLabel.setPosition(padding,load.getY()-courseLabel.getHeight()-padding);
+		courseLabel.setPosition(padding, 7*Gdx.graphics.getHeight()/8);
 		stage.addActor(courseLabel);
 		courseField = new TextField(" ",game.skin);
 		courseField.setSize(courseField.getPrefWidth(),courseLabel.getHeight());

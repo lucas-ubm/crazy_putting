@@ -19,6 +19,7 @@ public class MenuScreen implements Screen {
 	private Stage stage;
 	private TextButton startButton;
 	private TextButton controlsButton;
+	private TextButton designButton;
 	private Texture golfImg;
 	private Rectangle golf;
 	private ButtonGroup radioButtons;
@@ -51,23 +52,33 @@ public class MenuScreen implements Screen {
 		stage = new Stage(new ScreenViewport());
 		Gdx.input.setInputProcessor(stage);//let game take input from the stage
 		startButton = new TextButton("Play!", game.skin);
-		startButton.setPosition(Gdx.graphics.getWidth() / 2 - startButton.getWidth() / 2, 2 * Gdx.graphics.getHeight() / 6);
+		startButton.setPosition(Gdx.graphics.getWidth() / 2 - startButton.getWidth() / 2, 3 * Gdx.graphics.getHeight() / 6);
 		//When button 'Play!' is clicked set the screen to the Game screen (and close MenuScreen)
 		startButton.addListener(new ClickListener() {
 			public void clicked(InputEvent event, float x, float y) {
 				if (checkBox2.isChecked()) {
 					game.setGameMode(false);
-					game.setScreen(new com.project.putting_game.LoadInputScreen(game));
 				} else{
 					game.setGameMode(true);
-					game.setScreen(new com.project.putting_game.SelectInputScreen(game));
 				}
-
+				game.setScreen(new com.project.putting_game.LoadInputScreen(game));
 				dispose();
 			}
 		});
 
 		stage.addActor(startButton);
+
+		designButton = new TextButton("Design Course", game.skin);
+		designButton.setPosition(Gdx.graphics.getWidth() / 2 - designButton.getWidth() / 2, 2*Gdx.graphics.getHeight() / 6);
+		//When button 'Design Course' is clicked set the screen to the SelectInputScreen (and close MenuScreen)
+		designButton.addListener(new ClickListener() {
+			public void clicked(InputEvent event, float x, float y) {
+				game.setScreen(new com.project.putting_game.SelectInputScreen(game));
+				dispose();
+			}
+		});
+		stage.addActor(designButton);
+
 		controlsButton = new TextButton("Controls", game.skin);
 		controlsButton.setPosition(Gdx.graphics.getWidth() / 2 - controlsButton.getWidth() / 2, Gdx.graphics.getHeight() / 6);
 		//When button 'Controls' is clicked set the screen to the ControlsScreen (and close MenuScreen)
@@ -80,7 +91,7 @@ public class MenuScreen implements Screen {
 		stage.addActor(controlsButton);
 		//create buttons and labels for choosing which mode to play
 		mode1Label = new Label("Mode 1", game.skin);
-		mode1Label.setPosition(Gdx.graphics.getWidth() / 2 - mode1Label.getWidth() / 2, 3 * Gdx.graphics.getHeight() / 6);
+		mode1Label.setPosition(Gdx.graphics.getWidth() / 2 - mode1Label.getWidth() / 2, 4 * Gdx.graphics.getHeight() / 6);
 		mode2Label = new Label("Mode 2", game.skin);
 		mode2Label.setPosition(Gdx.graphics.getWidth() / 2 - mode2Label.getWidth() / 2, mode1Label.getY() - mode2Label.getHeight());
 		checkImg = new Texture(Gdx.files.internal("checked.png"));

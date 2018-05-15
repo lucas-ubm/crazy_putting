@@ -29,6 +29,7 @@ public class Game implements Screen {
 	private boolean condition = true;
 	private String course;
 	private boolean gameMode1;
+	private Field field;
 
 	public Game (Project2 game, String filePath) {
 	    //Creation of camera
@@ -49,21 +50,14 @@ public class Game implements Screen {
         fieldShape.y = 60;
         fieldShape.width = Gdx.graphics.getWidth() - 60*2;
         fieldShape.height = Gdx.graphics.getHeight() - 60*2;
-	}
 
-	public void render (float delta) {
-		Gdx.gl.glClearColor(0, 0, 0.2f, 1);
-		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-		camera.update();
-		game.batch.setProjectionMatrix(camera.combined);
-		game.batch.begin();
         Field field = new Field(course);
-        System.out.println("Gothere");
+        this.field = field;
         Pixmap pixmap = new Pixmap((int) Gdx.graphics.getWidth(), (int) Gdx.graphics.getHeight(), Pixmap.Format.RGBA8888);
-		for (int y = 0; y < Gdx.graphics.getHeight(); y++) {
+        for (int y = 0; y < Gdx.graphics.getHeight(); y++) {
             for (int x = 0; x < Gdx.graphics.getWidth(); x++) {
                 if(field.getMatrix()[x][y].height >=0) {
-                	float  value = -1*map(field.getMatrix()[x][y].height, field.getMax(),field.getMin());
+                    float  value = -1*map(field.getMatrix()[x][y].height, field.getMax(),field.getMin());
                     pixmap.setColor(new Color(0,  value, 0, 1f));// set color White with Alpha=0.5
                 }
                 else{
@@ -72,10 +66,16 @@ public class Game implements Screen {
                 pixmap.drawPixel(x, y);
             }
         }
-
-        fieldTexture = new Texture(pixmap);
+        this.fieldTexture = new Texture(pixmap);
         pixmap.dispose();
+	}
 
+	public void render (float delta) {
+		Gdx.gl.glClearColor(0, 0, 0.2f, 1);
+		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+		camera.update();
+		game.batch.setProjectionMatrix(camera.combined);
+		game.batch.begin();
         game.batch.draw(fieldTexture, fieldShape.x, fieldShape.y, fieldShape.width, fieldShape.height);
 		game.batch.draw(ball.ballImage, ball.position.x, ball.position.y, ball.shape.width, ball.shape.height);
 		game.batch.draw(hole.holeImage, hole.position.x, hole.position.y, hole.holeShape.width, hole.holeShape.height );
