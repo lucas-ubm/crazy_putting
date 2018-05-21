@@ -9,7 +9,7 @@ public class Engine {
     public static final double g = 9.81;
     public static double CurrentFriction;
     public static double currentHeight;
-    public static final double h = 0.001;
+    public static final double h = 0.01;
     public static double xh;
     public static double yh;
     public static double vx_h;
@@ -40,10 +40,10 @@ public class Engine {
         ball.velocity.y = (float) vy_h;
 
         //Get the friction of the surface at current location ball
-        CurrentFriction = fields.getMatrix()[(int) ball.position.x][(int) ball.position.y].friction;
+        CurrentFriction = fields.getMatrix()[(int) ball.position.y][(int) ball.position.x].friction;
 
         //Get the height of the field at current location ball
-        currentHeight = fields.getMatrix()[(int) ball.position.x][(int) ball.position.y].height;
+        currentHeight = fields.getMatrix()[(int) ball.position.y][(int) ball.position.x].height;
 
         //Checks whether the ball has touched the walls or touched the water. If it did, return to the previous position and set velocity to 0.
         int border = 60;
@@ -59,13 +59,13 @@ public class Engine {
     }
 
 
-    //*Method to calculate the force on the ball at the x-axis. This method is used when calculating the new velocity*//
+    /**Method to calculate the force on the ball at the x-axis. This method is used when calculating the new velocity*/
     public static double forceX(Ball ball) {
         double Fx = ((-g) * (0)) - (CurrentFriction * g * vx);
         return Fx;
     }
 
-    //*Method to calculate the force on the ball at the y-axis. This method is used when calculating the new velocity*//
+    /**Method to calculate the force on the ball at the y-axis. This method is used when calculating the new velocity*/
     public static double forceY() {
         double Fy = ((-g) * (0)) - (CurrentFriction * g * vy);
         return Fy;
