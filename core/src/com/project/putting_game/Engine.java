@@ -9,7 +9,7 @@ public class Engine {
     public static final double g = 9.81;
     public static double CurrentFriction;
     public static double currentHeight;
-    public static final double h = 0.00;
+    public static final double h = 0.001;
     public static double xh;
     public static double yh;
     public static double vx_h;

@@ -92,11 +92,12 @@ public class Game implements Screen {
             camera.unproject(touchPos);
             origin.set((int)touchPos.x - 64/2, (int)touchPos.y - 64/2, 0);
 
-            ballPos.set((int)ball.position.x, (int)ball.position.y, 0);
+            ballPos.set((int)(ball.position.x-ball.shape.height/2), (int)(ball.position.y-ball.shape.height/2), 0);
             Vector3 direction = new Vector3();
 
             direction.set((ballPos.x-origin.x), (ballPos.y-origin.y), 0);
-            ball.setUserVelocity(direction.scl(3f));
+            ball.setUserVelocity(direction.scl(15f));
+            System.out.println(ball.velocity);
             ball.prevPosition = ballPos;
 
         }
@@ -137,7 +138,7 @@ public class Game implements Screen {
             }
 
         }
-        if(ball.velocity.len() < 200){
+        if(ball.velocity.len() < 350){
 		    ball.velocity.x = 0;
 		    ball.velocity.y = 0;
 		    condition = true;
