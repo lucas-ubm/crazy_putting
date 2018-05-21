@@ -5,6 +5,7 @@ import java.util.ArrayList;
 public class FunctionAnalyser {
 
 	public static ArrayList<String> ShuntingYard(String function){
+
 		ArrayList<String> reverse= new ArrayList<String>();
 		MyStack<Character> operators = new MyStack<Character>();
 		int i = 0;
@@ -123,5 +124,22 @@ public class FunctionAnalyser {
 				stack.push(Double.parseDouble(token));
 		}
 		return stack.pop();
+	}
+
+	public static double runge_kutta (ArrayList<String> reverse, double t0, double t, double h, double y0){
+		double k1,k2,k3,k4;
+		System.out.println("here");
+		while (t0 < t){
+			k1 = h*FunctionAnalyser.reversePolish(reverse, t0, y0);
+			k2 = h*FunctionAnalyser.reversePolish(reverse, t0+1/3*h, y0+1/3*k1);
+			k3 = h*FunctionAnalyser.reversePolish(reverse, t0+2/3*h, y0-1/3*k1+k2);
+			k4 = h*FunctionAnalyser.reversePolish(reverse, t+h, y0+k1-k2+k3);
+
+			y0 =+ 1/8*(k1 + 3*k2 + 3*k3 + k4);
+			t0=+h;
+			System.out.println(t0);
+		}
+		return y0;
+
 	}
 }
