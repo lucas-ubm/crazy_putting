@@ -4,6 +4,9 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+
 public class Engine {
 
     public static final double g = 9.81;
@@ -18,7 +21,7 @@ public class Engine {
     public static double vy;
 
 
-    public static void calculate(Ball ball, Field fields) {
+    public static void calculate(Ball ball, Field fields, ArrayList<String> formula) {
         //Getting the current location and velocity of the ball
         double x = ball.position.x;
         double y = ball.position.y;
@@ -28,7 +31,7 @@ public class Engine {
         //Calculating the next location and velocity of the ball per timestep
         xh = x + h * vx;
         yh = y + h * vy;
-        vx_h = vx + h * forceX(ball);
+        vx_h = vx + h * forceX(ball, formula);
         vy_h = vy + h * forceY();
 
         //Storing the newly obtained velocities and locations in the Ball object
@@ -60,8 +63,8 @@ public class Engine {
 
 
     /**Method to calculate the force on the ball at the x-axis. This method is used when calculating the new velocity*/
-    public static double forceX(Ball ball) {
-        double Fx = ((-g) * (0)) - (CurrentFriction * g * vx);
+    public static double forceX(Ball ball, ArrayList<String> formula) {
+        double Fx = ((-g) * FunctionAnalyser.runge_kutta(formula, )) - (CurrentFriction * g * vx);
         return Fx;
     }
 

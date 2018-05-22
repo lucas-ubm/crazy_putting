@@ -74,7 +74,7 @@ public class FunctionAnalyser {
 				result = Math.sin(operand1);
 				stack.push(result);
 			}
-			else if(token.equals("c") || token.equals("t")) {
+			else if(token.equals("c")) {
 				operand1 = stack.pop();
 				result = Math.cos(operand1);
 				stack.push(result);
@@ -96,7 +96,7 @@ public class FunctionAnalyser {
 				result = operand1/operand2;
 				stack.push(result);
 			}
-			else if(token.equals("*") || token.equals("+") || token.equals("-")) {
+			else if(token.equals("*")) {
 				operand2 = stack.pop();
 				operand1 = stack.pop();
 				result = operand1*operand2;
@@ -105,13 +105,13 @@ public class FunctionAnalyser {
 			else if(token.equals("+")) {
 				operand2 = stack.pop();
 				operand1 = stack.pop();
-				result = operand1-operand2;
+				result = operand1+operand2;
 				stack.push(result);
 			}
 			else if(token.equals("-")) {
 				operand2 = stack.pop();
 				operand1 = stack.pop();
-				result = operand1+operand2;
+				result = operand1-operand2;
 				stack.push(result);
 			}
 			else if (token.equals("x")){
@@ -126,6 +126,15 @@ public class FunctionAnalyser {
 		return stack.pop();
 	}
 
+	/**
+	 *
+	 * @param reverse the formula in reverse polish notation
+	 * @param t0 the initial time
+	 * @param t the value that you want to calculate
+	 * @param h the timestep so the precision which you want to calculate it
+	 * @param y0 the value of the formula at the initial time
+	 * @return the value of the function at the desired point
+	 */
 	public static double runge_kutta (ArrayList<String> reverse, double t0, double t, double h, double y0){
 		double k1,k2,k3,k4;
 		System.out.println(reverse);
@@ -134,13 +143,12 @@ public class FunctionAnalyser {
 			k2 = h*FunctionAnalyser.reversePolish(reverse, t0+1/3.0*h, y0+1/3.0*k1);
 			k3 = h*FunctionAnalyser.reversePolish(reverse, t0+2/3.0*h, y0-1/3.0*k1+k2);
 			k4 = h*FunctionAnalyser.reversePolish(reverse, t0+h, y0+k1-k2+k3);
-			System.out.println(k1+ " " + k2+ " " + k3+ " " + k4);
 			y0 = y0+ 1/8.0*(k1 + 3*k2 + 3*k3 + k4);
 
 			t0+=h;
-			System.out.println(y0);
 		}
 		return y0;
 
 	}
+	
 }

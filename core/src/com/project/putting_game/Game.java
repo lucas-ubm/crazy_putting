@@ -28,6 +28,7 @@ public class Game implements Screen {
 	final Project2 game;
 	final private String file;
 	private boolean condition = true;
+	private ArrayList<String> fieldFormula;
 	private String course;
 	private boolean gameMode1;
 
@@ -40,6 +41,7 @@ public class Game implements Screen {
         camera.setToOrtho(false, 800, 480);
 
 		Settings fieldVariables = textToSettings();
+		this.fieldFormula = FunctionAnalyser.ShuntingYard(fieldVariables.courseFunction);
 		//Create bucket Rectangle
 		ball = new Ball(fieldVariables.startPosition, "golfball.png", 32);
 		hole = new Hole(fieldVariables.goalPosition, "hole.png", fieldVariables.goalRadius);
@@ -121,7 +123,7 @@ public class Game implements Screen {
         if(ball.velocity.len() >= 0.02) {
 		    condition = false;
             //Makes sure the bucket doesn't get out of the window
-            Engine.calculate(ball, field);
+            Engine.calculate(ball, field, fieldFormula);
             if(ball.position.x < 60){
                 ball.position = ball.prevPosition;
             }
