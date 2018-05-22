@@ -210,7 +210,8 @@ public class Game implements Screen {
 			System.out.println(fileString);
 			Settings result = new Settings(fileString.get(0),new Vector3(Integer.parseInt(fileString.get(1)),
 					Integer.parseInt(fileString.get(2)),0), new Vector3(Integer.parseInt(fileString.get(3)),
-					Integer.parseInt(fileString.get(4)),0), Integer.parseInt(fileString.get(5)));
+					Integer.parseInt(fileString.get(4)),0), Integer.parseInt(fileString.get(5)),
+                    Integer.parseInt(fileString.get(6)));
 			return result;
 		}
 		catch(IOException i){

@@ -128,16 +128,17 @@ public class FunctionAnalyser {
 
 	public static double runge_kutta (ArrayList<String> reverse, double t0, double t, double h, double y0){
 		double k1,k2,k3,k4;
-		System.out.println("here");
+		System.out.println(reverse);
 		while (t0 < t){
 			k1 = h*FunctionAnalyser.reversePolish(reverse, t0, y0);
-			k2 = h*FunctionAnalyser.reversePolish(reverse, t0+1/3*h, y0+1/3*k1);
-			k3 = h*FunctionAnalyser.reversePolish(reverse, t0+2/3*h, y0-1/3*k1+k2);
-			k4 = h*FunctionAnalyser.reversePolish(reverse, t+h, y0+k1-k2+k3);
+			k2 = h*FunctionAnalyser.reversePolish(reverse, t0+1/3.0*h, y0+1/3.0*k1);
+			k3 = h*FunctionAnalyser.reversePolish(reverse, t0+2/3.0*h, y0-1/3.0*k1+k2);
+			k4 = h*FunctionAnalyser.reversePolish(reverse, t0+h, y0+k1-k2+k3);
+			System.out.println(k1+ " " + k2+ " " + k3+ " " + k4);
+			y0 = y0+ 1/8.0*(k1 + 3*k2 + 3*k3 + k4);
 
-			y0 =+ 1/8*(k1 + 3*k2 + 3*k3 + k4);
-			t0=+h;
-			System.out.println(t0);
+			t0+=h;
+			System.out.println(y0);
 		}
 		return y0;
 
