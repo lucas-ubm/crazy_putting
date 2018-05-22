@@ -150,5 +150,14 @@ public class FunctionAnalyser {
 		return y0;
 
 	}
-	
+
+	public static double derivative(ArrayList<String> reverse, double x, String respect) {
+		if(respect.equalsIgnoreCase("x")) {
+			return (FunctionAnalyser.reversePolish(reverse,x+1e-10,0)-FunctionAnalyser.reversePolish(reverse,x,0))/1e-10;
+		}
+		else {
+			return (FunctionAnalyser.reversePolish(reverse,0,x+1e-10)-FunctionAnalyser.reversePolish(reverse,0,x))/1e-10;
+		}
+	}
+
 }

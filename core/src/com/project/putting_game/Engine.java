@@ -4,7 +4,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public class Engine {
@@ -64,7 +63,7 @@ public class Engine {
 
     /**Method to calculate the force on the ball at the x-axis. This method is used when calculating the new velocity*/
     public static double forceX(Ball ball, ArrayList<String> formula) {
-        double Fx = ((-g) * FunctionAnalyser.runge_kutta(formula, )) - (CurrentFriction * g * vx);
+        double Fx = ((-g) * ) - (CurrentFriction * g * vx);
         return Fx;
     }
 
