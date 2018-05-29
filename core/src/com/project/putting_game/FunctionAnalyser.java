@@ -151,12 +151,12 @@ public class FunctionAnalyser {
 
 	}
 
-	public static double derivative(ArrayList<String> reverse, double x, String respect) {
+	public static double derivative(ArrayList<String> reverse, double x, double y, String respect) {
 		if(respect.equalsIgnoreCase("x")) {
-			return (FunctionAnalyser.reversePolish(reverse,x+1e-10,0)-FunctionAnalyser.reversePolish(reverse,x,0))/1e-10;
+			return (FunctionAnalyser.reversePolish(reverse,x+1e-10,y)-FunctionAnalyser.reversePolish(reverse,x,y))/1e-10;
 		}
 		else {
-			return (FunctionAnalyser.reversePolish(reverse,0,x+1e-10)-FunctionAnalyser.reversePolish(reverse,0,x))/1e-10;
+			return (FunctionAnalyser.reversePolish(reverse,x,y+1e-10)-FunctionAnalyser.reversePolish(reverse,x,y))/1e-10;
 		}
 	}
 

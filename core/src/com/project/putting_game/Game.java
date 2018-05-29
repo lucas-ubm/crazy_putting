@@ -57,7 +57,7 @@ public class Game implements Screen {
 		for (int y = 0; y < Gdx.graphics.getHeight(); y++) {
 			for (int x = 0; x < Gdx.graphics.getWidth(); x++) {
 				if(field.getMatrix()[y][x].height >=0) {
-					float  value = -1*map(field.getMatrix()[y][x].height, field.getMax(),field.getMin());
+					float  value = -1*map(field.getMatrix()[y][x].height, field.getMax());
 					pixmap.setColor(new Color(0,  value, 0, 1f));// set color White with Alpha=0.5
 				}
 				else{
@@ -182,8 +182,9 @@ public class Game implements Screen {
     public void resume() {
     }
 
-    public static float map (double x, double max, double min) {
-	    return (float) (0 - (max-x)/(max-min));
+    public static float map (double x, double max) {
+
+	    return (float) (0 - (x)/(max));
 
     }
 

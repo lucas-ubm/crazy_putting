@@ -1,7 +1,6 @@
 package com.project.putting_game;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 
 import java.util.ArrayList;
@@ -31,7 +30,7 @@ public class Engine {
         xh = x + h * vx;
         yh = y + h * vy;
         vx_h = vx + h * forceX(ball, formula);
-        vy_h = vy + h * forceY();
+        vy_h = vy + h * forceY(ball, formula);
 
         //Storing the newly obtained velocities and locations in the Ball object
         ball.position.x = (float) xh;
@@ -51,8 +50,9 @@ public class Engine {
         int border = 60;
         int ballSide =(int) ball.shape.height;
         int side = border + ballSide;
+        double currentHeight = fields.getMatrix()[(int)ball.position.y][(int)ball.position.x].height;
         if (ball.position.x <= border || ball.position.y <= border || ball.position.x >= Gdx.graphics.getWidth() - side ||
-                ball.position.y >= Gdx.graphics.getHeight() - side || water(ball, fields)) {
+                ball.position.y >= Gdx.graphics.getHeight() - side || currentHeight < 0) {
 //             System.out.println("Previous " + ball.prevPosition);
             ball.position = ball.prevPosition;
             ball.velocity = new Vector3(0, 0, 0);
@@ -63,33 +63,14 @@ public class Engine {
 
     /**Method to calculate the force on the ball at the x-axis. This method is used when calculating the new velocity*/
     public static double forceX(Ball ball, ArrayList<String> formula) {
-        double Fx = ((-g) * ) - (CurrentFriction * g * vx);
+        double Fx = ((-g) * FunctionAnalyser.derivative(formula, ball.position.x, ball.position.y, "x")) - (CurrentFriction * g * vx);
         return Fx;
     }
 
     /**Method to calculate the force on the ball at the y-axis. This method is used when calculating the new velocity*/
-    public static double forceY() {
-        double Fy = ((-g) * (0)) - (CurrentFriction * g * vy);
+    public static double forceY(Ball ball, ArrayList<String> formula) {
+        double Fy = ((-g) * FunctionAnalyser.derivative(formula, ball.position.x, ball.position.y, "y")) - (CurrentFriction * g * vy);
         return Fy;
-    }
-
-//Right now, input is the ball object containing vectors. The output is only one position.
-//Now we get 2 positions, current pos + position we want to get too. Now we want to know what force we have to use to get to that point.
-//So we simulate the movement of the ball to place X.
-
-
-    public static boolean water(Ball ball, Field field) {
-        Vector2 topLeft = new Vector2(ball.position.x - ball.shape.width / 2, ball.position.y - ball.shape.height / 2);
-        for (int i = (int)topLeft.x; i < topLeft.x + ball.shape.height * 2; i++) {
-            for (int j = (int)topLeft.y; j < topLeft.y + ball.shape.height * 2; j++) {
-                if (ball.shape.contains(new Vector2(i, j))) {
-                    if(field.getMatrix()[i][j].height < 0){
-                        return true;
-                    }
-                }
-            }
-        }
-        return false;
     }
 
 }

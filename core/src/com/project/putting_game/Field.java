@@ -91,19 +91,21 @@ public class Field {
 		        }
         }else{
 	        ArrayList<String> function = FunctionAnalyser.ShuntingYard(course);
-			max= FunctionAnalyser.reversePolish(function,0,0);
-			min=max;
+	        System.out.println("Hey");
+			this.max = 0;
+			this.min = max;
 	        for(int i = 0; i < matrix.length; i++) {
 	            for(int j = 0; j < matrix[0].length; j++) {
 	                matrix[i][j] = new Properties();
-	                matrix[i][j].height = FunctionAnalyser.reversePolish(function,i,j);
+	                matrix[i][j].height = FunctionAnalyser.reversePolish(function,j,i);
 	                if(matrix[i][j].height>max)
-	                    max= matrix[i][j].height;
+	                    this.max= matrix[i][j].height;
 	                if(matrix[i][j].height<min)
-	                    min=matrix[i][j].height;
+	                    this.min=matrix[i][j].height;
 	                matrix[i][j].friction = 0.4;
 	            }
 	        }
+	        System.out.println(max+" " + min);
        }
     }
 }
