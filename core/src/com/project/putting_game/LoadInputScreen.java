@@ -4,17 +4,16 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.scenes.scene2d.ui.TextField;
+import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import com.badlogic.gdx.graphics.Color;
 
-import java.io.FileNotFoundException;
-import java.io.FileReader;
+import java.io.*;
 
 public class LoadInputScreen implements Screen {
 	final Project2 game;
@@ -63,7 +62,7 @@ public class LoadInputScreen implements Screen {
 						error.setText("");
 						game.inputfile = file;
 						//give default course
-						game.setScreen(new com.project.putting_game.Game(game,"course.txt"));
+						game.setScreen(new com.project.putting_game.Game(game,"demo.txt"));
 						dispose();
 					}// else display error and try again
 					catch(FileNotFoundException exception){
@@ -74,28 +73,17 @@ public class LoadInputScreen implements Screen {
 		}else {
 			ok.addListener(new ClickListener(){
 				public void clicked(InputEvent event, float x, float y) {
-					game.setScreen(new com.project.putting_game.Game(game, "demo.txt"));
-					/*try{//TODO
+					try{//TODO check inputs
 						String file = fileField.getText()+".txt";
 						FileReader reader = new FileReader(file);
-						BufferedReader in = new BufferedReader(reader);
-						String line = in.readLine();
-						while (line!=null){
-							for (int i=0; i<=line.length()-word.length(); i++)
-								//= because first letter of substring is first letter of word
-								if (line.substring(i,i+word.length()).equals(word))
-									System.out.println(file+": "+line);
-							line = in.readLine();
-						}
-						//Field Course1 = new Field();
 						//succeeds then
 						error.setText("");
-						game.setScreen(new com.project.putting_game.Game(game));
+						game.setScreen(new com.project.putting_game.Game(game,file));
 						dispose();
 					}// else display error and try again
 					catch(FileNotFoundException exception){
 						error.setText("Input was a non-existing file");
-					}*/
+					}
 				}
 			});
 		}

@@ -20,6 +20,7 @@ public class Project2 extends Game {
 	public TextButton.TextButtonStyle textButtonStyle;
 	public Label.LabelStyle labelStyle;
 	public TextField.TextFieldStyle textFieldStyle;
+	final public int borderLength = 60;
 
 	@Override
 	/** Gets called when 'run' is clicked.

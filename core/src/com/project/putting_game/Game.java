@@ -28,7 +28,6 @@ public class Game implements Screen {
 	final Project2 game;
 	final private String file;
 	private boolean condition = true;
-	private ArrayList<String> fieldFormula;
 	private String course;
 	private boolean gameMode1;
 
@@ -41,23 +40,22 @@ public class Game implements Screen {
         camera.setToOrtho(false, 800, 480);
 
 		Settings fieldVariables = textToSettings();
-		this.fieldFormula = FunctionAnalyser.ShuntingYard(fieldVariables.courseFunction);
 		//Create bucket Rectangle
 		ball = new Ball(fieldVariables.startPosition, "golfball.png", 32);
 		hole = new Hole(fieldVariables.goalPosition, "hole.png", fieldVariables.goalRadius);
 		this.course = fieldVariables.courseFunction;
 		//Create field
         fieldShape = new Rectangle();
-        fieldShape.x = fieldVariables.borderLength;
-        fieldShape.y = fieldVariables.borderLength;
-        fieldShape.width = Gdx.graphics.getWidth() - fieldVariables.borderLength*2;
-        fieldShape.height = Gdx.graphics.getHeight() - fieldVariables.borderLength*2;
-		field = new Field(course);
+        fieldShape.x = game.borderLength;
+        fieldShape.y = game.borderLength;
+        fieldShape.width = Gdx.graphics.getWidth() - game.borderLength*2;
+        fieldShape.height = Gdx.graphics.getHeight() - game.borderLength*2;
+		field = new Field(course.replaceAll(" ",""));
 		Pixmap pixmap = new Pixmap((int) Gdx.graphics.getWidth(), (int) Gdx.graphics.getHeight(), Pixmap.Format.RGBA8888);
 		for (int y = 0; y < Gdx.graphics.getHeight(); y++) {
 			for (int x = 0; x < Gdx.graphics.getWidth(); x++) {
 				if(field.getMatrix()[y][x].height >=0) {
-					float  value = -1*map(field.getMatrix()[y][x].height, field.getMax());
+					float  value = -1*map(field.getMatrix()[y][x].height, field.getMax(),field.getMin());
 					pixmap.setColor(new Color(0,  value, 0, 1f));// set color White with Alpha=0.5
 				}
 				else{
@@ -123,7 +121,7 @@ public class Game implements Screen {
         if(ball.velocity.len() >= 0.02) {
 		    condition = false;
             //Makes sure the bucket doesn't get out of the window
-            Engine.calculate(ball, field, fieldFormula);
+            Engine.calculate(ball, field);
             if(ball.position.x < 60){
                 ball.position = ball.prevPosition;
             }
@@ -182,9 +180,8 @@ public class Game implements Screen {
     public void resume() {
     }
 
-    public static float map (double x, double max) {
-
-	    return (float) (0 - (x)/(max));
+    public static float map (double x, double max, double min) {
+	    return (float) (0 - (max-x)/(max-min));
 
     }
 
@@ -194,7 +191,7 @@ public class Game implements Screen {
     }
 	public Settings textToSettings() {
 		try{
-			FileReader reader = new FileReader(file);
+			FileReader reader = new FileReader(Gdx.files.local(file).file());
 			BufferedReader in = new BufferedReader(reader);
 			String line = in.readLine();
 			ArrayList<String> fileString = new ArrayList<String>();
@@ -213,8 +210,7 @@ public class Game implements Screen {
 			System.out.println(fileString);
 			Settings result = new Settings(fileString.get(0),new Vector3(Integer.parseInt(fileString.get(1)),
 					Integer.parseInt(fileString.get(2)),0), new Vector3(Integer.parseInt(fileString.get(3)),
-					Integer.parseInt(fileString.get(4)),0), Integer.parseInt(fileString.get(5)),
-                    Integer.parseInt(fileString.get(6)));
+					Integer.parseInt(fileString.get(4)),0), Integer.parseInt(fileString.get(5)));
 			return result;
 		}
 		catch(IOException i){
@@ -238,7 +234,7 @@ public class Game implements Screen {
             Files.write(file, lines, Charset.forName("UTF-8"), StandardOpenOption.APPEND);
         }
         catch(IOException e) {
-            System.out.println("You fucked up");
+            System.out.println("You messed up");
         }
     }
 }

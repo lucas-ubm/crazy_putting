@@ -65,7 +65,6 @@ public class MenuScreen implements Screen {
 				dispose();
 			}
 		});
-
 		stage.addActor(startButton);
 
 		designButton = new TextButton("Design Course", game.skin);
