@@ -31,6 +31,7 @@ public class Game implements Screen {
 	private ArrayList<String> fieldFormula;
 	private String course;
 	private boolean gameMode1;
+    private boolean doneOnce = false;
 
 	public Game (Project2 game, String file) {
 	    //Creation of camera
@@ -48,10 +49,10 @@ public class Game implements Screen {
 		this.course = fieldVariables.courseFunction;
 		//Create field
         fieldShape = new Rectangle();
-        fieldShape.x = fieldVariables.borderLength;
-        fieldShape.y = fieldVariables.borderLength;
-        fieldShape.width = Gdx.graphics.getWidth() - fieldVariables.borderLength*2;
-        fieldShape.height = Gdx.graphics.getHeight() - fieldVariables.borderLength*2;
+        fieldShape.x = game.borderLength;
+        fieldShape.y = game.borderLength;
+        fieldShape.width = Gdx.graphics.getWidth() - game.borderLength*2;
+        fieldShape.height = Gdx.graphics.getHeight() - game.borderLength*2;
 		field = new Field(course);
 		Pixmap pixmap = new Pixmap((int) Gdx.graphics.getWidth(), (int) Gdx.graphics.getHeight(), Pixmap.Format.RGBA8888);
 		for (int y = 0; y < Gdx.graphics.getHeight(); y++) {
@@ -63,7 +64,7 @@ public class Game implements Screen {
 				else{
 					pixmap.setColor(new Color(0,0,0.4f,1f));
 				}
-				pixmap.drawPixel(x, y);
+				pixmap.drawPixel(x, Gdx.graphics.getHeight() - y);
 			}
 		}
 		fieldTexture = new Texture(pixmap);
@@ -100,6 +101,13 @@ public class Game implements Screen {
             ball.setUserVelocity(direction.scl(3f));
             ball.prevPosition = ballPos;
 
+        }
+        if(doneOnce)
+        {
+            doneOnce = false;
+            RandomBot bot = new RandomBot(field, ball, hole, fieldFormula);
+            Vector3 bestShot = bot.startProcess();
+            System.out.println(bestShot);
         }
 
         if(!gameMode1 && condition)
@@ -154,9 +162,17 @@ public class Game implements Screen {
 	public boolean checkRadius()
     {
         boolean result = false;
-        if(Math.pow((ball.position.x+ball.shape.width/2-(hole.position.x+hole.holeShape.width/2)), 2) + Math.pow((ball.position.y+ball.shape.height/2-(hole.position.y+hole.holeShape.height/2)), 2) <= Math.pow(hole.holeShape.height/2-ball.shape.width/2,2)){
-            result = true;
-        }
+        float goalX = hole.position.x+(hole.holeShape.width/2)-(ball.shape.width/2);
+        float goalY = hole.position.y+(hole.holeShape.width/2)-(ball.shape.width/2);
+        float ax = goalX - ball.position.x;
+        float ay = goalY - ball.position.y;
+        float x2 = ax*ax;
+        float y2 = ay*ay;
+        float a = x2+y2;
+
+        if(Math.sqrt(a)<11)
+            result=true;
+
         return result;
     }
 
@@ -213,8 +229,8 @@ public class Game implements Screen {
 			System.out.println(fileString);
 			Settings result = new Settings(fileString.get(0),new Vector3(Integer.parseInt(fileString.get(1)),
 					Integer.parseInt(fileString.get(2)),0), new Vector3(Integer.parseInt(fileString.get(3)),
-					Integer.parseInt(fileString.get(4)),0), Integer.parseInt(fileString.get(5)),
-                    Integer.parseInt(fileString.get(6)));
+					Integer.parseInt(fileString.get(4)),0), Integer.parseInt(fileString.get(5))
+                    );
 			return result;
 		}
 		catch(IOException i){
@@ -227,18 +243,22 @@ public class Game implements Screen {
 	public static void outputGame(Ball ball) {
         String move;
         ArrayList<String> lines = new ArrayList<String>();
+        int counter =0;
+
         while(!ball.moveHistory.isEmpty()) {
             move = ball.moveHistory.dequeue().toString();
             System.out.println(move);
+            counter++;
             lines.add(move);
         }
+        System.out.println("Congratulations, you finished in " + counter + " moves!");
         try {
             lines.add("");
             Path file = Paths.get("Games.txt");
             Files.write(file, lines, Charset.forName("UTF-8"), StandardOpenOption.APPEND);
         }
         catch(IOException e) {
-            System.out.println("You fucked up");
+            System.out.println("You messed up");
         }
     }
 }

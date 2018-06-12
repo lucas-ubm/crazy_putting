@@ -13,14 +13,12 @@ public class Settings {
     Vector3 startPosition;
     Vector3 goalPosition;
     int goalRadius;
-    int borderLength;
 
-    public Settings(String courseFunction, Vector3 startPosition, Vector3 goalPosition, int goalRadius, int borderLength) {
+    public Settings(String courseFunction, Vector3 startPosition, Vector3 goalPosition, int goalRadius) {
         this.courseFunction = courseFunction;
         this.startPosition = startPosition;
         this.goalPosition = goalPosition;
         this.goalRadius = goalRadius;
-        this.borderLength = borderLength;
     }
 
 

@@ -21,9 +21,9 @@ public class WinScreen implements Screen {
     private Rectangle golf;
 
     /**Constructor of WinScreen. Same as create() if extending ApplicationAdapter.
-	 * Instantiating all variables defined above and its components (such as position and size).
-	 * @param game - game created when 'run' was clicked (parent of all screens)
-	 */
+     * Instantiating all variables defined above and its components (such as position and size).
+     * @param game - game created when 'run' was clicked (parent of all screens)
+     */
     public WinScreen(final Project2 game) {
         this.game = game;
         camera = new OrthographicCamera();
@@ -43,7 +43,7 @@ public class WinScreen implements Screen {
         //When button 'Play again!' is clicked, set the screen to the Game (and close WinScreen)
         playAgain.addListener(new ClickListener(){
             public void clicked(InputEvent event,float x, float y){
-                game.setScreen(new com.project.putting_game.Game(game,"course.txt"));
+                game.setScreen(new com.project.putting_game.MenuScreen(game));
                 dispose();
             }
         });
@@ -51,8 +51,8 @@ public class WinScreen implements Screen {
     }
 
     /** Called many times a second. Draws all textures and elements of the stage, such as buttons and labels, on the screen.
-	 * @param delta -  time elapsed since rendering the last frame
-	 */
+     * @param delta -  time elapsed since rendering the last frame
+     */
     public void render(float delta) {
         Gdx.gl.glClearColor(0, 0.7f, 0, 0); //set color of screen/background
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
@@ -82,8 +82,8 @@ public class WinScreen implements Screen {
     }
     @Override
     /**Will be called when a button is clicked and we move to another screen, as specified in the listeners.
-	 * Deletes elements of the WinScreen
-	 */
+     * Deletes elements of the WinScreen
+     */
     public void dispose(){
         stage.dispose();
     }
