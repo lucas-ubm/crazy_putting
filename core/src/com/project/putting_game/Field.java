@@ -30,7 +30,7 @@ public class Field {
         	int gridW = 7;
         	int gridH = 4;
         	Vector3[][] heights = new Vector3[gridH][gridW];
-        	Gdx.graphics.setWindowedMode((gridW-1)*(int)(Gdx.graphics.getWidth()/(gridW-1)), (gridH-1)*(int)(Gdx.graphics.getHeight()/(gridH-1)));
+        	Gdx.graphics.setWindowedMode((gridW-1)* Gdx.graphics.getWidth()/(gridW-1), (gridH-1)* Gdx.graphics.getHeight()/(gridH-1));
 	        for(int m=0; m<gridW; m++)
         		for(int n=0; n<gridH; n++){
         	        heights[n][m]= new Vector3((Gdx.graphics.getWidth()/(gridW-1)*m),Gdx.graphics.getHeight()/(gridH-1)*n,0);

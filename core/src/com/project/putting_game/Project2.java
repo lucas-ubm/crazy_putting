@@ -34,7 +34,7 @@ public class Project2 extends Game {
 		skin = new Skin();
 		skin.add("default", font);
 		//Create a texture
-		Pixmap backgroundButton = new Pixmap((int) Gdx.graphics.getWidth()/2,(int)Gdx.graphics.getHeight()/10,Pixmap.Format.RGB888);//format is enum: how to store color values
+		Pixmap backgroundButton = new Pixmap(Gdx.graphics.getWidth() /2, Gdx.graphics.getHeight() /10,Pixmap.Format.RGB888);//format is enum: how to store color values
 		backgroundButton.setColor(Color.WHITE);
 		backgroundButton.fill();
 		skin.add("white", new Texture(backgroundButton));

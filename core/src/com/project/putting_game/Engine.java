@@ -46,8 +46,8 @@ public class Engine {
         currentHeight = fields.getMatrix()[(int) ball.position.y][(int) ball.position.x].height;
 
         //Checks whether the ball has touched the walls or touched the water. If it did, return to the previous position and set velocity to 0.
-        int border = 60;
-        int ballSide =(int) ball.shape.height;
+        int border = 0;
+        int ballSide =(int) ball.shape.height/2;
         int side = border + ballSide;
         if (ball.position.x <= border || ball.position.y <= border || ball.position.x >= Gdx.graphics.getWidth() - side ||
                 ball.position.y >= Gdx.graphics.getHeight() - side || water(ball, fields)) {
@@ -72,7 +72,6 @@ public class Engine {
 //Right now, input is the ball object containing vectors. The output is only one position.
 //Now we get 2 positions, current pos + position we want to get too. Now we want to know what force we have to use to get to that point.
 //So we simulate the movement of the ball to place X.
-
 
     public static boolean water(Ball ball, Field field) {
         Vector2 topLeft = new Vector2(ball.position.x - ball.shape.width / 2, ball.position.y - ball.shape.height / 2);
