@@ -8,19 +8,20 @@ public class Hole
 {
     public Vector3 position;
     public Ellipse holeShape;
-    //height, width, x, y (floats)
     public Texture holeImage;
 
-    public Hole(Vector3 position, String path, int side)
+    /** Constructor of Hole
+     * @param position goal position
+     * @param side radius of the hole
+     */
+    public Hole(Vector3 position, int side)
     {
         this.position = position;
-        this.holeImage = new Texture(Gdx.files.internal(path));
+        this.holeImage = new Texture("hole.png");
         this.holeShape = new Ellipse();
         holeShape.x = position.x;
         holeShape.y = position.y;
         holeShape.height = side;
         holeShape.width = side;
-
     }
-
 }

@@ -13,16 +13,14 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
 public class WinScreen implements Screen {
     final com.project.putting_game.Project2 game;
-    OrthographicCamera camera;
-    String playButton;
+    private OrthographicCamera camera;
     private Stage stage;
-    private TextButton playAgain;
     private Texture golfImg;
     private Rectangle golf;
 
     /**Constructor of WinScreen. Same as create() if extending ApplicationAdapter.
 	 * Instantiating all variables defined above and its components (such as position and size).
-	 * @param game - game created when 'run' was clicked (parent of all screens)
+	 * @param game game created when 'run' was clicked (parent of all screens)
 	 */
     public WinScreen(final Project2 game) {
         this.game = game;
@@ -38,12 +36,12 @@ public class WinScreen implements Screen {
 
         stage = new Stage(new ScreenViewport());
         Gdx.input.setInputProcessor(stage);
-        playAgain = new TextButton("Play again!", game.skin);
+        TextButton playAgain = new TextButton("Play again!", game.skin);
         playAgain.setPosition(Gdx.graphics.getWidth()/2 - playAgain.getWidth()/2,2*Gdx.graphics.getHeight()/6);
         //When button 'Play again!' is clicked, set the screen to the Game (and close WinScreen)
         playAgain.addListener(new ClickListener(){
             public void clicked(InputEvent event,float x, float y){
-                game.setScreen(new com.project.putting_game.Game(game));
+                game.setScreen(new com.project.putting_game.MenuScreen(game));
                 dispose();
             }
         });
@@ -51,7 +49,7 @@ public class WinScreen implements Screen {
     }
 
     /** Called many times a second. Draws all textures and elements of the stage, such as buttons and labels, on the screen.
-	 * @param delta -  time elapsed since rendering the last frame
+	 * @param delta time elapsed since rendering the last frame
 	 */
     public void render(float delta) {
         Gdx.gl.glClearColor(0, 0.7f, 0, 0); //set color of screen/background
@@ -64,6 +62,11 @@ public class WinScreen implements Screen {
         stage.getBatch().end();
         stage.draw();//draw stage (so the elements of the stage)
     }
+
+    /** Resize the Screen
+     * @param width new width of screen
+     * @param height new height of screen
+     */
     @Override
     public void resize(int width, int height) {
         stage.getViewport().update(width, height);
