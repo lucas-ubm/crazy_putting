@@ -1,4 +1,7 @@
-void dijkstra(int graph[][], int src)
+// Funtion that implements Dijkstra's single source shortest path
+    // algorithm for a graph represented using adjacency matrix
+    // representation
+    void dijkstra(int graph[][], int src)
     {
         int dist[] = new int[V]; // The output array. dist[i] will hold
                                  // the shortest distance from src to i
