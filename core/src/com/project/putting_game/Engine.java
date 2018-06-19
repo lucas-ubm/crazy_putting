@@ -74,10 +74,11 @@ public class Engine {
 //So we simulate the movement of the ball to place X.
 
     public static boolean water(Ball ball, Field field) {
-        Vector2 topLeft = new Vector2(ball.position.x - ball.shape.width / 2, ball.position.y - ball.shape.height / 2);
-        for (int i = (int)topLeft.x; i < topLeft.x + ball.shape.width; i++) {
-            for (int j = (int)topLeft.y; j < topLeft.y + ball.shape.height; j++) {
+        Vector2 bottomLeft = new Vector2(ball.position.x - ball.shape.width / 2, ball.position.y - ball.shape.height / 2);
+        for (int i = (int)bottomLeft.x; i < bottomLeft.x + ball.shape.width; i++) {
+            for (int j = (int)bottomLeft.y; j < bottomLeft.y + ball.shape.height; j++) {
                 if (ball.shape.contains(new Vector2(i, j))) {
+                    System.out.println(i+" "+j);
                     if(field.getMatrix()[j][i].height < 0){
                         //System.out.println(field.getMatrix()[j][i].height);
                         return true;

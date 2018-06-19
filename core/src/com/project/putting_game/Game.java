@@ -82,7 +82,7 @@ public class Game implements Screen {
 						for (int j = x - 5; j <= x + 5; j++){
 							pixmap.setColor(Color.BLUE);
 							pixmap.drawPixel(j, i);
-							field.getMatrix()[field.getMatrix().length-i][j].height=-1;//set equal to water so ball reacts same way
+							field.getMatrix()[field.getMatrix().length-1-i][j].height=-1;//set equal to water so ball reacts same way
 						}
 					fieldTexture = new Texture(pixmap);
 				}
@@ -91,11 +91,12 @@ public class Game implements Screen {
 			@Override
 			public boolean touchDragged (int x, int y, int pointer) {
 				if (design) {
+					//System.out.println(x+" "+y+" "+(field.getMatrix().length-1-y));
 					for (int i = y - 5; i <= y + 5; i++) //for all points within radius of 5
 						for (int j = x - 5; j <= x + 5; j++){
 							pixmap.setColor(Color.BLUE);
 							pixmap.drawPixel(j, i);
-							field.getMatrix()[field.getMatrix().length-i][j].height=-1;//set equal to water so ball reacts same way
+							field.getMatrix()[field.getMatrix().length-1-i][j].height=-1;//set equal to water so ball reacts same way
 						}
 					fieldTexture = new Texture(pixmap);
 				}
@@ -172,16 +173,16 @@ public class Game implements Screen {
 		    condition = false;
             //Makes sure the ball doesn't get out of the window
             Engine.calculate(ball, field);
-            if(ball.position.x < ball.shape.width/2){
+            if(ball.position.x <= ball.shape.width/2){
                 ball.position = ball.prevPosition;
             }
-            if(ball.position.x > Gdx.graphics.getWidth() - ball.shape.width/2) {
+            if(ball.position.x >= fieldShape.width - ball.shape.width/2) {
                 ball.position = ball.prevPosition;
             }
-            if(ball.position.y < ball.shape.height/2) {
+            if(ball.position.y <= ball.shape.height/2) {
                 ball.position = ball.prevPosition;
             }
-            if(ball.position.y > Gdx.graphics.getHeight() - ball.shape.height/2) {
+            if(ball.position.y >= fieldShape.height - ball.shape.height/2) {
                 ball.position = ball.prevPosition;
             }
         }
