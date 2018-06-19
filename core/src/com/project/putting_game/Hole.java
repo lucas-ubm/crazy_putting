@@ -24,4 +24,8 @@ public class Hole
         holeShape.height = side;
         holeShape.width = side;
     }
+
+    public Vector3 getPosition() {
+        return position;
+    }
 }

@@ -43,4 +43,8 @@ public class Ball {
         this.velocity = newVelocity;
         moveHistory.enqueue(newVelocity.cpy()); //add to moves output
     }
+
+    public Vector3 getPosition() {
+        return position;
+    }
 }
