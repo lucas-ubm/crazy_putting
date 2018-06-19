@@ -4,6 +4,8 @@ public class Properties {
     public double height;
     public double friction;
 
-
+    public double getHeight() {
+        return height;
+    }
 
 }

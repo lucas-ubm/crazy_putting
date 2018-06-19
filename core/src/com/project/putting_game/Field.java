@@ -33,4 +33,9 @@ public class Field {
         this.hole = hole;
         this.holeRadius = holeRadius;
     }
+
+    public Properties[][] getProperties() {
+        return matrix;
+    }
+
 }
