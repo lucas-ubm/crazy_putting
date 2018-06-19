@@ -13,13 +13,14 @@ import com.badlogic.gdx.scenes.scene2d.ui.*;
 public class Project2 extends Game {
 	public SpriteBatch batch;
 	public BitmapFont font;
-	public boolean gameMode1;
+	private boolean gameMode1;
 	public String inputfile = "Input.txt";
 	public Skin uiskin;
 	public Skin skin;
 	public TextButton.TextButtonStyle textButtonStyle;
 	public Label.LabelStyle labelStyle;
 	public TextField.TextFieldStyle textFieldStyle;
+	final public int borderLength = 60;
 
 	@Override
 	/** Gets called when 'run' is clicked.
@@ -33,7 +34,7 @@ public class Project2 extends Game {
 		skin = new Skin();
 		skin.add("default", font);
 		//Create a texture
-		Pixmap backgroundButton = new Pixmap((int) Gdx.graphics.getWidth()/2,(int)Gdx.graphics.getHeight()/10,Pixmap.Format.RGB888);//format is enum: how to store color values
+		Pixmap backgroundButton = new Pixmap(Gdx.graphics.getWidth() /2, Gdx.graphics.getHeight() /10,Pixmap.Format.RGB888);//format is enum: how to store color values
 		backgroundButton.setColor(Color.WHITE);
 		backgroundButton.fill();
 		skin.add("white", new Texture(backgroundButton));
@@ -75,10 +76,13 @@ public class Project2 extends Game {
 	public void dispose () {
 		batch.dispose();
 		font.dispose();
-		//GameScreen.dispose();
+		//Game.dispose();
 	}
 
 	public void setGameMode(boolean gameMode) {
 		this.gameMode1 = gameMode;
+	}
+	public boolean getGameMode() {
+		return gameMode1;
 	}
 }
