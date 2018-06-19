@@ -49,31 +49,11 @@ public class Engine {
         int border = 0;
         int ballSide =(int) ball.shape.height/2;
         int side = border + ballSide;
-        if(ball.position.x < 5){
-            ball.position = ball.prevPosition;
-            ball.velocity.scl(0);
-
-        }
-        if(ball.position.x > 800- 16 ) {
-            ball.position = ball.prevPosition;
-            ball.velocity.scl(0);
-
-        }
-        if(ball.position.y < 5) {
-            ball.position = ball.prevPosition;
-            ball.velocity.scl(0);
-
-        }
-        if(ball.position.y > 480 - 16) {
-            ball.position = ball.prevPosition;
-            ball.velocity.scl(0);
-
-        }
-        if (ball.position.x <= border || ball.position.y <= border || ball.position.x >= Gdx.graphics.getWidth() - side ||
+        if (ball.position.x <= ball.shape.width/2 || ball.position.y <= ball.shape.height/2 || ball.position.x >= Gdx.graphics.getWidth() - side ||
                 ball.position.y >= Gdx.graphics.getHeight() - side || water(ball, fields)) {
 //             System.out.println("Previous " + ball.prevPosition);
-            ball.position = ball.prevPosition;
-            ball.velocity = new Vector3(0, 0, 0);
+	        ball.velocity = new Vector3(0, 0, 0);
+	        ball.position = ball.prevPosition;
         }
     }
 
@@ -81,9 +61,6 @@ public class Engine {
     public static double forceX(Ball ball,Field field) {
         double Fx = ((-g) * FunctionAnalyser.derivative(field,(int)ball.position.x,(int)ball.position.y,"x")) - (CurrentFriction * g * vx);
         return Fx;
-
-
-
     }
 
     /**Method to calculate the force on the ball at the y-axis. This method is used when calculating the new velocity*/
@@ -97,13 +74,12 @@ public class Engine {
 //So we simulate the movement of the ball to place X.
 
     public static boolean water(Ball ball, Field field) {
-        Vector2 bottomLeft = new Vector2(ball.position.x - ball.shape.width / 2, ball.position.y - ball.shape.height / 2);
-        for (int i = (int)bottomLeft.x; i < bottomLeft.x + ball.shape.width; i++) {
-            for (int j = (int)bottomLeft.y; j < bottomLeft.y + ball.shape.height; j++) {
+	    //System.out.println("Position:"+ball.position.x+" "+ball.position.y);
+	    Vector2 center = new Vector2(ball.position.x, ball.position.y);
+        for (int i = (int)(center.x-ball.shape.width); i < center.x + ball.shape.width; i++) {
+            for (int j = (int)(center.y-ball.shape.height); j < center.y + ball.shape.height; j++) {
                 if (ball.shape.contains(new Vector2(i, j))) {
-                    //System.out.println(i+" "+j);
                     if(field.getMatrix()[field.getMatrix().length-1-j][i].height < 0){
-                        //System.out.println(field.getMatrix()[j][i].height);
                         return true;
                     }
                 }

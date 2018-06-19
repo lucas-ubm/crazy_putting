@@ -92,6 +92,7 @@ public class Game implements Screen {
 		Gdx.input.setInputProcessor(new InputAdapter(){
 			@Override
 			public boolean touchDown (int x, int y, int pointer, int button) {
+				//System.out.println("Touched:"+" "+x+" "+(Gdx.graphics.getHeight()-y));
 				if (design) {
 					for (int i = y - 5; i <= y + 5; i++) //for all points within radius of 5
 						for (int j = x - 5; j <= x + 5; j++){
@@ -106,7 +107,7 @@ public class Game implements Screen {
 			@Override
 			public boolean touchDragged (int x, int y, int pointer) {
 				if (design) {
-					System.out.println(x+" "+y+" "+(field.getMatrix().length-1-y));
+					//System.out.println(x+" "+y+" "+(field.getMatrix().length-1-y));
 					for (int i = y - 5; i <= y + 5; i++) //for all points within radius of 5
 						for (int j = x - 5; j <= x + 5; j++){
 							pixmap.setColor(Color.BLUE);
@@ -141,8 +142,8 @@ public class Game implements Screen {
 		game.batch.setProjectionMatrix(camera.combined);
 		game.batch.begin();
 		game.batch.draw(fieldTexture, fieldShape.x, fieldShape.y, fieldShape.width, fieldShape.height);
-		game.batch.draw(ball.ballImage, ball.position.x, ball.position.y, ball.shape.width, ball.shape.height);
-		game.batch.draw(hole.holeImage, hole.position.x, hole.position.y, hole.holeShape.width, hole.holeShape.height );
+		game.batch.draw(ball.ballImage, ball.position.x-ball.shape.width/2, ball.position.y-ball.shape.height/2, ball.shape.width, ball.shape.height);
+		game.batch.draw(hole.holeImage, hole.position.x-hole.holeShape.width/4, hole.position.y-hole.holeShape.height/2, hole.holeShape.width, hole.holeShape.height );
 		game.batch.end();
 		if(stage!=null){
 			stage.act();
@@ -228,7 +229,7 @@ public class Game implements Screen {
 	}
 
     @Override
-    public void resize(int width, int height) {
+    public void resize(int width, int height) {stage.getViewport().update(width, height);
     }
     @Override
     public void show(){
