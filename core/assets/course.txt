@@ -1,0 +1,4 @@
+course: flat
+start position: 80,80
+goal position: 300,300
+goal radius: 50
