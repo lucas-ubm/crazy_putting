@@ -113,8 +113,4 @@ public class Field {
        }
     }
 
-    public Properties[][] getProperties() {
-        return matrix;
-    }
-
 }
