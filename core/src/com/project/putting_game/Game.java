@@ -1,18 +1,16 @@
 package com.project.putting_game;
 
-import com.badlogic.gdx.*;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
+import com.badlogic.gdx.InputAdapter;
+import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.*;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector3;
-import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
-import java.awt.*;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
@@ -23,9 +21,6 @@ import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.StringTokenizer;
-
-import static com.project.putting_game.Queue.moved;
-import static sun.audio.AudioDevice.device;
 
 public class Game implements Screen {
 	private OrthographicCamera camera;
@@ -72,6 +67,12 @@ public class Game implements Screen {
 
 		pixmap = new Pixmap((int) fieldShape.width, (int) fieldShape.height, Pixmap.Format.RGBA8888);
 
+        fieldShape.x = 0;//game.borderLength;
+        fieldShape.y = 0;//game.borderLength;
+        fieldShape.width = Gdx.graphics.getWidth();// - game.borderLength*2;
+        fieldShape.height = Gdx.graphics.getHeight();// - game.borderLength*2;
+		field = new Field(course);
+		pixmap = new Pixmap(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), Pixmap.Format.RGBA8888);
 		for (int y = 0; y < Gdx.graphics.getHeight(); y++) {
 			for (int x = 0; x < Gdx.graphics.getWidth(); x++) {
 				if(field.getMatrix()[y][x].height >=0) {
@@ -129,6 +130,9 @@ public class Game implements Screen {
 					if(design)
 						stage.dispose();
 					design = false;
+				}
+				if(keycode==Input.Keys.ESCAPE) {
+					//game.setScreen(new Game(game,file));
 				}
 				return true;
 			}
@@ -189,10 +193,22 @@ public class Game implements Screen {
 
         if(ball.velocity.len() >= 0.02) {
 		    condition = false;
-            //Makes sure the bucket doesn't get out of the window
+            //Makes sure the ball doesn't get out of the window
             Engine.calculate(ball, field);
 
 
+            if(ball.position.x < ball.shape.width/2){
+                ball.position = ball.prevPosition;
+            }
+            if(ball.position.x > Gdx.graphics.getWidth() - ball.shape.width/2) {
+                ball.position = ball.prevPosition;
+            }
+            if(ball.position.y < ball.shape.height/2) {
+                ball.position = ball.prevPosition;
+            }
+            if(ball.position.y > Gdx.graphics.getHeight() - ball.shape.height/2) {
+                ball.position = ball.prevPosition;
+            }
         }
         if(ball.velocity.len() < 200){
 		    ball.velocity.x = 0;

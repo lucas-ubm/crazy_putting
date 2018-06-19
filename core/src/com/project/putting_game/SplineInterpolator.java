@@ -17,7 +17,8 @@ public class SplineInterpolator {
 		MatrixToString(ys);
 		System.out.println();System.out.println();}*/
 		return Multiplication(Multiplication(xs,ds),ys)[0][0];//has only 1 entry
-	};
+	}
+
 	public static double[][] findCoefs(Vector3[][] heights, int i, int j) {//i=y,j=x
 		double[][] c1 = {{1, 0, 0, 0}, {0, 0, 1, 0}, {-3, 3, -2, -1}, {2, -2, 1, 1}};
 		double[][] c2 = {{1, 0, -3, 2}, {0, 0, 3, -2}, {0, 1, -2, 1}, {0, 0, -1, 1}};

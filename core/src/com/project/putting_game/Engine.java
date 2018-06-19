@@ -47,7 +47,7 @@ public class Engine {
 
         //Checks whether the ball has touched the walls or touched the water. If it did, return to the previous position and set velocity to 0.
         int border = 0;
-        int ballSide =(int) ball.shape.height;
+        int ballSide =(int) ball.shape.height/2;
         int side = border + ballSide;
         if(ball.position.x < 5){
             ball.position = ball.prevPosition;
@@ -97,7 +97,6 @@ public class Engine {
 //Right now, input is the ball object containing vectors. The output is only one position.
 //Now we get 2 positions, current pos + position we want to get too. Now we want to know what force we have to use to get to that point.
 //So we simulate the movement of the ball to place X.
-
 
     public static boolean water(Ball ball, Field field) {
         Vector2 topLeft = new Vector2(ball.position.x , ball.position.y );
