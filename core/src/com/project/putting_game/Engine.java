@@ -10,7 +10,7 @@ public class Engine {
     public static final double g = 9.81;
     public static double CurrentFriction;
     public static double currentHeight;
-    public static final double h = 0.01;
+    public static final double h = 0.005;
     public static double xh;
     public static double yh;
     public static double vx_h;
@@ -46,14 +46,36 @@ public class Engine {
         currentHeight = fields.getMatrix()[(int) ball.position.y][(int) ball.position.x].height;
 
         //Checks whether the ball has touched the walls or touched the water. If it did, return to the previous position and set velocity to 0.
-        int border = 60;
+        int border = 0;
         int ballSide =(int) ball.shape.height;
         int side = border + ballSide;
+        if(ball.position.x < 5){
+            ball.position = ball.prevPosition;
+            ball.velocity.scl(0);
+
+        }
+        if(ball.position.x > 800- 16 ) {
+            ball.position = ball.prevPosition;
+            ball.velocity.scl(0);
+
+        }
+        if(ball.position.y < 5) {
+            ball.position = ball.prevPosition;
+            ball.velocity.scl(0);
+
+        }
+        if(ball.position.y > 480 - 16) {
+            ball.position = ball.prevPosition;
+            ball.velocity.scl(0);
+
+        }
         if (ball.position.x <= border || ball.position.y <= border || ball.position.x >= Gdx.graphics.getWidth() - side ||
                 ball.position.y >= Gdx.graphics.getHeight() - side || water(ball, fields)) {
 //             System.out.println("Previous " + ball.prevPosition);
             ball.position = ball.prevPosition;
             ball.velocity = new Vector3(0, 0, 0);
+            System.out.println("getwidth is " + Gdx.graphics.getWidth());
+            System.out.println("getheight is " + Gdx.graphics.getHeight());
         }
     }
 
@@ -61,6 +83,9 @@ public class Engine {
     public static double forceX(Ball ball,Field field) {
         double Fx = ((-g) * FunctionAnalyser.derivative(field,(int)ball.position.x,(int)ball.position.y,"x")) - (CurrentFriction * g * vx);
         return Fx;
+
+
+
     }
 
     /**Method to calculate the force on the ball at the y-axis. This method is used when calculating the new velocity*/
@@ -75,10 +100,12 @@ public class Engine {
 
 
     public static boolean water(Ball ball, Field field) {
-        Vector2 topLeft = new Vector2(ball.position.x - ball.shape.width / 2, ball.position.y - ball.shape.height / 2);
+        Vector2 topLeft = new Vector2(ball.position.x , ball.position.y );
         for (int i = (int)topLeft.x; i < topLeft.x + ball.shape.width; i++) {
             for (int j = (int)topLeft.y; j < topLeft.y + ball.shape.height; j++) {
-                if (ball.shape.contains(new Vector2(i, j))) {
+                if (ball.shape.contains(new Vector2(i, j)) ) {
+                    System.out.println(j);
+                    System.out.println(i);
                     if(field.getMatrix()[j][i].height < 0){
                         //System.out.println(field.getMatrix()[j][i].height);
                         return true;

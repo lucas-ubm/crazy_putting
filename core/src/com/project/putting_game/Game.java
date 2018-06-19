@@ -2,6 +2,7 @@ package com.project.putting_game;
 
 import com.badlogic.gdx.*;
 import com.badlogic.gdx.graphics.*;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -11,6 +12,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
+import java.awt.*;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
@@ -21,6 +23,9 @@ import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.StringTokenizer;
+
+import static com.project.putting_game.Queue.moved;
+import static sun.audio.AudioDevice.device;
 
 public class Game implements Screen {
 	private OrthographicCamera camera;
@@ -54,12 +59,19 @@ public class Game implements Screen {
 		this.course = fieldVariables.courseFunction.replaceAll(" ","");
 		//Create field
         fieldShape = new Rectangle();
-        fieldShape.x = game.borderLength;
-        fieldShape.y = game.borderLength;
-        fieldShape.width = Gdx.graphics.getWidth() - game.borderLength*2;
-        fieldShape.height = Gdx.graphics.getHeight() - game.borderLength*2;
+        fieldShape.x = 0;
+        fieldShape.y = 0;
+        fieldShape.width = Gdx.graphics.getWidth();
+        fieldShape.height = Gdx.graphics.getHeight();
 		field = new Field(course);
-		pixmap = new Pixmap((int) Gdx.graphics.getWidth(), (int) Gdx.graphics.getHeight(), Pixmap.Format.RGBA8888);
+//		PointerInfo a = MouseInfo.getPointerInfo();
+//		Point b = a.getLocation();
+//		int xmouse = (int) b.getX();
+//		int ymouse = (int) b.getY();
+
+
+		pixmap = new Pixmap((int) fieldShape.width, (int) fieldShape.height, Pixmap.Format.RGBA8888);
+
 		for (int y = 0; y < Gdx.graphics.getHeight(); y++) {
 			for (int x = 0; x < Gdx.graphics.getWidth(); x++) {
 				if(field.getMatrix()[y][x].height >=0) {
@@ -93,12 +105,19 @@ public class Game implements Screen {
 			}
 			@Override
 			public boolean touchDragged (int x, int y, int pointer) {
-				if (design) {
+
+				 if (design) {
 					for (int i = y - 5; i <= y + 5; i++) //for all points within radius of 5
 						for (int j = x - 5; j <= x + 5; j++){
 							pixmap.setColor(Color.BLUE);
-							pixmap.drawPixel(j, i);
-							field.getMatrix()[field.getMatrix().length-i][j].height=-1;//set equal to water so ball reacts same way
+							if((x < 0) || (x > 800-16) || (y < 0) || (y > 480-16)){
+								System.out.println("Not cool bruh");
+							}
+							else{
+								pixmap.drawPixel(j, i);
+								field.getMatrix()[field.getMatrix().length-i][j].height=-1;//set equal to water so ball reacts same way
+							}
+
 						}
 					fieldTexture = new Texture(pixmap);
 				}
@@ -172,18 +191,7 @@ public class Game implements Screen {
 		    condition = false;
             //Makes sure the bucket doesn't get out of the window
             Engine.calculate(ball, field);
-            if(ball.position.x < 60){
-                ball.position = ball.prevPosition;
-            }
-            if(ball.position.x > 800 - 92) {
-                ball.position = ball.prevPosition;
-            }
-            if(ball.position.y < 60) {
-                ball.position = ball.prevPosition;
-            }
-            if(ball.position.y > 480 - 92) {
-                ball.position = ball.prevPosition;
-            }
+
 
         }
         if(ball.velocity.len() < 200){
