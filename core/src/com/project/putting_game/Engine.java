@@ -1,7 +1,9 @@
 package com.project.putting_game;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
+import jdk.nashorn.internal.objects.annotations.Function;
 
 public class Engine {
 
@@ -16,7 +18,6 @@ public class Engine {
     public static double vx;
     public static double vy;
 
-
     public static void calculate(Ball ball, Field fields) {
         //Getting the current location and velocity of the ball
         double x = ball.position.x;
@@ -27,8 +28,8 @@ public class Engine {
         //Calculating the next location and velocity of the ball per timestep
         xh = x + h * vx;
         yh = y + h * vy;
-        vx_h = vx + h * forceX(ball);
-        vy_h = vy + h * forceY();
+        vx_h = vx + h * forceX(ball,fields);
+        vy_h = vy + h * forceY(ball,fields);
 
         //Storing the newly obtained velocities and locations in the Ball object
         ball.position.x = (float) xh;
@@ -39,34 +40,32 @@ public class Engine {
         ball.velocity.y = (float) vy_h;
 
         //Get the friction of the surface at current location ball
-        CurrentFriction = fields.matrix[(int) ball.position.x][(int) ball.position.y].friction;
+        CurrentFriction = fields.getMatrix()[(int) ball.position.y][(int) ball.position.x].friction;
 
         //Get the height of the field at current location ball
-        currentHeight = fields.matrix[(int) ball.position.x][(int) ball.position.y].height;
-
+        currentHeight = fields.getMatrix()[(int) ball.position.y][(int) ball.position.x].height;
 
         //Checks whether the ball has touched the walls or touched the water. If it did, return to the previous position and set velocity to 0.
-        int border = Settings.borderLength;
-        int ballSide = Settings.ballSide;
+        int border = 0;
+        int ballSide =(int) ball.shape.height/2;
         int side = border + ballSide;
-        if (ball.position.x <= border || ball.position.y <= border || ball.position.x >= Settings.windowWidth - side || ball.position.y >= Settings.windowHeight - side || water(ball, fields)) {
+        if (ball.position.x <= border || ball.position.y <= border || ball.position.x >= Gdx.graphics.getWidth() - side ||
+                ball.position.y >= Gdx.graphics.getHeight() - side || water(ball, fields)) {
 //             System.out.println("Previous " + ball.prevPosition);
             ball.position = ball.prevPosition;
             ball.velocity = new Vector3(0, 0, 0);
         }
-
     }
 
-
-    //*Method to calculate the force on the ball at the x-axis. This method is used when calculating the new velocity*//
-    public static double forceX(Ball ball) {
-        double Fx = ((-g) * (0)) - (CurrentFriction * g * vx);
+    /**Method to calculate the force on the ball at the x-axis. This method is used when calculating the new velocity*/
+    public static double forceX(Ball ball,Field field) {
+        double Fx = ((-g) * FunctionAnalyser.derivative(field,(int)ball.position.x,(int)ball.position.y,"x")) - (CurrentFriction * g * vx);
         return Fx;
     }
 
-    //*Method to calculate the force on the ball at the y-axis. This method is used when calculating the new velocity*//
-    public static double forceY() {
-        double Fy = ((-g) * (0)) - (CurrentFriction * g * vy);
+    /**Method to calculate the force on the ball at the y-axis. This method is used when calculating the new velocity*/
+    public static double forceY(Ball ball,Field field) {
+        double Fy = ((-g) * FunctionAnalyser.derivative(field,(int)ball.position.x,(int)ball.position.y,"y")) - (CurrentFriction * g * vy);
         return Fy;
     }
 
@@ -74,13 +73,13 @@ public class Engine {
 //Now we get 2 positions, current pos + position we want to get too. Now we want to know what force we have to use to get to that point.
 //So we simulate the movement of the ball to place X.
 
-
     public static boolean water(Ball ball, Field field) {
         Vector2 topLeft = new Vector2(ball.position.x - ball.shape.width / 2, ball.position.y - ball.shape.height / 2);
-        for (int i = (int)topLeft.x; i < topLeft.x + Settings.ballSide * 2; i++) {
-            for (int j = (int)topLeft.y; j < topLeft.y + Settings.ballSide * 2; j++) {
+        for (int i = (int)topLeft.x; i < topLeft.x + ball.shape.width; i++) {
+            for (int j = (int)topLeft.y; j < topLeft.y + ball.shape.height; j++) {
                 if (ball.shape.contains(new Vector2(i, j))) {
-                    if(field.matrix[i][j].height < 0){
+                    if(field.getMatrix()[j][i].height < 0){
+                        //System.out.println(field.getMatrix()[j][i].height);
                         return true;
                     }
                 }
