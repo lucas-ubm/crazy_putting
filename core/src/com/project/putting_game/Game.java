@@ -1,6 +1,9 @@
 package com.project.putting_game;
 
-import com.badlogic.gdx.*;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
+import com.badlogic.gdx.InputAdapter;
+import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector3;
@@ -51,6 +54,18 @@ public class Game implements Screen {
 		this.course = fieldVariables.courseFunction.replaceAll(" ","");
 		//Create field
         fieldShape = new Rectangle();
+        fieldShape.x = 0;
+        fieldShape.y = 0;
+        fieldShape.width = Gdx.graphics.getWidth();
+        fieldShape.height = Gdx.graphics.getHeight();
+		field = new Field(course);
+//		PointerInfo a = MouseInfo.getPointerInfo();
+//		Point b = a.getLocation();
+//		int xmouse = (int) b.getX();
+//		int ymouse = (int) b.getY();
+
+		pixmap = new Pixmap((int) fieldShape.width, (int) fieldShape.height, Pixmap.Format.RGBA8888);
+
         fieldShape.x = 0;//game.borderLength;
         fieldShape.y = 0;//game.borderLength;
         fieldShape.width = Gdx.graphics.getWidth();// - game.borderLength*2;
@@ -66,7 +81,7 @@ public class Game implements Screen {
 				else{
 					pixmap.setColor(new Color(0,0,0.4f,1f));
 				}
-				pixmap.drawPixel(x, Gdx.graphics.getHeight()-y);
+				pixmap.drawPixel(x, y);
 			}
 		}
 
@@ -82,7 +97,7 @@ public class Game implements Screen {
 						for (int j = x - 5; j <= x + 5; j++){
 							pixmap.setColor(Color.BLUE);
 							pixmap.drawPixel(j, i);
-							field.getMatrix()[field.getMatrix().length-1-i][j].height=-1;//set equal to water so ball reacts same way
+							field.getMatrix()[i][j].height=-1;//set equal to water so ball reacts same way
 						}
 					fieldTexture = new Texture(pixmap);
 				}
@@ -91,12 +106,12 @@ public class Game implements Screen {
 			@Override
 			public boolean touchDragged (int x, int y, int pointer) {
 				if (design) {
-					//System.out.println(x+" "+y+" "+(field.getMatrix().length-1-y));
+					System.out.println(x+" "+y+" "+(field.getMatrix().length-1-y));
 					for (int i = y - 5; i <= y + 5; i++) //for all points within radius of 5
 						for (int j = x - 5; j <= x + 5; j++){
 							pixmap.setColor(Color.BLUE);
 							pixmap.drawPixel(j, i);
-							field.getMatrix()[field.getMatrix().length-1-i][j].height=-1;//set equal to water so ball reacts same way
+							field.getMatrix()[i][j].height=-1;//set equal to water so ball reacts same way
 						}
 					fieldTexture = new Texture(pixmap);
 				}
@@ -199,8 +214,7 @@ public class Game implements Screen {
         }
 	}
 
-	public boolean checkRadius()
-    {
+	public boolean checkRadius() {
         boolean result = false;
         if(Math.pow((ball.position.x+ball.shape.width/2-(hole.position.x+hole.holeShape.width/2)), 2) + Math.pow((ball.position.y+ball.shape.height/2-(hole.position.y+hole.holeShape.height/2)), 2) <= Math.pow(hole.holeShape.height/2-ball.shape.width/2,2)){
             result = true;

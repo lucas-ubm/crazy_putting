@@ -28,7 +28,7 @@ public class Ball {
 
         this.position = position;
         this.ballImage = new Texture("golfball.png");
-        this.prevPosition = null; //no shots played
+        this.prevPosition = position; //no shots played
         this.shape = new Ellipse();
         shape.x = position.x;
         shape.y = position.y;
