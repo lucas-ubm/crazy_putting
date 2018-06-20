@@ -60,7 +60,7 @@ public class SelectInputScreen implements Screen {
 		courseField.setPosition(courseLabel.getX()+courseLabel.getWidth()+padding,courseLabel.getY());
 		stage.addActor(courseField);
 
-		labeltext = "Enter positions as integers where"+game.borderLength+"<x<"+(Gdx.graphics.getWidth()-game.borderLength)+" and "+game.borderLength+"0<y<"+(Gdx.graphics.getHeight()-game.borderLength);
+		labeltext = "Enter positions as integers where "+game.borderLength+"<x<"+(Gdx.graphics.getWidth()-game.borderLength)+" and "+game.borderLength+"<y<"+(Gdx.graphics.getHeight()-game.borderLength);
 		label = new Label(labeltext,game.skin);
 		label.setPosition(courseLabel.getX(),courseLabel.getY()-label.getHeight()-padding);
 		stage.addActor(label);
@@ -115,7 +115,7 @@ public class SelectInputScreen implements Screen {
 					if(fileField.getText().equals("")||courseField.getText().equals("")||startFieldX.getText().equals("")||startFieldY.getText().equals("")||goalFieldX.getText().equals("")||goalFieldY.getText().equals("")||radiusField.getText().equals(""))
 						throw new NullPointerException();
 					courseField.setText(courseField.getText().replaceAll(" ",""));
-					if(Integer.parseInt(startFieldX.getText())<=Gdx.graphics.getWidth() && Integer.parseInt(startFieldY.getText())<=Gdx.graphics.getHeight()&& Integer.parseInt(goalFieldX.getText())<=Gdx.graphics.getWidth()&&Integer.parseInt(goalFieldY.getText())<=Gdx.graphics.getHeight()&&Integer.parseInt(radiusField.getText())>0) {
+					if(Integer.parseInt(startFieldX.getText())<=Gdx.graphics.getWidth()&&game.borderLength<=Integer.parseInt(startFieldX.getText())&&Integer.parseInt(startFieldY.getText())<=Gdx.graphics.getHeight()&&game.borderLength<=Integer.parseInt(startFieldY.getText())&&Integer.parseInt(goalFieldX.getText())<=Gdx.graphics.getWidth()&&game.borderLength<=Integer.parseInt(goalFieldX.getText())&&Integer.parseInt(goalFieldY.getText())<=Gdx.graphics.getHeight()&&game.borderLength<=Integer.parseInt(goalFieldY.getText())&&Integer.parseInt(radiusField.getText())>0) {
 						String file = fileField.getText()+".txt";
 						FileHandle writer = Gdx.files.local(file);
 						//save file with inputs
@@ -163,7 +163,7 @@ public class SelectInputScreen implements Screen {
 
 	@Override
 	public void resize(int width, int height) {
-		labeltext =  "Enter positions as integers where"+game.borderLength+"<x<"+(Gdx.graphics.getWidth()-game.borderLength)+" and "+game.borderLength+"0<y<"+(Gdx.graphics.getHeight()-game.borderLength);
+		labeltext = "Enter positions as integers where "+game.borderLength+"<x<"+(Gdx.graphics.getWidth()-game.borderLength)+" and "+game.borderLength+"<y<"+(Gdx.graphics.getHeight()-game.borderLength);
 		label.setText(labeltext);
 		stage.getViewport().update(width, height);
 	}

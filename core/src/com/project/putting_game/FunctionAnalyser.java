@@ -3,13 +3,8 @@ package com.project.putting_game;
 import java.util.ArrayList;
 
 public class FunctionAnalyser {
-	/**
-	 *
-	 * @param function function for which you want to find rpn
-	 * @return function in rpn
-	 */
-	public static ArrayList<String> ShuntingYard(String function){
 
+	public static ArrayList<String> ShuntingYard(String function){
 		ArrayList<String> reverse= new ArrayList<String>();
 		MyStack<Character> operators = new MyStack<Character>();
 		int i = 0;
@@ -24,8 +19,6 @@ public class FunctionAnalyser {
 			}
 			else if(token=='s'||token=='c'||token=='t'){//function
 				operators.push(token);
-				//operators.push(function.charAt(i+1));
-				//operators.push(function.charAt(i+2));
 				i+=3;
 			}
 			else if(token=='^') {//operator
@@ -54,7 +47,7 @@ public class FunctionAnalyser {
 				i++;
 			}
 			else if(token==')') {
-				while (operators.top() != '(')//TODO not function?
+				while (operators.top() != '(')
 					reverse.add(Character.toString(operators.pop()));
 				char popped = operators.pop();//left bracket
 				i++;
@@ -65,13 +58,6 @@ public class FunctionAnalyser {
 		return reverse;
 	}
 
-	/**
-	 *
-	 * @param reverse function in reverse polish notation
-	 * @param x x value of the function
-	 * @param y y value of the function
-	 * @return value of the given function at the given point
-	 */
 	public static Double reversePolish(ArrayList<String> reverse,double x,double y){
 		String token;
 		Double operand2;
@@ -146,22 +132,16 @@ public class FunctionAnalyser {
 	 * @param y0 the value of the formula at the initial time
 	 * @return the value of the function at the desired point
 	 */
-	public static double runge_kutta (ArrayList<String> reverse, double t0, double t, double h, double y0){
-		double k1,k2,k3,k4;
-		System.out.println(reverse);
-		while (t0 < t){
-			k1 = h*FunctionAnalyser.reversePolish(reverse, t0, y0);
-			k2 = h*FunctionAnalyser.reversePolish(reverse, t0+1/3.0*h, y0+1/3.0*k1);
-			k3 = h*FunctionAnalyser.reversePolish(reverse, t0+2/3.0*h, y0-1/3.0*k1+k2);
-			k4 = h*FunctionAnalyser.reversePolish(reverse, t0+h, y0+k1-k2+k3);
-			y0 = y0+ 1/8.0*(k1 + 3*k2 + 3*k3 + k4);
-
-			t0+=h;
+	public static double derivative(Field field, int x, int y, String respect) {
+		if(respect.equalsIgnoreCase("x")) {
+			return (field.getMatrix()[y][x+1].height - field.getMatrix()[y][x-1].height)/2;
+			//return (FunctionAnalyser.reversePolish(reverse,x+1e-10,y)-FunctionAnalyser.reversePolish(reverse,x,y))/1e-10;
 		}
-		return y0;
-
+		else {
+			return (field.getMatrix()[y+1][x].height - field.getMatrix()[y-1][x].height)/2;
+			//return (FunctionAnalyser.reversePolish(reverse,x,y+1e-10)-FunctionAnalyser.reversePolish(reverse,x,y))/1e-10;
+		}
 	}
-
 	/**
 	 *
 	 * @param reverse function for which you are calculatind the derivative
@@ -170,13 +150,19 @@ public class FunctionAnalyser {
 	 * @param respect variable with respect of which you are calculating the derivative
 	 * @return the value of the derivative at the given point
 	 */
-	public static double derivative(ArrayList<String> reverse, double x, double y, String respect) {
-		if(respect.equalsIgnoreCase("x")) {
-			return (FunctionAnalyser.reversePolish(reverse,x+1e-5,y)-FunctionAnalyser.reversePolish(reverse,x,y))/1e-5;
+	public static double runge_kutta (ArrayList<String> reverse, double t0, double t, double h, double y0) {
+		double k1, k2, k3, k4;
+		System.out.println(reverse);
+		while (t0 < t) {
+			k1 = h * FunctionAnalyser.reversePolish(reverse, t0, y0);
+			k2 = h * FunctionAnalyser.reversePolish(reverse, t0 + 1 / 3.0 * h, y0 + 1 / 3.0 * k1);
+			k3 = h * FunctionAnalyser.reversePolish(reverse, t0 + 2 / 3.0 * h, y0 - 1 / 3.0 * k1 + k2);
+			k4 = h * FunctionAnalyser.reversePolish(reverse, t0 + h, y0 + k1 - k2 + k3);
+			System.out.println(k1 + " " + k2 + " " + k3 + " " + k4);
+			y0 = y0+ 1 / 8.0 * (k1 + 3 * k2 + 3 * k3 + k4);
+			t0 += h;
+			System.out.println(y0);
 		}
-		else {
-			return (FunctionAnalyser.reversePolish(reverse,x,y+1e-5)-FunctionAnalyser.reversePolish(reverse,x,y))/1e-5;
-		}
+		return y0;
 	}
-
-}
+	}

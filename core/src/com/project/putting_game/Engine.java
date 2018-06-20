@@ -54,27 +54,23 @@ public class Engine {
                 ball.position.y >= Gdx.graphics.getHeight() - side) {
 //             System.out.println("Previous " + ball.prevPosition);
             ball.position = ball.prevPosition;
-            ball.velocity = new Vector3(0, 0, 0);
-        }
-
-        if(ball.position.x < 60){
-            ball.position = ball.prevPosition;
-            ball.velocity.scl(0);
-        }
-        if(ball.position.x > 800 - 92) {
-            ball.position = ball.prevPosition;
-            ball.velocity.scl(0);
-        }
-        if(ball.position.y < 60) {
-            ball.position = ball.prevPosition;
-            ball.velocity.scl(0);
-        }
-        if(ball.position.y > 480 - 92) {
-            ball.position = ball.prevPosition;
             ball.velocity.scl(0);
         }
 
-        if(ball.velocity.len() < 200) {
+        if(ball.position.x <= ball.shape.width/2){
+            ball.position = ball.prevPosition;
+            ball.velocity.scl(0);
+        }
+        if(ball.position.x >= fieldShape.width - ball.shape.width/2) {
+            ball.position = ball.prevPosition;
+            ball.velocity.scl(0);
+        }
+        if(ball.position.y <= ball.shape.height/2) {
+            ball.position = ball.prevPosition;
+            ball.velocity.scl(0);
+        }
+        if(ball.position.y >= fieldShape.height - ball.shape.height/2) {
+            ball.position = ball.prevPosition;
             ball.velocity.scl(0);
         }
 

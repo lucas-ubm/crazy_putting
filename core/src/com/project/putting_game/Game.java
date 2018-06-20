@@ -1,10 +1,15 @@
 package com.project.putting_game;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
+import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -34,6 +39,9 @@ public class Game implements Screen {
 	private boolean gameMode1;
 	public ArrayList<String> fieldFormula;
 	private int players;
+	private boolean design;
+	private Stage stage;
+	private Pixmap pixmap;
 
 	public Game (Project2 game, String file) {
 	    //Creation of camera
@@ -43,7 +51,7 @@ public class Game implements Screen {
         this.file = file;
         camera = new OrthographicCamera();
         camera.setToOrtho(false, 800, 480);
-
+		design = true;
 		Settings fieldVariables = textToSettings();
 
         if(!fieldVariables.courseFunction.equalsIgnoreCase("spline"))
@@ -64,10 +72,10 @@ public class Game implements Screen {
 		//Create field
 
         fieldShape = new Rectangle();
-        fieldShape.x = game.borderLength;
-        fieldShape.y = game.borderLength;
-        fieldShape.width = Gdx.graphics.getWidth() - game.borderLength*2;
-        fieldShape.height = Gdx.graphics.getHeight() - game.borderLength*2;
+				fieldShape.x = 0;//game.borderLength;
+				fieldShape.y = 0;//game.borderLength;
+				fieldShape.width = Gdx.graphics.getWidth();// - game.borderLength*2;
+				fieldShape.height = Gdx.graphics.getHeight();// - game.borderLength*2;
 		field = new Field(course.replaceAll(" ",""));
 		Pixmap pixmap = new Pixmap((int) Gdx.graphics.getWidth(), (int) Gdx.graphics.getHeight(), Pixmap.Format.RGBA8888);
 		for (int y = 0; y < Gdx.graphics.getHeight(); y++) {
@@ -82,9 +90,55 @@ public class Game implements Screen {
 				pixmap.drawPixel(x, y);
 			}
 		}
-		fieldTexture = new Texture(pixmap);
-		pixmap.dispose();
 
+		stage = new Stage(new ScreenViewport());
+		Label text = new Label("Drag the mouse over the screen to create rivers, when you are done press ENTER",game.skin);
+		text.setPosition(0,Gdx.graphics.getHeight()-text.getPrefHeight());
+		stage.addActor(text);
+		Gdx.input.setInputProcessor(new InputAdapter(){
+			@Override
+			public boolean touchDown (int x, int y, int pointer, int button) {
+				//System.out.println("Touched:"+" "+x+" "+(Gdx.graphics.getHeight()-y));
+				if (design) {
+					for (int i = y - 5; i <= y + 5; i++) //for all points within radius of 5
+						for (int j = x - 5; j <= x + 5; j++){
+							pixmap.setColor(Color.BLUE);
+							pixmap.drawPixel(j, i);
+							field.getMatrix()[i][j].height=-1;//set equal to water so ball reacts same way
+						}
+					fieldTexture = new Texture(pixmap);
+				}
+				return true; // return true to indicate the event was handled
+			}
+			@Override
+			public boolean touchDragged (int x, int y, int pointer) {
+				if (design) {
+					//System.out.println(x+" "+y+" "+(field.getMatrix().length-1-y));
+					for (int i = y - 5; i <= y + 5; i++) //for all points within radius of 5
+						for (int j = x - 5; j <= x + 5; j++){
+							pixmap.setColor(Color.BLUE);
+							pixmap.drawPixel(j, i);
+							field.getMatrix()[i][j].height=-1;//set equal to water so ball reacts same way
+						}
+					fieldTexture = new Texture(pixmap);
+				}
+				return true; // return true to indicate the event was handled
+			}
+			@Override
+			public boolean keyDown(int keycode){
+				if(keycode==Input.Keys.ENTER) {
+					if(design)
+						stage.dispose();
+					design = false;
+				}
+				if(keycode==Input.Keys.ESCAPE) {
+					//game.setScreen(new Game(game,file));
+				}
+				return true;
+			}
+		});
+
+		fieldTexture = new Texture(pixmap);
 	}
 
 	public void render (float delta) {
@@ -103,6 +157,11 @@ public class Game implements Screen {
             game.batch.draw(h.holeImage, h.position.x, h.position.y, h.holeShape.width, h.holeShape.height);
         }
 		game.batch.end();
+		if(stage!=null){
+			stage.act();
+			stage.getBatch().setProjectionMatrix(camera.combined);
+			stage.draw();//draw stage (so the elements of the stage)
+		}
 
         play();
 
@@ -136,7 +195,6 @@ public class Game implements Screen {
             direction.set((ballPos.x-origin.x), (ballPos.y-origin.y), 0);
             ball.setUserVelocity(direction.scl(3f));
             ball.prevPosition = ballPos;
-
         }
 
         if(!gameMode1 && condition)
@@ -154,7 +212,8 @@ public class Game implements Screen {
             else{
                 System.out.println("No velocities left");
                 outputGame(ball);
-                System.exit(0);
+                game.setScreen(new WinScreen(game));
+                //System.exit(0);
             }
         }
 
@@ -193,7 +252,7 @@ public class Game implements Screen {
 	}
 
     @Override
-    public void resize(int width, int height) {
+    public void resize(int width, int height) {stage.getViewport().update(width, height);
     }
     @Override
     public void show(){
@@ -266,6 +325,4 @@ public class Game implements Screen {
             System.out.println("You messed up");
         }
     }
-
-
 }
