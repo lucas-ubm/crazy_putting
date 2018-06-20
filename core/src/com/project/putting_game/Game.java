@@ -20,19 +20,24 @@ import java.util.StringTokenizer;
 public class Game implements Screen {
 	private OrthographicCamera camera;
 	private Texture fieldTexture;
+	private ArrayList<Ball> balls;
 	private Ball ball;
-	private Field field;
-	public int i =0;
-	private Rectangle fieldShape;
 	private Hole hole;
+	private Field field;
+	public int i = 0;
+	private Rectangle fieldShape;
+	private ArrayList<Hole> holes;
 	final Project2 game;
 	final private String file;
 	private boolean condition = true;
 	private String course;
 	private boolean gameMode1;
+	public ArrayList<String> fieldFormula;
+	private int players;
 
 	public Game (Project2 game, String file) {
 	    //Creation of camera
+        this.players = 3;
         this.game = game;
         this.gameMode1 = game.getGameMode();
         this.file = file;
@@ -40,11 +45,24 @@ public class Game implements Screen {
         camera.setToOrtho(false, 800, 480);
 
 		Settings fieldVariables = textToSettings();
-		//Create bucket Rectangle
-		ball = new Ball(fieldVariables.startPosition, "golfball.png", 32);
-		hole = new Hole(fieldVariables.goalPosition, "hole.png", fieldVariables.goalRadius);
+
+        if(!fieldVariables.courseFunction.equalsIgnoreCase("spline"))
+            this.fieldFormula = FunctionAnalyser.ShuntingYard(fieldVariables.courseFunction);
+
+        this.balls = new ArrayList<Ball>();
+        this.holes = new ArrayList<Hole>();
+
+        for(int i = 0; i < this.players; i++){
+            balls.add(new Ball(fieldVariables.startPosition.scl((float)(1+0.3*i)).cpy(), "golfball.png", 32));
+            holes.add(new Hole(fieldVariables.goalPosition.scl((float)(1-0.1*i)).cpy(), "hole.png", fieldVariables.goalRadius));
+        }
+        this.ball = balls.get(0);
+        this.hole = holes.get(0);
+
+
 		this.course = fieldVariables.courseFunction;
 		//Create field
+
         fieldShape = new Rectangle();
         fieldShape.x = game.borderLength;
         fieldShape.y = game.borderLength;
@@ -55,7 +73,7 @@ public class Game implements Screen {
 		for (int y = 0; y < Gdx.graphics.getHeight(); y++) {
 			for (int x = 0; x < Gdx.graphics.getWidth(); x++) {
 				if(field.getMatrix()[y][x].height >=0) {
-					float  value = -1*map(field.getMatrix()[y][x].height, field.getMax(),field.getMin());
+					float  value = map(field.getMatrix()[y][x].height, field.getMax(),field.getMin());
 					pixmap.setColor(new Color(0,  value, 0, 1f));// set color White with Alpha=0.5
 				}
 				else{
@@ -66,6 +84,7 @@ public class Game implements Screen {
 		}
 		fieldTexture = new Texture(pixmap);
 		pixmap.dispose();
+
 	}
 
 	public void render (float delta) {
@@ -74,22 +93,42 @@ public class Game implements Screen {
 		camera.update();
 		game.batch.setProjectionMatrix(camera.combined);
 		game.batch.begin();
-
         game.batch.draw(fieldTexture, fieldShape.x, fieldShape.y, fieldShape.width, fieldShape.height);
-		game.batch.draw(ball.ballImage, ball.position.x, ball.position.y, ball.shape.width, ball.shape.height);
-		game.batch.draw(hole.holeImage, hole.position.x, hole.position.y, hole.holeShape.width, hole.holeShape.height );
 
+
+        for(Ball b: balls) {
+            game.batch.draw(b.ballImage, b.position.x, b.position.y, b.shape.width, b.shape.height);
+        }
+        for(Hole h: holes){
+            game.batch.draw(h.holeImage, h.position.x, h.position.y, h.holeShape.width, h.holeShape.height);
+        }
 		game.batch.end();
+
+        play();
+
+
+	}
+
+	public boolean checkRadius(Ball ball, Hole hole)
+    {
+        boolean result = false;
+        if(Math.pow((ball.position.x+ball.shape.width/2-(hole.position.x+hole.holeShape.width/2)), 2) + Math.pow((ball.position.y+ball.shape.height/2-(hole.position.y+hole.holeShape.height/2)), 2) <= Math.pow(hole.holeShape.height/2-ball.shape.width/2,2)){
+            result = true;
+        }
+        return result;
+    }
+
+    public boolean play(){
+	    int balln = ball.id;
         Vector3 origin = new Vector3();
         Vector3 ballPos = new Vector3();
-
-		if(Gdx.input.justTouched() && condition && gameMode1) {
-		    boolean condition = true;
-
+        if(Gdx.input.justTouched() && condition && gameMode1) {
+            ball = balls.get(nextBall(ball));
+            hole = holes.get(nextBall(ball));
             Vector3 touchPos = new Vector3();
             touchPos.set(Gdx.input.getX(), Gdx.input.getY(), 0);
             camera.unproject(touchPos);
-            origin.set((int)touchPos.x - 64/2, (int)touchPos.y - 64/2, 0);
+            origin.set((int)touchPos.x - ball.shape.width/2, (int)touchPos.y - ball.shape.height/2, 0);
 
             ballPos.set((int)ball.position.x, (int)ball.position.y, 0);
             Vector3 direction = new Vector3();
@@ -104,6 +143,7 @@ public class Game implements Screen {
         {
             Moves Course1 = new Moves(game.inputfile);
             Vector3[] data = Course1.getData();
+            ball = balls.get(0);
             if(data[i] != null && i < data.length)
             {
                 ball.setUserVelocity(data[i]);
@@ -119,43 +159,32 @@ public class Game implements Screen {
         }
 
         if(ball.velocity.len() >= 0.02) {
-		    condition = false;
-            //Makes sure the bucket doesn't get out of the window
-            Engine.calculate(ball, field);
-            if(ball.position.x < 60){
-                ball.position = ball.prevPosition;
-            }
-            if(ball.position.x > 800 - 92) {
-                ball.position = ball.prevPosition;
-            }
-            if(ball.position.y < 60) {
-                ball.position = ball.prevPosition;
-            }
-            if(ball.position.y > 480 - 92) {
-                ball.position = ball.prevPosition;
-            }
-
-        }
-        if(ball.velocity.len() < 200){
-		    ball.velocity.x = 0;
-		    ball.velocity.y = 0;
-		    condition = true;
+            Engine.calculate(ball, field, fieldFormula);
         }
 
-        if(ball.velocity.len() <= 0.2 && checkRadius())
+        condition = ball.velocity.len() == 0;
+
+
+        if(ball.velocity.len() <= 0.2 && checkRadius(ball, hole))
         {
             outputGame(ball);
             game.setScreen(new com.project.putting_game.WinScreen(game));
         }
-	}
+        return condition;
+    }
 
-	public boolean checkRadius()
-    {
-        boolean result = false;
-        if(Math.pow((ball.position.x+ball.shape.width/2-(hole.position.x+hole.holeShape.width/2)), 2) + Math.pow((ball.position.y+ball.shape.height/2-(hole.position.y+hole.holeShape.height/2)), 2) <= Math.pow(hole.holeShape.height/2-ball.shape.width/2,2)){
-            result = true;
+    public int nextBall(Ball ball){
+        int id = 0;
+	    if(ball.velocity.len() == 0 && Gdx.input.isTouched()){
+	        if(ball.id < balls.size() - 1){
+	            id = ball.id + 1;
+            }
+            return id;
         }
-        return result;
+        else{
+	        return ball.id;
+        }
+
     }
 
 	@Override
@@ -181,7 +210,7 @@ public class Game implements Screen {
     }
 
     public static float map (double x, double max, double min) {
-	    return (float) (0 - (max-x)/(max-min));
+        return (float) ((x)/(max-min));
 
     }
 
@@ -237,4 +266,6 @@ public class Game implements Screen {
             System.out.println("You messed up");
         }
     }
+
+
 }

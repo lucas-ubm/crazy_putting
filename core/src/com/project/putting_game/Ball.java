@@ -17,12 +17,12 @@ public class Ball {
     public Texture ballImage;
     public Ellipse shape;
     public Queue<Vector3> moveHistory;
+    public static int c;
+    public int id;
 
 
     public Ball(Vector3 position, String path, int side) {
         this.velocity = new Vector3(0,0,0);
-        moveHistory = new Queue<Vector3>();
-        moveHistory.enqueue(velocity);
         moveHistory = new Queue<Vector3>();
 
         this.position = position;
@@ -33,6 +33,8 @@ public class Ball {
         shape.y = position.y;
         shape.height = side;
         shape.width = side;
+        id = c;
+        c++;
 
     }
 

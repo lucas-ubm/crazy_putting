@@ -3,7 +3,11 @@ package com.project.putting_game;
 import java.util.ArrayList;
 
 public class FunctionAnalyser {
-
+	/**
+	 *
+	 * @param function function for which you want to find rpn
+	 * @return function in rpn
+	 */
 	public static ArrayList<String> ShuntingYard(String function){
 
 		ArrayList<String> reverse= new ArrayList<String>();
@@ -61,6 +65,13 @@ public class FunctionAnalyser {
 		return reverse;
 	}
 
+	/**
+	 *
+	 * @param reverse function in reverse polish notation
+	 * @param x x value of the function
+	 * @param y y value of the function
+	 * @return value of the given function at the given point
+	 */
 	public static Double reversePolish(ArrayList<String> reverse,double x,double y){
 		String token;
 		Double operand2;
@@ -151,12 +162,20 @@ public class FunctionAnalyser {
 
 	}
 
+	/**
+	 *
+	 * @param reverse function for which you are calculatind the derivative
+	 * @param x x value of the function
+	 * @param y y value of the function
+	 * @param respect variable with respect of which you are calculating the derivative
+	 * @return the value of the derivative at the given point
+	 */
 	public static double derivative(ArrayList<String> reverse, double x, double y, String respect) {
 		if(respect.equalsIgnoreCase("x")) {
-			return (FunctionAnalyser.reversePolish(reverse,x+1e-10,y)-FunctionAnalyser.reversePolish(reverse,x,y))/1e-10;
+			return (FunctionAnalyser.reversePolish(reverse,x+1e-5,y)-FunctionAnalyser.reversePolish(reverse,x,y))/1e-5;
 		}
 		else {
-			return (FunctionAnalyser.reversePolish(reverse,x,y+1e-10)-FunctionAnalyser.reversePolish(reverse,x,y))/1e-10;
+			return (FunctionAnalyser.reversePolish(reverse,x,y+1e-5)-FunctionAnalyser.reversePolish(reverse,x,y))/1e-5;
 		}
 	}
 

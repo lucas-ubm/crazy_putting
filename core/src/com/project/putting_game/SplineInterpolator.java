@@ -2,8 +2,6 @@ package com.project.putting_game;
 
 import com.badlogic.gdx.math.Vector3;
 
-import java.util.Arrays;
-
 public class SplineInterpolator {
 
 	public static double getHeight(double[][] ds, double x, double y){
@@ -30,41 +28,41 @@ public class SplineInterpolator {
 	}//i=y,j=x
 	public static double fx(Vector3[][] heights, int i, int j){
 		if(j==0)
-			return (heights[i][j+1].z-heights[i][j].z)/(Math.abs(heights[i][j+1].x - heights[i][j].x));
+			return (heights[i][j+1].z-heights[i][j].z)/(heights[i][j+1].x - heights[i][j].x);
 		else if(j==heights[i].length-1)
-			return (heights[i][j].z-heights[i][j-1].z)/(Math.abs(heights[i][j].x - heights[i][j-1].x));
+			return (heights[i][j].z-heights[i][j-1].z)/(heights[i][j].x - heights[i][j-1].x);
 		else{
 			//System.out.println("fx="+i+" "+j+":"+heights[i][j+1].z+"-"+heights[i][j-1].z+"/(2*"+heights[i][j+1].x+" - "+heights[i][j].x);
-			return (heights[i][j+1].z-heights[i][j-1].z)/(Math.abs(heights[i][j+1].x - heights[i][j-1].x));
-	}}
+			return (heights[i][j+1].z-heights[i][j-1].z)/(heights[i][j+1].x - heights[i][j-1].x);
+		}}
 	public static double fy(Vector3[][] heights, int i, int j){
 		if(i==0)
-			return (heights[i+1][j].z-heights[i][j].z)/(Math.abs(heights[i+1][j].y - heights[i][j].y));
+			return (heights[i+1][j].z-heights[i][j].z)/(heights[i+1][j].y - heights[i][j].y);
 		else if(i==heights.length-1)
-			return (heights[i][j].z-heights[i-1][j].z)/(Math.abs(heights[i][j].y - heights[i-1][j].y));
+			return (heights[i][j].z-heights[i-1][j].z)/(heights[i][j].y - heights[i-1][j].y);
 		else{
 			//System.out.println("fy="+i+" "+j+":"+heights[i+1][j].z+"-"+heights[i-1][j].z+"/(2*"+heights[i+1][j].y+" - "+heights[i][j].y+"output "+(heights[i+1][j].z - heights[i-1][j].z) / (Math.abs(heights[i+1][j].y - heights[i-1][j].y)));
-			return (heights[i+1][j].z - heights[i-1][j].z) / (Math.abs(heights[i+1][j].y - heights[i-1][j].y));
-	}}
+			return (heights[i+1][j].z - heights[i-1][j].z) / (heights[i+1][j].y - heights[i-1][j].y);
+		}}
 	public static double fxy(Vector3[][] heights, int i, int j){
 		if(i==0 && j==0)//corners
-			return (heights[i+1][j+1].z-heights[i][j+1].z-heights[i+1][j].z+heights[i][j].z)/(Math.abs(heights[i+1][j].x - heights[i+1][j+1].x)*Math.abs(heights[i+1][j].y-heights[i][j].y));
+			return (heights[i+1][j+1].z-heights[i][j+1].z-heights[i+1][j].z+heights[i][j].z)/((heights[i+1][j].x - heights[i+1][j+1].x)*(heights[i+1][j].y-heights[i][j].y));
 		else if(j==heights[i].length-1&& i==0)
-			return (heights[i+1][j].z-heights[i][j].z-heights[i+1][j-1].z+heights[i][j-1].z)/(Math.abs(heights[i+1][j-1].x - heights[i+1][j].x)*Math.abs(heights[i+1][j-1].y-heights[i][j-1].y));
+			return (heights[i+1][j].z-heights[i][j].z-heights[i+1][j-1].z+heights[i][j-1].z)/((heights[i+1][j-1].x - heights[i+1][j].x)*(heights[i+1][j-1].y-heights[i][j-1].y));
 		else if(j==0 &&i==heights.length-1)
-			return (heights[i][j+1].z-heights[i-1][j+1].z-heights[i][j].z+heights[i-1][j].z)/(Math.abs(heights[i][j].x - heights[i][j+1].x)*Math.abs(heights[i][j].y-heights[i-1][j].y));
+			return (heights[i][j+1].z-heights[i-1][j+1].z-heights[i][j].z+heights[i-1][j].z)/((heights[i][j].x - heights[i][j+1].x)*(heights[i][j].y-heights[i-1][j].y));
 		else if(i==heights.length-1&&j==heights[i].length-1)
-			return (heights[i][j].z-heights[i-1][j].z-heights[i][j-1].z+heights[i-1][j-1].z)/(Math.abs(heights[i][j-1].x - heights[i][j].x)*Math.abs(heights[i][j-1].y-heights[i-1][j-1].y));
+			return (heights[i][j].z-heights[i-1][j].z-heights[i][j-1].z+heights[i-1][j-1].z)/((heights[i][j-1].x - heights[i][j].x)*(heights[i][j-1].y-heights[i-1][j-1].y));
 		else if(j==0)//borders
-			return (heights[i+1][j+1].z-heights[i-1][j+1].z-heights[i+1][j].z+heights[i-1][j].z)/(Math.abs(heights[i+1][j].x - heights[i+1][j+1].x)*Math.abs(heights[i+1][j].y-heights[i-1][j].y));
+			return (heights[i+1][j+1].z-heights[i-1][j+1].z-heights[i+1][j].z+heights[i-1][j].z)/((heights[i+1][j].x - heights[i+1][j+1].x)*(heights[i+1][j].y-heights[i-1][j].y));
 		else if(j==heights[i].length-1)
-			return (heights[i+1][j].z-heights[i-1][j].z-heights[i+1][j-1].z+heights[i-1][j-1].z)/(Math.abs(heights[i+1][j-1].x - heights[i+1][j].x)*Math.abs(heights[i+1][j-1].y-heights[i-1][j-1].y));
+			return (heights[i+1][j].z-heights[i-1][j].z-heights[i+1][j-1].z+heights[i-1][j-1].z)/((heights[i+1][j-1].x - heights[i+1][j].x)*(heights[i+1][j-1].y-heights[i-1][j-1].y));
 		else if(i==0)
-			return (heights[i+1][j+1].z-heights[i][j+1].z-heights[i+1][j-1].z+heights[i][j-1].z)/(Math.abs(heights[i+1][j-1].x - heights[i+1][j+1].x)*Math.abs(heights[i+1][j-1].y-heights[i][j-1].y));
+			return (heights[i+1][j+1].z-heights[i][j+1].z-heights[i+1][j-1].z+heights[i][j-1].z)/((heights[i+1][j-1].x - heights[i+1][j+1].x)*(heights[i+1][j-1].y-heights[i][j-1].y));
 		else if(i==heights.length-1)
-			return (heights[i][j+1].z-heights[i-1][j+1].z-heights[i][j-1].z+heights[i-1][j-1].z)/(Math.abs(heights[i][j-1].x - heights[i][j+1].x)*Math.abs(heights[i][j-1].y-heights[i-1][j-1].y));
+			return (heights[i][j+1].z-heights[i-1][j+1].z-heights[i][j-1].z+heights[i-1][j-1].z)/((heights[i][j-1].x - heights[i][j+1].x)*(heights[i][j-1].y-heights[i-1][j-1].y));
 		else//middle
-			return (heights[i+1][j+1].z-heights[i-1][j+1].z-heights[i+1][j-1].z+heights[i-1][j-1].z)/(Math.abs(heights[i+1][j-1].x - heights[i+1][j+1].x)*Math.abs(heights[i+1][j-1].y-heights[i-1][j-1].y));
+			return (heights[i+1][j+1].z-heights[i-1][j+1].z-heights[i+1][j-1].z+heights[i-1][j-1].z)/((heights[i+1][j-1].x - heights[i+1][j+1].x)*(heights[i+1][j-1].y-heights[i-1][j-1].y));
 	}
 	public static double[][] Multiplication(double[][] m1, double[][] m2) {
 		double[][] result = new double[m1.length][m2[0].length];
