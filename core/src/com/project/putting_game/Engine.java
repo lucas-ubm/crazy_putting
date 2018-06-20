@@ -1,7 +1,6 @@
 package com.project.putting_game;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.math.Vector3;
 
 import java.util.ArrayList;
 
@@ -61,7 +60,7 @@ public class Engine {
             ball.position = ball.prevPosition;
             ball.velocity.scl(0);
         }
-        if(ball.position.x >= fieldShape.width - ball.shape.width/2) {
+        if(ball.position.x >= Gdx.graphics.getWidth() - ball.shape.width/2) {
             ball.position = ball.prevPosition;
             ball.velocity.scl(0);
         }
@@ -69,7 +68,7 @@ public class Engine {
             ball.position = ball.prevPosition;
             ball.velocity.scl(0);
         }
-        if(ball.position.y >= fieldShape.height - ball.shape.height/2) {
+        if(ball.position.y >= Gdx.graphics.getHeight() - ball.shape.height/2) {
             ball.position = ball.prevPosition;
             ball.velocity.scl(0);
         }

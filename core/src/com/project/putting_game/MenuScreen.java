@@ -26,8 +26,6 @@ public class MenuScreen implements Screen {
 	private ImageButton checkBox2;
 	private Texture checkImg;
 	private Texture uncheckImg;
-	private Texture golfImg;
-	private Rectangle golf;
 
 	/**Constructor of MenuScreen. Same as create() if extending ApplicationAdapter.
 	 * Instantiating all variables defined above and its components (such as position and size).
