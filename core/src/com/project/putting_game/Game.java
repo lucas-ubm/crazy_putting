@@ -61,8 +61,8 @@ public class Game implements Screen {
         this.holes = new ArrayList<Hole>();
 
         for(int i = 0; i < this.players; i++){
-            balls.add(new Ball(fieldVariables.startPosition.scl((float)(1+0.3*i)).cpy(), "golfball.png", 20));
-            holes.add(new Hole(fieldVariables.goalPosition.scl((float)(1-0.1*i)).cpy(), "hole.png", fieldVariables.goalRadius));
+            balls.add(new Ball(players,fieldVariables.startPosition.scl((float)(1+0.3*i)).cpy(), "golfball.png", 24));
+            holes.add(new Hole(players,fieldVariables.goalPosition.scl((float)(1-0.1*i)).cpy(), "hole.png", fieldVariables.goalRadius));
         }
         this.ball = balls.get(0);
         this.hole = holes.get(0);
@@ -72,10 +72,10 @@ public class Game implements Screen {
 		//Create field
 
         fieldShape = new Rectangle();
-				fieldShape.x = 0;//game.borderLength;
-				fieldShape.y = 0;//game.borderLength;
-				fieldShape.width = Gdx.graphics.getWidth();// - game.borderLength*2;
-				fieldShape.height = Gdx.graphics.getHeight();// - game.borderLength*2;
+		fieldShape.x = 0;//game.borderLength;
+		fieldShape.y = 0;//game.borderLength;
+		fieldShape.width = Gdx.graphics.getWidth();// - game.borderLength*2;
+		fieldShape.height = Gdx.graphics.getHeight();// - game.borderLength*2;
 		field = new Field(course.replaceAll(" ",""));
 		pixmap = new Pixmap((int) Gdx.graphics.getWidth(), (int) Gdx.graphics.getHeight(), Pixmap.Format.RGBA8888);
 		for (int y = 0; y < Gdx.graphics.getHeight(); y++) {
@@ -149,12 +149,15 @@ public class Game implements Screen {
 		game.batch.begin();
         game.batch.draw(fieldTexture, fieldShape.x, fieldShape.y, fieldShape.width, fieldShape.height);
 
-
         for(Ball b: balls) {
-            game.batch.draw(b.ballImage, b.position.x-b.shape.height/2, b.position.y-b.shape.height/2, b.shape.width, b.shape.height);
+        	b.ballImage.setPosition(b.position.x-b.shape.height/2, b.position.y-b.shape.height/2);
+        	b.ballImage.draw(game.batch);
+           // game.batch.draw(b.ballImage, b.position.x-b.shape.height/2, b.position.y-b.shape.height/2, b.shape.width, b.shape.height);
         }
         for(Hole h: holes){
-            game.batch.draw(h.holeImage, h.position.x-h.holeShape.height/4, h.position.y-h.holeShape.height/2, h.holeShape.width, h.holeShape.height);
+	        //b.ballImage.setPosition(h.position.x-h.holeShape.height/4, h.position.y-h.holeShape.height/2);
+	        h.holeImage.draw(game.batch);
+            //game.batch.draw(h.holeImage, h.position.x-h.holeShape.height/4, h.position.y-h.holeShape.height/2, h.holeShape.width, h.holeShape.height);
         }
 		game.batch.end();
 		if(stage!=null){
@@ -162,14 +165,10 @@ public class Game implements Screen {
 			stage.getBatch().setProjectionMatrix(camera.combined);
 			stage.draw();//draw stage (so the elements of the stage)
 		}
-
         play();
-
-
 	}
 
-	public boolean checkRadius(Ball ball, Hole hole)
-    {
+	public boolean checkRadius(Ball ball, Hole hole) {
         boolean result = false;
         if(Math.pow((ball.position.x+ball.shape.width/2-(hole.position.x+hole.holeShape.width/2)), 2) + Math.pow((ball.position.y+ball.shape.height/2-(hole.position.y+hole.holeShape.height/2)), 2) <= Math.pow(hole.holeShape.height/2-ball.shape.width/2,2)){
             result = true;
@@ -243,7 +242,6 @@ public class Game implements Screen {
         else{
 	        return ball.id;
         }
-
     }
 
 	@Override
@@ -270,7 +268,6 @@ public class Game implements Screen {
 
     public static float map (double x, double max, double min) {
         return (float) ((x)/(max-min));
-
     }
 
     public void setGameMode(boolean gameMode1)
