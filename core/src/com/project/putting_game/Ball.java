@@ -40,7 +40,7 @@ public class Ball {
 	    float value = ((float) id+1)/((float)players);//scale color of the ball to number of different colors needed
 	    //System.out.println(value);
 	    ballImage.setColor(new Color(value, (float)0.2, 1-value, 1f));
-        this.prevPosition = null;
+        this.prevPosition = position;
         this.shape = new Ellipse();
         shape.x = position.x;
         shape.y = position.y;
