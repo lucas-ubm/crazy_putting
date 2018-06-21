@@ -17,9 +17,6 @@ public class Project2 extends Game {
 	public String inputfile = "Input.txt";
 	public Skin uiskin;
 	public Skin skin;
-	public TextButton.TextButtonStyle textButtonStyle;
-	public Label.LabelStyle labelStyle;
-	public TextField.TextFieldStyle textFieldStyle;
 	final public int borderLength = 60;
 
 	@Override
@@ -40,7 +37,7 @@ public class Project2 extends Game {
 		skin.add("white", new Texture(backgroundButton));
 		skin.add("background",new Texture(backgroundButton));
 		//Create a button style
-		textButtonStyle = new TextButton.TextButtonStyle();
+		TextButton.TextButtonStyle textButtonStyle = new TextButton.TextButtonStyle();
 		textButtonStyle.up = skin.newDrawable("background", Color.FOREST); //standard color of the button (no special action)
 		textButtonStyle.down = skin.newDrawable("background", Color.BLACK); //let the button turn black if you press your mouse when standing on the button
 		textButtonStyle.checked = skin.newDrawable("background", Color.BLACK);
@@ -49,12 +46,12 @@ public class Project2 extends Game {
 		skin.add("default", textButtonStyle);
 		backgroundButton.dispose();//don't need it anymore, only taking memory
 		//create label style
-		labelStyle = new Label.LabelStyle();
+		Label.LabelStyle labelStyle = new Label.LabelStyle();
 		labelStyle.font = skin.getFont("default");
 		skin.add("default", labelStyle);
 		this.setScreen(new MenuScreen(this));
 		//create textfield style
-		textFieldStyle = new TextField.TextFieldStyle();
+		TextField.TextFieldStyle textFieldStyle = new TextField.TextFieldStyle();
 		textFieldStyle.font = font;
 		textFieldStyle.fontColor = Color.BLUE;
 		textFieldStyle.background = skin.newDrawable("white", Color.LIGHT_GRAY);

@@ -12,7 +12,7 @@ public class Hole
     public Ellipse holeShape;
     //height, width, x, y (floats)
     public Sprite holeImage;
-    public static int c=1;
+    public static int c=0;
     public int id;
 
     public Hole(int players,Vector3 position, String path, int side) {
@@ -21,8 +21,8 @@ public class Hole
         this.position = position;
         Texture texture = new Texture(Gdx.files.internal(path));
         this.holeImage = new Sprite(texture);
-        float  value = ((float) id)/((float)players);
-        holeImage.setColor(new Color(value, (float)0.2, value, 1f));
+        float  value = ((float) id+1)/((float)players);
+        holeImage.setColor(new Color(value, (float)0.2, 1-value, 1f));
         this.holeShape = new Ellipse();
         holeShape.x = position.x;
         holeShape.y = position.y;
