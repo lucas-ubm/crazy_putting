@@ -46,9 +46,9 @@ public class Game implements Screen {
 	private Stage mpStage;
 	private Label.LabelStyle ballStyle;
 
-	public Game (Project2 game, String file) {
+	public Game (Project2 game, String file,int players) {
 		//Creation of camera
-		this.players = 2;
+		this.players = players;
 		this.maxDistance =300;
 		this.game = game;
 		this.gameMode1 = game.getGameMode();
@@ -242,6 +242,7 @@ public class Game implements Screen {
 			outputGame(ball);
 			game.setScreen(new com.project.putting_game.WinScreen(game));
 		}
+
 
 		if(ball.velocity.len() == 0 && checkRadius(ball, hole)) {
 			System.out.println("This ball is in his hole");
