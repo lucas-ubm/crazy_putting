@@ -45,7 +45,7 @@ public class Game implements Screen {
 
 	public Game (Project2 game, String file) {
 	    //Creation of camera
-        this.players = 3;
+        this.players = 2;
         this.game = game;
         this.gameMode1 = game.getGameMode();
         this.file = file;
@@ -61,7 +61,7 @@ public class Game implements Screen {
         this.holes = new ArrayList<Hole>();
 
         for(int i = 0; i < this.players; i++){
-            balls.add(new Ball(fieldVariables.startPosition.scl((float)(1+0.3*i)).cpy(), "golfball.png", 32));
+            balls.add(new Ball(fieldVariables.startPosition.scl((float)(1+0.3*i)).cpy(), "golfball.png", 20));
             holes.add(new Hole(fieldVariables.goalPosition.scl((float)(1-0.1*i)).cpy(), "hole.png", fieldVariables.goalRadius));
         }
         this.ball = balls.get(0);
@@ -151,10 +151,10 @@ public class Game implements Screen {
 
 
         for(Ball b: balls) {
-            game.batch.draw(b.ballImage, b.position.x, b.position.y, b.shape.width, b.shape.height);
+            game.batch.draw(b.ballImage, b.position.x-b.shape.height/2, b.position.y-b.shape.height/2, b.shape.width, b.shape.height);
         }
         for(Hole h: holes){
-            game.batch.draw(h.holeImage, h.position.x, h.position.y, h.holeShape.width, h.holeShape.height);
+            game.batch.draw(h.holeImage, h.position.x-h.holeShape.height/4, h.position.y-h.holeShape.height/2, h.holeShape.width, h.holeShape.height);
         }
 		game.batch.end();
 		if(stage!=null){
@@ -181,7 +181,7 @@ public class Game implements Screen {
 	    int balln = ball.id;
         Vector3 origin = new Vector3();
         Vector3 ballPos = new Vector3();
-        if(Gdx.input.justTouched() && condition && gameMode1) {
+        if(Gdx.input.justTouched() && condition && gameMode1  && !design) {
             ball = balls.get(nextBall(ball));
             hole = holes.get(nextBall(ball));
             Vector3 touchPos = new Vector3();
@@ -193,7 +193,7 @@ public class Game implements Screen {
             Vector3 direction = new Vector3();
 
             direction.set((ballPos.x-origin.x), (ballPos.y-origin.y), 0);
-            ball.setUserVelocity(direction.scl(3f));
+            ball.setUserVelocity(direction.scl(6f));
             ball.prevPosition = ballPos;
         }
 

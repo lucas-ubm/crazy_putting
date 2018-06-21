@@ -1,6 +1,7 @@
 package com.project.putting_game;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.math.Vector2;
 
 import java.util.ArrayList;
 
@@ -9,7 +10,7 @@ public class Engine {
     public static final double g = 9.81;
     public static double CurrentFriction;
     public static double currentHeight;
-    public static final double h = 0.01;
+    public static final double h = 0.005;
     public static double xh;
     public static double yh;
     public static double vx_h;
@@ -46,11 +47,11 @@ public class Engine {
         currentHeight = fields.getMatrix()[(int) ball.position.y][(int) ball.position.x].height;
 
         //Checks whether the ball has touched the walls or touched the water. If it did, return to the previous position and set velocity to 0.
-        int border = 60;
+        int border = 0;
         int ballSide =(int) ball.shape.height;
         int side = border + ballSide;
-        if (ball.position.x <= border || ball.position.y <= border || ball.position.x >= Gdx.graphics.getWidth() - side ||
-                ball.position.y >= Gdx.graphics.getHeight() - side) {
+        if (ball.position.x <= ball.shape.width/2 || ball.position.y <= ball.shape.height/2 || ball.position.x >= Gdx.graphics.getWidth() - side ||
+                ball.position.y >= Gdx.graphics.getHeight() - side || water(ball, fields)) {
 //             System.out.println("Previous " + ball.prevPosition);
             ball.position = ball.prevPosition;
             ball.velocity.scl(0);
@@ -90,6 +91,25 @@ public class Engine {
     public static double forceY(Ball ball, ArrayList<String> formula) {
         double Fy = ((-g) * FunctionAnalyser.derivative(formula, ball.position.x, ball.position.y, "y")) - (CurrentFriction * g * vy);
         return Fy;
+    }
+
+    //Right now, input is the ball object containing vectors. The output is only one position.
+    //Now we get 2 positions, current pos + position we want to get too. Now we want to know what force we have to use to get to that point.
+    //So we simulate the movement of the ball to place X.
+
+    public static boolean water(Ball ball, Field field) {
+        //System.out.println("Position:"+ball.position.x+" "+ball.position.y);
+        Vector2 center = new Vector2(ball.position.x, ball.position.y);
+        for (int i = (int)(center.x-ball.shape.width); i < center.x + ball.shape.width; i++) {
+            for (int j = (int)(center.y-ball.shape.height); j < center.y + ball.shape.height; j++) {
+                if (ball.shape.contains(new Vector2(i, j))) {
+                    if(field.getMatrix()[field.getMatrix().length-1-j][i].height < 0){
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
     }
 
 
