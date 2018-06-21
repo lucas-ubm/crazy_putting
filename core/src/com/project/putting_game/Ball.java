@@ -18,13 +18,14 @@ public class Ball {
     public Ellipse shape;
     public Queue<Vector3> moveHistory;
     public static int c;
+    public boolean arrived;
     public int id;
 
 
     public Ball(Vector3 position, String path, int side) {
         this.velocity = new Vector3(0,0,0);
         moveHistory = new Queue<Vector3>();
-
+        this.arrived = false;
         this.position = position;
         this.ballImage = new Texture(Gdx.files.internal(path));
         this.prevPosition = position;
@@ -44,4 +45,4 @@ public class Ball {
         moveHistory.enqueue(newVelocity.cpy());
     }
 
-    }
+}
