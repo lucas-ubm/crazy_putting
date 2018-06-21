@@ -77,7 +77,7 @@ public class Game implements Screen {
 				fieldShape.width = Gdx.graphics.getWidth();// - game.borderLength*2;
 				fieldShape.height = Gdx.graphics.getHeight();// - game.borderLength*2;
 		field = new Field(course.replaceAll(" ",""));
-		Pixmap pixmap = new Pixmap((int) Gdx.graphics.getWidth(), (int) Gdx.graphics.getHeight(), Pixmap.Format.RGBA8888);
+		pixmap = new Pixmap((int) Gdx.graphics.getWidth(), (int) Gdx.graphics.getHeight(), Pixmap.Format.RGBA8888);
 		for (int y = 0; y < Gdx.graphics.getHeight(); y++) {
 			for (int x = 0; x < Gdx.graphics.getWidth(); x++) {
 				if(field.getMatrix()[y][x].height >=0) {
@@ -224,7 +224,7 @@ public class Game implements Screen {
         condition = ball.velocity.len() == 0;
 
 
-        if(ball.velocity.len() <= 0.2 && checkRadius(ball, hole))
+        if(ball.velocity.len() <= 0.02 && checkRadius(ball, hole))
         {
             outputGame(ball);
             game.setScreen(new com.project.putting_game.WinScreen(game));
