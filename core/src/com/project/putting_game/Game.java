@@ -30,6 +30,7 @@ public class Game implements Screen {
 	private Hole hole;
 	private Field field;
 	public int i = 0;
+	private int maxDistance;
 	private Rectangle fieldShape;
 	private ArrayList<Hole> holes;
 	final Project2 game;
@@ -46,6 +47,7 @@ public class Game implements Screen {
 	public Game (Project2 game, String file) {
 	    //Creation of camera
         this.players = 2;
+        this.maxDistance = 300;
         this.game = game;
         this.gameMode1 = game.getGameMode();
         this.file = file;
@@ -217,10 +219,11 @@ public class Game implements Screen {
             }
         }
 
-        if(ball.velocity.len() >= 0.02) {
-            Engine.calculate(ball, field, fieldFormula);
-        }
-
+        Engine.calculate(ball, field, fieldFormula);
+		if(ball.velocity.len() == 0 && !distanceBalls(ball)){
+			ball.position = ball.prevPosition;
+			ball.velocity.scl(0);
+		}
         condition = ball.velocity.len() == 0;
 
 
@@ -245,6 +248,18 @@ public class Game implements Screen {
         }
 
     }
+
+    public boolean distanceBalls(Ball ball) {
+		Vector3 origin = ball.position.cpy();
+		for(Ball b: balls){
+
+			if(Math.abs(origin.dst(b.position)) > maxDistance){
+				System.out.println(Math.abs(origin.dst(b.position)));
+				return false;
+			}
+		}
+		return true;
+	}
 
 	@Override
 	public void dispose () {

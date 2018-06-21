@@ -27,7 +27,7 @@ public class Ball {
 
         this.position = position;
         this.ballImage = new Texture(Gdx.files.internal(path));
-        this.prevPosition = null;
+        this.prevPosition = position;
         this.shape = new Ellipse();
         shape.x = position.x;
         shape.y = position.y;
