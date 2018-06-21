@@ -261,6 +261,15 @@ public class Game implements Screen {
 		return true;
 	}
 
+	public void score(){
+		int maxScore = 0;
+		for(Ball b: balls){
+			if(b.moveHistory.getSize() > maxScore) {
+				maxScore = b.moveHistory.getSize();
+			}
+		}
+	}
+
 	@Override
 	public void dispose () {
         fieldTexture.dispose();
