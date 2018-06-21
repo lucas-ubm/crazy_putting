@@ -20,6 +20,7 @@ public class Ball {
     public Ellipse shape;
     public Queue<Vector3> moveHistory;
     public static int c;
+    public boolean arrived;
     public int id;
 
 
@@ -27,15 +28,16 @@ public class Ball {
         this.velocity = new Vector3(0,0,0);
         moveHistory = new Queue<Vector3>();
 
-	    id = c;
-	    c++;
-	    this.position = position;
+	      id = c;
+	      c++;
+	      this.position = position;
         Texture texture = new Texture(Gdx.files.internal(path));
         this.ballImage = new Sprite(texture);
-	    float  value = ((float) id)/((float)players-1);
-	    System.out.println(value);
-	    ballImage.setColor(new Color(value, (float)0.2, value, 1f));
-        this.prevPosition = null;
+	      float  value = ((float) id)/((float)players-1);
+	      System.out.println(value);
+	      ballImage.setColor(new Color(value, (float)0.2, value, 1f));
+        this.prevPosition = position;
+        this.arrived = false;
         this.shape = new Ellipse();
         shape.x = position.x;
         shape.y = position.y;
@@ -49,4 +51,4 @@ public class Ball {
         moveHistory.enqueue(newVelocity.cpy());
     }
 
-    }
+}

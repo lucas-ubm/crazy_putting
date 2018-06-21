@@ -10,6 +10,7 @@ import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import jdk.internal.cmm.SystemResourcePressureImpl;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -30,6 +31,7 @@ public class Game implements Screen {
 	private Hole hole;
 	private Field field;
 	public int i = 0;
+	private int maxDistance;
 	private Rectangle fieldShape;
 	private ArrayList<Hole> holes;
 	final Project2 game;
@@ -46,6 +48,7 @@ public class Game implements Screen {
 	public Game (Project2 game, String file) {
 	    //Creation of camera
         this.players = 2;
+        this.maxDistance = 300;
         this.game = game;
         this.gameMode1 = game.getGameMode();
         this.file = file;
@@ -176,13 +179,13 @@ public class Game implements Screen {
         return result;
     }
 
-    public boolean play(){
-	    int balln = ball.id;
+    public Ball play(){
         Vector3 origin = new Vector3();
         Vector3 ballPos = new Vector3();
-        if(Gdx.input.justTouched() && condition && gameMode1  && !design) {
-            ball = balls.get(nextBall(ball));
-            hole = holes.get(nextBall(ball));
+		ball = balls.get(nextBall(ball, condition));
+		hole = holes.get(nextBall(ball, condition));
+        if(Gdx.input.justTouched() && condition && gameMode1  && !design && !ball.arrived) {
+        	score();
             Vector3 touchPos = new Vector3();
             touchPos.set(Gdx.input.getX(), Gdx.input.getY(), 0);
             camera.unproject(touchPos);
@@ -216,24 +219,29 @@ public class Game implements Screen {
             }
         }
 
-        if(ball.velocity.len() >= 0.02) {
-            Engine.calculate(ball, field, fieldFormula);
-        }
-
+        Engine.calculate(ball, field, fieldFormula);
+		if(ball.velocity.len() == 0 && !distanceBalls(ball)){
+			ball.position = ball.prevPosition;
+			ball.velocity.scl(0);
+		}
         condition = ball.velocity.len() == 0;
 
+		if(checkFinished()) {
+			outputGame(ball);
+			game.setScreen(new com.project.putting_game.WinScreen(game));
+		}
 
-        if(ball.velocity.len() <= 0.02 && checkRadius(ball, hole))
-        {
-            outputGame(ball);
-            game.setScreen(new com.project.putting_game.WinScreen(game));
+        if(ball.velocity.len() == 0 && checkRadius(ball, hole)) {
+			System.out.println("Hey");
+            ball.arrived = true;
         }
-        return condition;
+
+        return ball;
     }
 
-    public int nextBall(Ball ball){
+    public int nextBall(Ball ball, boolean condition){
         int id = 0;
-	    if(ball.velocity.len() == 0 && Gdx.input.isTouched()){
+	    if(ball.velocity.len() == 0 && Gdx.input.isTouched() && condition){
 	        if(ball.id < balls.size() - 1){
 	            id = ball.id + 1;
             }
@@ -243,6 +251,36 @@ public class Game implements Screen {
 	        return ball.id;
         }
     }
+
+    public boolean distanceBalls(Ball ball) {
+		Vector3 origin = ball.position.cpy();
+		for(Ball b: balls){
+
+			if(Math.abs(origin.dst(b.position)) > maxDistance){
+				System.out.println(Math.abs(origin.dst(b.position)));
+				return false;
+			}
+		}
+		return true;
+	}
+
+	public void score(){
+		int maxScore = 0;
+		for(Ball b: balls){
+			if(b.moveHistory.getSize() > maxScore) {
+				maxScore = b.moveHistory.getSize();
+			}
+		}
+	}
+
+	public boolean checkFinished(){
+		for(Ball b: balls){
+			if(!b.arrived) {
+				return false;
+			}
+		}
+		return true;
+	}
 
 	@Override
 	public void dispose () {
