@@ -241,7 +241,7 @@ public class Game implements Screen {
 
     public int nextBall(Ball ball, boolean condition){
         int id = 0;
-	    if(ball.velocity.len() == 0 && Gdx.input.isTouched() && condition){
+	    if(ball.velocity.len() == 0 && Gdx.input.isTouched()  && condition){
 	        if(ball.id < balls.size() - 1){
 	            id = ball.id + 1;
             }
