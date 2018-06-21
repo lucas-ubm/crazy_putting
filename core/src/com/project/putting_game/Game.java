@@ -184,6 +184,7 @@ public class Game implements Screen {
         Vector3 origin = new Vector3();
         Vector3 ballPos = new Vector3();
         if(Gdx.input.justTouched() && condition && gameMode1  && !design) {
+        	score();
             ball = balls.get(nextBall(ball));
             hole = holes.get(nextBall(ball));
             Vector3 touchPos = new Vector3();
