@@ -5,6 +5,7 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.*;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -42,6 +43,10 @@ public class Game implements Screen {
 	private boolean design;
 	private Stage stage;
 	private Pixmap pixmap;
+	private Stage mpStage;
+	private Rectangle player;
+	private Sprite color;
+	private Ball currentBall;
 
 	public Game (Project2 game, String file) {
 	    //Creation of camera
@@ -67,7 +72,6 @@ public class Game implements Screen {
         this.ball = balls.get(0);
         this.hole = holes.get(0);
 
-
 		this.course = fieldVariables.courseFunction;
 		//Create field
 
@@ -90,6 +94,21 @@ public class Game implements Screen {
 				pixmap.drawPixel(x, y);
 			}
 		}
+
+		final Label turn = new Label("player's turn: ",game.skin);
+		turn.setPosition(0,Gdx.graphics.getHeight()-turn.getPrefHeight());
+		mpStage = new Stage(new ScreenViewport());
+		mpStage.addActor(turn);
+		Pixmap white = new Pixmap(10, (int)turn.getHeight(), Pixmap.Format.RGBA8888);
+		for (int i=0; i<white.getWidth();i++){
+			for(int j=0; j<white.getHeight(); j++){
+				white.setColor(Color.WHITE);
+				white.drawPixel(i,j);
+			}
+		}
+		Texture texture= new Texture(white);
+		color = new Sprite(texture);
+		color.setPosition(turn.getX()+turn.getWidth(),turn.getY());
 
 		stage = new Stage(new ScreenViewport());
 		Label text = new Label("Drag the mouse over the screen to create rivers, when you are done press ENTER",game.skin);
@@ -127,8 +146,9 @@ public class Game implements Screen {
 			@Override
 			public boolean keyDown(int keycode){
 				if(keycode==Input.Keys.ENTER) {
-					if(design)
+					if(design) {
 						stage.dispose();
+					}
 					design = false;
 				}
 				if(keycode==Input.Keys.ESCAPE) {
@@ -137,7 +157,6 @@ public class Game implements Screen {
 				return true;
 			}
 		});
-
 		fieldTexture = new Texture(pixmap);
 	}
 
@@ -152,20 +171,25 @@ public class Game implements Screen {
         for(Ball b: balls) {
         	b.ballImage.setPosition(b.position.x-b.shape.height/2, b.position.y-b.shape.height/2);
         	b.ballImage.draw(game.batch);
-           // game.batch.draw(b.ballImage, b.position.x-b.shape.height/2, b.position.y-b.shape.height/2, b.shape.width, b.shape.height);
-        }
+         }
         for(Hole h: holes){
-	        //b.ballImage.setPosition(h.position.x-h.holeShape.height/4, h.position.y-h.holeShape.height/2);
 	        h.holeImage.draw(game.batch);
-            //game.batch.draw(h.holeImage, h.position.x-h.holeShape.height/4, h.position.y-h.holeShape.height/2, h.holeShape.width, h.holeShape.height);
         }
-		game.batch.end();
-		if(stage!=null){
+		if(design) {
 			stage.act();
 			stage.getBatch().setProjectionMatrix(camera.combined);
 			stage.draw();//draw stage (so the elements of the stage)
 		}
-        play();
+		else{
+			mpStage.act();
+			mpStage.getBatch().setProjectionMatrix(camera.combined);
+			mpStage.draw();//draw stage (so the elements of the stage)
+			float value = ((float) nextBall(currentBall))/((float)players);
+			color.setColor(new Color(value, (float)0.2, value, 1f));
+			color.draw(game.batch);
+		}
+		game.batch.end();
+        currentBall = play();
 	}
 
 	public boolean checkRadius(Ball ball, Hole hole) {
@@ -176,8 +200,7 @@ public class Game implements Screen {
         return result;
     }
 
-    public boolean play(){
-	    int balln = ball.id;
+    public Ball play(){
         Vector3 origin = new Vector3();
         Vector3 ballPos = new Vector3();
         if(Gdx.input.justTouched() && condition && gameMode1  && !design) {
@@ -228,19 +251,19 @@ public class Game implements Screen {
             outputGame(ball);
             game.setScreen(new com.project.putting_game.WinScreen(game));
         }
-        return condition;
+        return ball;
     }
 
     public int nextBall(Ball ball){
         int id = 0;
 	    if(ball.velocity.len() == 0 && Gdx.input.isTouched()){
-	        if(ball.id < balls.size() - 1){
-	            id = ball.id + 1;
+	        if(ball.getId() < balls.size() - 1){
+	            id = ball.getId() + 1;
             }
             return id;
         }
         else{
-	        return ball.id;
+	        return ball.getId();
         }
     }
 

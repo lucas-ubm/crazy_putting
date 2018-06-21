@@ -19,9 +19,12 @@ public class Ball {
     public Sprite ballImage;
     public Ellipse shape;
     public Queue<Vector3> moveHistory;
-    public static int c;
-    public int id;
+    public static int c=1;
+    private int id;
 
+    public int getId(){
+    	return this.id;
+    }
 
     public Ball(int players,Vector3 position, String path, int side) {
         this.velocity = new Vector3(0,0,0);
@@ -32,8 +35,8 @@ public class Ball {
 	    this.position = position;
         Texture texture = new Texture(Gdx.files.internal(path));
         this.ballImage = new Sprite(texture);
-	    float  value = ((float) id)/((float)players-1);
-	    System.out.println(value);
+	    float value = ((float) id)/((float)players);//scale color of the ball to number of different colors needed
+	    //System.out.println(value);
 	    ballImage.setColor(new Color(value, (float)0.2, value, 1f));
         this.prevPosition = null;
         this.shape = new Ellipse();
