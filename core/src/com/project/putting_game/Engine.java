@@ -19,8 +19,6 @@ public class Engine {
 
 
     public static void calculate(Ball ball, Field fields, ArrayList<String> formula) {
-        System.out.println("Position "+ball.position);
-//        System.out.println("Velocity " +ball.acceleration);
         //Get the friction of the surface at current location ball
         CurrentFriction = fields.getMatrix()[(int) ball.position.y][(int) ball.position.x].friction;
 
@@ -32,12 +30,8 @@ public class Engine {
         k3 = acceleration(ball.position.cpy().add(2f/3f*h), ball.velocity.cpy().sub(k1.cpy().scl(1f/3f).add(k2.cpy())), formula).scl(h);
         k4 = acceleration(ball.position.cpy().add(h), ball.velocity.cpy().add(k1.cpy()).sub(k2.cpy()).add(k3.cpy()), formula).scl(h);
 
-//        System.out.println("k1 = " + k1 + " k2 = " + k2 + " k3 = " + k3 + " k4 = " +k4);
         ball.velocity.add((k1.add(k2.scl(3)).add(k3.scl(3)).add(k4)).scl(1f/6f));
-//        System.out.println("Real acceleration = "+ball.acceleration.cpy());
         ball.position.add(ball.velocity.cpy().scl(h));
-        ball.shape.x = ball.position.x;
-        ball.shape.y = ball.position.y;
 
         //Checks whether the ball has touched the walls or touched the water. If it did, return to the previous position and set acceleration to 0.
         int border = 0;
@@ -45,7 +39,6 @@ public class Engine {
         int side = border + ballSide;
         if (ball.position.x <= ball.shape.width/2 || ball.position.y <= ball.shape.height/2 || ball.position.x >= Gdx.graphics.getWidth() - side ||
                 ball.position.y >= Gdx.graphics.getHeight() - side || water(ball, fields)) {
-//             System.out.println("Previous " + ball.prevPosition);
             ball.position = ball.prevPosition;
             ball.velocity.scl(0);
         }
@@ -75,18 +68,16 @@ public class Engine {
 
     /**
      *
-     * @param position
-     * @param velocity
-     * @param formula
-     * @return
+     * @param position position of the ball
+     * @param velocity velocity of the ball
+     * @param formula formula of the field
+     * @return acceleration
      */
     public static Vector3 acceleration(Vector3 position, Vector3 velocity,ArrayList<String> formula){
         Vector3 acceleration = new Vector3();
-        System.out.println(CurrentFriction);
         acceleration.x =(float) (((-g) * FunctionAnalyser.derivative(formula, position.x, position.y, "x")) - (CurrentFriction * g * velocity.x));
 
         acceleration.y =(float) (((-g) * FunctionAnalyser.derivative(formula, position.x, position.y, "y")) - (CurrentFriction * g * velocity.y));
-        System.out.println("Acceleration "+acceleration);
 
         return acceleration;
     }
