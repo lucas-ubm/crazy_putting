@@ -17,12 +17,9 @@ import java.io.*;
 
 public class LoadInputScreen implements Screen {
 	final Project2 game;
-	OrthographicCamera camera;
+	private OrthographicCamera camera;
 	private Stage stage;
-	private TextField fileField;
-	private TextButton ok;
 	private Label error;
-	private TextButton cancel;
 
 	public LoadInputScreen(final Project2 game){
 		this.game = game;
@@ -31,14 +28,19 @@ public class LoadInputScreen implements Screen {
 
 		stage = new Stage(new ScreenViewport());
 		Gdx.input.setInputProcessor(stage);
-		fileField = new TextField("Enter textfile name",game.skin);
+		final TextField fileField = new TextField("Enter textfile name",game.skin);
 		fileField.setSize(Gdx.graphics.getWidth()*3/5,fileField.getPrefHeight());
 		fileField.setPosition(Gdx.graphics.getWidth()/2-fileField.getWidth()/2,4*Gdx.graphics.getHeight()/6);
 		stage.addActor(fileField);
+		final TextField playerField = new TextField("",game.skin);
+		playerField.setSize(50,playerField.getPrefHeight());
+		Label playerLabel = new Label("Number of players: ",game.skin);
+		playerLabel.setPosition(fileField.getX(),fileField.getY()-10-(playerField.getHeight())/2-playerLabel.getPrefHeight()/2);
+		stage.addActor(playerLabel);
+		playerField.setPosition(playerLabel.getX()+playerLabel.getWidth(),fileField.getY()-playerField.getHeight()-10);
+		stage.addActor(playerField);
 		error = new Label("", game.skin);
-		error.setPosition(fileField.getX(),fileField.getY()-fileField.getHeight());
-		stage.addActor(error);
-		cancel = new TextButton("Cancel", game.skin);
+		TextButton cancel = new TextButton("Cancel", game.skin);
 		cancel.setPosition(Gdx.graphics.getWidth()/2+10,2*Gdx.graphics.getHeight()/6);
 		cancel.addListener(new ClickListener(){
 			public void clicked(InputEvent event, float x, float y) {
@@ -47,7 +49,7 @@ public class LoadInputScreen implements Screen {
 			}
 		});
 		stage.addActor(cancel);
-		ok = new TextButton("OK", game.skin);
+		TextButton ok = new TextButton("OK", game.skin);
 		ok.setPosition(Gdx.graphics.getWidth()/2-ok.getWidth()-10,2*Gdx.graphics.getHeight()/6);
 		ok.setSize(cancel.getPrefWidth(), cancel.getPrefHeight());
 		if(!game.getGameMode()){
@@ -62,7 +64,7 @@ public class LoadInputScreen implements Screen {
 						error.setText("");
 						game.inputfile = file;
 						//give default course
-						game.setScreen(new com.project.putting_game.Game(game,"demo.txt"));
+						game.setScreen(new com.project.putting_game.Game(game,"demo.txt",1));
 						dispose();
 					}// else display error and try again
 					catch(FileNotFoundException exception){
@@ -76,17 +78,23 @@ public class LoadInputScreen implements Screen {
 					try{//TODO check inputs
 						String file = fileField.getText()+".txt";
 						FileReader reader = new FileReader(file);
+						int players = Integer.parseInt(playerField.getText());
 						//succeeds then
 						error.setText("");
-						game.setScreen(new com.project.putting_game.Game(game,file));
+						game.setScreen(new com.project.putting_game.Game(game,file,players));
 						dispose();
 					}// else display error and try again
 					catch(FileNotFoundException exception){
 						error.setText("Input was a non-existing file");
 					}
+					catch(NumberFormatException e) {
+						error.setText("Please check the number of players");
+					}
 				}
 			});
 		}
+		error.setPosition(fileField.getX(),ok.getY()+ok.getHeight()+error.getPrefHeight());
+		stage.addActor(error);
 		stage.addActor(ok);
 	}
 

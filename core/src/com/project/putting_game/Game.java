@@ -10,7 +10,6 @@ import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
-import jdk.internal.cmm.SystemResourcePressureImpl;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -44,37 +43,39 @@ public class Game implements Screen {
 	private boolean design;
 	private Stage stage;
 	private Pixmap pixmap;
+	private Stage mpStage;
+	private Label.LabelStyle ballStyle;
 
-	public Game (Project2 game, String file) {
-	    //Creation of camera
-        this.players = 2;
-        this.maxDistance = 300;
-        this.game = game;
-        this.gameMode1 = game.getGameMode();
-        this.file = file;
-        camera = new OrthographicCamera();
-        camera.setToOrtho(false, 800, 480);
+	public Game (Project2 game, String file,int players) {
+		//Creation of camera
+		this.players = players;
+		this.maxDistance =300;
+		this.game = game;
+		this.gameMode1 = game.getGameMode();
+		this.file = file;
+		camera = new OrthographicCamera();
+		camera.setToOrtho(false, 800, 480);
 		design = true;
 		Settings fieldVariables = textToSettings();
 
-        if(!fieldVariables.courseFunction.equalsIgnoreCase("spline"))
-            this.fieldFormula = FunctionAnalyser.ShuntingYard(fieldVariables.courseFunction);
+		if(!fieldVariables.courseFunction.equalsIgnoreCase("spline"))
+			this.fieldFormula = FunctionAnalyser.ShuntingYard(fieldVariables.courseFunction);
 
-        this.balls = new ArrayList<Ball>();
-        this.holes = new ArrayList<Hole>();
+		this.balls = new ArrayList<Ball>();
+		this.holes = new ArrayList<Hole>();
 
-        for(int i = 0; i < this.players; i++){
-            balls.add(new Ball(players,fieldVariables.startPosition.scl((float)(1+0.3*i)).cpy(), "golfball.png", 24));
-            holes.add(new Hole(players,fieldVariables.goalPosition.scl((float)(1-0.1*i)).cpy(), "hole.png", fieldVariables.goalRadius));
-        }
-        this.ball = balls.get(0);
-        this.hole = holes.get(0);
+		for(int i = 0; i < this.players; i++){
+			balls.add(new Ball(players,fieldVariables.startPosition.scl((float)(1+0.3*i)).cpy(), "golfball.png", 24));
+			holes.add(new Hole(players,fieldVariables.goalPosition.scl((float)(1-0.1*i)).cpy(), "hole.png", fieldVariables.goalRadius));
+		}
+		this.ball = balls.get(0);
+		this.hole = holes.get(0);
 
 
 		this.course = fieldVariables.courseFunction;
 		//Create field
 
-        fieldShape = new Rectangle();
+		fieldShape = new Rectangle();
 		fieldShape.x = 0;//game.borderLength;
 		fieldShape.y = 0;//game.borderLength;
 		fieldShape.width = Gdx.graphics.getWidth();// - game.borderLength*2;
@@ -93,6 +94,12 @@ public class Game implements Screen {
 				pixmap.drawPixel(x, y);
 			}
 		}
+		ballStyle = new Label.LabelStyle();
+		ballStyle.font = game.skin.getFont("default");
+		Label turn = new Label("turn",ballStyle);
+		turn.setPosition(10,Gdx.graphics.getHeight()-turn.getPrefHeight()-10);
+		mpStage = new Stage(new ScreenViewport());
+		mpStage.addActor(turn);
 
 		stage = new Stage(new ScreenViewport());
 		Label text = new Label("Drag the mouse over the screen to create rivers, when you are done press ENTER",game.skin);
@@ -150,38 +157,42 @@ public class Game implements Screen {
 		camera.update();
 		game.batch.setProjectionMatrix(camera.combined);
 		game.batch.begin();
-        game.batch.draw(fieldTexture, fieldShape.x, fieldShape.y, fieldShape.width, fieldShape.height);
+		game.batch.draw(fieldTexture, fieldShape.x, fieldShape.y, fieldShape.width, fieldShape.height);
 
-        for(Ball b: balls) {
-        	b.ballImage.setPosition(b.position.x-b.shape.height/2, b.position.y-b.shape.height/2);
-        	b.ballImage.draw(game.batch);
-           // game.batch.draw(b.ballImage, b.position.x-b.shape.height/2, b.position.y-b.shape.height/2, b.shape.width, b.shape.height);
-        }
-        for(Hole h: holes){
-	        //b.ballImage.setPosition(h.position.x-h.holeShape.height/4, h.position.y-h.holeShape.height/2);
-	        h.holeImage.draw(game.batch);
-            //game.batch.draw(h.holeImage, h.position.x-h.holeShape.height/4, h.position.y-h.holeShape.height/2, h.holeShape.width, h.holeShape.height);
-        }
+		for(Ball b: balls) {
+			b.ballImage.setPosition(b.position.x-b.shape.height/2, b.position.y-b.shape.height/2);
+			b.ballImage.draw(game.batch);
+		}
+		for(Hole h: holes){
+			h.holeImage.draw(game.batch);
+			}
 		game.batch.end();
-		if(stage!=null){
+		if(design){
 			stage.act();
 			stage.getBatch().setProjectionMatrix(camera.combined);
 			stage.draw();//draw stage (so the elements of the stage)
 		}
-        play();
+		else{
+			float value = ((float) nextBallColor(ball)+1)/((float)players);
+			ballStyle.fontColor=new Color(value, (float)0.2, 1-value, 1f);
+			mpStage.act();
+			mpStage.getBatch().setProjectionMatrix(camera.combined);
+			mpStage.draw();//draw stage (so the elements of the stage)
+		}
+		play();
 	}
 
 	public boolean checkRadius(Ball ball, Hole hole) {
-        boolean result = false;
-        if(Math.pow((ball.position.x+ball.shape.width/2-(hole.position.x+hole.holeShape.width/2)), 2) + Math.pow((ball.position.y+ball.shape.height/2-(hole.position.y+hole.holeShape.height/2)), 2) <= Math.pow(hole.holeShape.height/2-ball.shape.width/2,2)){
-            result = true;
-        }
-        return result;
-    }
+		boolean result = false;
+		if(Math.pow((ball.position.x+ball.shape.width/2-(hole.position.x+hole.holeShape.width/2)), 2) + Math.pow((ball.position.y+ball.shape.height/2-(hole.position.y+hole.holeShape.height/2)), 2) <= Math.pow(hole.holeShape.height/2-ball.shape.width/2,2)){
+			result = true;
+		}
+		return result;
+	}
 
-    public Ball play(){
-        Vector3 origin = new Vector3();
-        Vector3 ballPos = new Vector3();
+	public void play(){
+		Vector3 origin = new Vector3();
+		Vector3 ballPos = new Vector3();
 		ball = balls.get(nextBall(ball, condition));
 		hole = holes.get(nextBall(ball, condition));
         if(Gdx.input.justTouched() && condition && gameMode1  && !design && !ball.arrived) {
@@ -225,35 +236,46 @@ public class Game implements Screen {
 			ball.position = ball.prevPosition;
 			ball.velocity.scl(0);
 		}
-        condition = ball.velocity.len() == 0;
+
+		condition = ball.velocity.len() == 0;
 
 		if(checkFinished()) {
 			outputGame(ball);
 			game.setScreen(new com.project.putting_game.WinScreen(game));
 		}
 
-        if(ball.velocity.len() == 0 && checkRadius(ball, hole)) {
-//			System.out.println("Hey");
-            ball.arrived = true;
-        }
 
-        return ball;
-    }
+		if(ball.velocity.len() == 0 && checkRadius(ball, hole)) {
+			System.out.println("This ball is in his hole");
+			ball.arrived = true;
+		}
+	}
 
-    public int nextBall(Ball ball, boolean condition){
-        int id = 0;
-	    if(ball.velocity.len() == 0 && Gdx.input.isTouched()  && condition){
-	        if(ball.id < balls.size() - 1){
-	            id = ball.id + 1;
-            }
-            return id;
-        }
-        else{
-	        return ball.id;
-        }
-    }
-
-    public boolean distanceBalls(Ball ball) {
+	public int nextBall(Ball ball,boolean condition){
+		int id = 0;
+		if(ball.velocity.len() == 0 && Gdx.input.isTouched()&&condition){
+			if(ball.getId() < balls.size() - 1){
+				id = ball.getId() + 1;
+			}
+			return id;
+		}
+		else{
+			return ball.getId();
+		}
+	}
+	public int nextBallColor(Ball ball){
+		int id = 0;
+		if(ball.velocity.len() == 0){
+			if(ball.getId() < balls.size() - 1){
+				id = ball.getId() + 1;
+			}
+			return id;
+		}
+		else{
+			return ball.getId();
+		}
+	}
+	public boolean distanceBalls(Ball ball) {
 		Vector3 origin = ball.position.cpy();
 		for(Ball b: balls){
 
@@ -285,34 +307,34 @@ public class Game implements Screen {
 
 	@Override
 	public void dispose () {
-        fieldTexture.dispose();
+		fieldTexture.dispose();
 	}
 
-    @Override
-    public void resize(int width, int height) {stage.getViewport().update(width, height);
-    }
-    @Override
-    public void show(){
-        //play music
-    }
-    @Override
-    public void hide(){
-    }
-    @Override
-    public void pause() {
-    }
-    @Override
-    public void resume() {
-    }
+	@Override
+	public void resize(int width, int height) {stage.getViewport().update(width, height);
+	}
+	@Override
+	public void show(){
+		//play music
+	}
+	@Override
+	public void hide(){
+	}
+	@Override
+	public void pause() {
+	}
+	@Override
+	public void resume() {
+	}
 
-    public static float map (double x, double max, double min) {
-        return (float) ((x)/(max-min));
-    }
+	public static float map (double x, double max, double min) {
+		return (float) ((x)/(max-min));
+	}
 
-    public void setGameMode(boolean gameMode1)
-    {
-        this.gameMode1 = gameMode1;
-    }
+	public void setGameMode(boolean gameMode1)
+	{
+		this.gameMode1 = gameMode1;
+	}
 	public Settings textToSettings() {
 		try{
 			FileReader reader = new FileReader(Gdx.files.local(file).file());
@@ -345,20 +367,20 @@ public class Game implements Screen {
 
 
 	public static void outputGame(Ball ball) {
-        String move;
-        ArrayList<String> lines = new ArrayList<String>();
-        while(!ball.moveHistory.isEmpty()) {
-            move = ball.moveHistory.dequeue().toString();
-            System.out.println(move);
-            lines.add(move);
-        }
-        try {
-            lines.add("");
-            Path file = Paths.get("Games.txt");
-            Files.write(file, lines, Charset.forName("UTF-8"), StandardOpenOption.APPEND);
-        }
-        catch(IOException e) {
-            System.out.println("You messed up");
-        }
-    }
+		String move;
+		ArrayList<String> lines = new ArrayList<String>();
+		while(!ball.moveHistory.isEmpty()) {
+			move = ball.moveHistory.dequeue().toString();
+			System.out.println(move);
+			lines.add(move);
+		}
+		try {
+			lines.add("");
+			Path file = Paths.get("Games.txt");
+			Files.write(file, lines, Charset.forName("UTF-8"), StandardOpenOption.APPEND);
+		}
+		catch(IOException e) {
+			System.out.println("You messed up");
+		}
+	}
 }
