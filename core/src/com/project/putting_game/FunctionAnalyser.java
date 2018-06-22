@@ -142,6 +142,7 @@ public class FunctionAnalyser {
 		}
 	}
 
+
 	/**
 	 *
 	 * @param reverse function for which you are calculatind the derivative
@@ -151,31 +152,14 @@ public class FunctionAnalyser {
 	 * @return the value of the derivative at the given point
 	 */
 	public static double derivative(ArrayList<String> reverse, double x, double y, String respect) {
-		if(respect.equalsIgnoreCase("x")) {
-			return (FunctionAnalyser.reversePolish(reverse,x+1e-10,y)-FunctionAnalyser.reversePolish(reverse,x,y))/1e-10;
+		double h = 1e-10;
+	    if(respect.equalsIgnoreCase("x")) {
+			return (FunctionAnalyser.reversePolish(reverse,x-2*h,y)-8*FunctionAnalyser.reversePolish(reverse,x-h,y)+8*FunctionAnalyser.reversePolish(reverse, x+h, y)-FunctionAnalyser.reversePolish(reverse, x+2*h, y))/(12*h);
 		}
 		else {
-			return (FunctionAnalyser.reversePolish(reverse,x,y+1e-10)-FunctionAnalyser.reversePolish(reverse,x,y))/1e-10;
+			return (FunctionAnalyser.reversePolish(reverse,x,y-2*h)-8*FunctionAnalyser.reversePolish(reverse,x,y-h)+8*FunctionAnalyser.reversePolish(reverse, x, y+h)-FunctionAnalyser.reversePolish(reverse, x, y+2*h))/(12*h);
 		}
 	}
-
-//	/**
-////	 *
-////	 * @param reverse function for which you are calculatind the derivative
-////	 * @param x x value of the function
-////	 * @param y y value of the function
-////	 * @param respect variable with respect of which you are calculating the derivative
-////	 * @return the value of the derivative at the given point
-////	 */
-////	public static double derivative(ArrayList<String> reverse, double x, double y, String respect) {
-////		double h = 1e-10;
-////	    if(respect.equalsIgnoreCase("x")) {
-////			return (FunctionAnalyser.reversePolish(reverse,x-2*h,y)-8*FunctionAnalyser.reversePolish(reverse,x-h,y)+8*FunctionAnalyser.reversePolish(reverse, x+h, y)-FunctionAnalyser.reversePolish(reverse, x+2*h, y))/(12*h);
-////		}
-////		else {
-////			return (FunctionAnalyser.reversePolish(reverse,x,y-2*h)-8*FunctionAnalyser.reversePolish(reverse,x,y-h)+8*FunctionAnalyser.reversePolish(reverse, x, y+h)-FunctionAnalyser.reversePolish(reverse, x, y+2*h))/(12*h);
-////		}
-////	}
 
 
 

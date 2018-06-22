@@ -33,9 +33,11 @@ public class Engine {
         k4 = acceleration(ball.position.cpy().add(h), ball.velocity.cpy().add(k1.cpy()).sub(k2.cpy()).add(k3.cpy()), formula).scl(h);
 
 //        System.out.println("k1 = " + k1 + " k2 = " + k2 + " k3 = " + k3 + " k4 = " +k4);
-        ball.velocity.add((k1.add(k2.scl(2)).add(k3.scl(2)).add(k4)).scl(h/6f));
+        ball.velocity.add((k1.add(k2.scl(3)).add(k3.scl(3)).add(k4)).scl(1f/6f));
 //        System.out.println("Real acceleration = "+ball.acceleration.cpy());
         ball.position.add(ball.velocity.cpy().scl(h));
+        ball.shape.x = ball.position.x;
+        ball.shape.y = ball.position.y;
 
         //Checks whether the ball has touched the walls or touched the water. If it did, return to the previous position and set acceleration to 0.
         int border = 0;
@@ -78,10 +80,11 @@ public class Engine {
      * @param formula
      * @return
      */
-    public static Vector3 acceleration(Vector3 position, Vector3 velocity, ArrayList<String> formula){
+    public static Vector3 acceleration(Vector3 position, Vector3 velocity,ArrayList<String> formula){
         Vector3 acceleration = new Vector3();
-
+        System.out.println(CurrentFriction);
         acceleration.x =(float) (((-g) * FunctionAnalyser.derivative(formula, position.x, position.y, "x")) - (CurrentFriction * g * velocity.x));
+
         acceleration.y =(float) (((-g) * FunctionAnalyser.derivative(formula, position.x, position.y, "y")) - (CurrentFriction * g * velocity.y));
         System.out.println("Acceleration "+acceleration);
 
