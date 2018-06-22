@@ -196,6 +196,7 @@ public class Game implements Screen {
 
             direction.set((ballPos.x-origin.x), (ballPos.y-origin.y), 0);
             ball.setUserVelocity(direction.scl(6f));
+            System.out.println(direction.len());
             ball.prevPosition = ballPos;
         }
 
@@ -232,7 +233,7 @@ public class Game implements Screen {
 		}
 
         if(ball.velocity.len() == 0 && checkRadius(ball, hole)) {
-			System.out.println("Hey");
+//			System.out.println("Hey");
             ball.arrived = true;
         }
 
