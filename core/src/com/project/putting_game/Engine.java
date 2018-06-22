@@ -2,6 +2,7 @@ package com.project.putting_game;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.Vector3;
 
 import java.util.ArrayList;
 
@@ -10,35 +11,23 @@ public class Engine {
     public static final double g = 9.81;
     public static double CurrentFriction;
     public static double currentHeight;
-    public static final double h = 0.005;
-    public static double xh;
-    public static double yh;
-    public static double vx_h;
-    public static double vy_h;
-    public static double vx;
-    public static double vy;
+    public static final float h = 0.1f;
+    public static Vector3 k1;
+    public static Vector3 k2;
+    public static Vector3 k3;
+    public static Vector3 k4;
 
 
     public static void calculate(Ball ball, Field fields, ArrayList<String> formula) {
-        //Getting the current location and velocity of the ball
-        double x = ball.position.x;
-        double y = ball.position.y;
-        vx = ball.velocity.x;
-        vy = ball.velocity.y;
 
-        //Calculating the next location and velocity of the ball per timestep
-        xh = x + h * vx;
-        yh = y + h * vy;
-        vx_h = vx + h * forceX(ball, formula);
-        vy_h = vy + h * forceY(ball, formula);
+        k1 = velocity(ball.position, ball.velocity, formula).scl(h);
+        k2 = velocity(ball.position.add(1f/3f*h), ball.velocity.add(k1.scl(1f/3f)), formula).scl(h);
+        k3 = velocity(ball.position.add(2f/3f*h), ball.velocity.sub(k1.scl(1f/3f).add(k2)), formula).scl(h);
+        k4 = velocity(ball.position.add(h), ball.velocity.add(k1).sub(k2).add(k3), formula).scl(h);
 
-        //Storing the newly obtained velocities and locations in the Ball object
-        ball.position.x = (float) xh;
-        ball.shape.x = (float) xh;
-        ball.position.y = (float) yh;
-        ball.shape.y = (float) yh;
-        ball.velocity.x = (float) vx_h;
-        ball.velocity.y = (float) vy_h;
+        ball.position.add((k1.add(k2.scl(2)).add(k3.scl(2)).add(k4)).scl(h/6f));
+        ball.shape.x = ball.position.x;
+        ball.shape.y = ball.position.y;
 
         //Get the friction of the surface at current location ball
         CurrentFriction = fields.getMatrix()[(int) ball.position.y][(int) ball.position.x].friction;
@@ -80,17 +69,20 @@ public class Engine {
 
     }
 
+    /**
+     *
+     * @param position
+     * @param velocity
+     * @param formula
+     * @return
+     */
+    public static Vector3 velocity(Vector3 position, Vector3 velocity, ArrayList<String> formula){
+        Vector3 acceleration = new Vector3();
+        acceleration.x =(float) (((-g) * FunctionAnalyser.derivative(formula, position.x, position.y, "x")) - (CurrentFriction * g * velocity.x));
+        acceleration.y =(float) (((-g) * FunctionAnalyser.derivative(formula, position.x, position.y, "y")) - (CurrentFriction * g * velocity.y));
+        Vector3 newVelocity = velocity.cpy().add(acceleration.scl(h));
 
-    /**Method to calculate the force on the ball at the x-axis. This method is used when calculating the new velocity*/
-    public static double forceX(Ball ball, ArrayList<String> formula) {
-        double Fx = ((-g) * FunctionAnalyser.derivative(formula, ball.position.x, ball.position.y, "x")) - (CurrentFriction * g * vx);
-        return Fx;
-    }
-
-    /**Method to calculate the force on the ball at the y-axis. This method is used when calculating the new velocity*/
-    public static double forceY(Ball ball, ArrayList<String> formula) {
-        double Fy = ((-g) * FunctionAnalyser.derivative(formula, ball.position.x, ball.position.y, "y")) - (CurrentFriction * g * vy);
-        return Fy;
+        return newVelocity;
     }
 
     //Right now, input is the ball object containing vectors. The output is only one position.
