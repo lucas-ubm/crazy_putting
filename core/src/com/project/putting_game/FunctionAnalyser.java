@@ -122,6 +122,15 @@ public class FunctionAnalyser {
 		}
 		return stack.pop();
 	}
+
+	/**
+	 *
+	 * @param field function for which you are calculatind the derivative
+	 * @param x x value of the function
+	 * @param y y value of the function
+	 * @param respect variable with respect of which you are calculating the derivative
+	 * @return the value of the derivative at the given point
+	 */
 	public static double derivative(Field field, int x, int y, String respect) {
 		if(respect.equalsIgnoreCase("x")) {
 			return (field.getMatrix()[y][x+1].height - field.getMatrix()[y][x-1].height)/2;
@@ -132,6 +141,37 @@ public class FunctionAnalyser {
 			//return (FunctionAnalyser.reversePolish(reverse,x,y+1e-10)-FunctionAnalyser.reversePolish(reverse,x,y))/1e-10;
 		}
 	}
+
+
+	/**
+	 *
+	 * @param reverse function for which you are calculatind the derivative
+	 * @param x x value of the function
+	 * @param y y value of the function
+	 * @param respect variable with respect of which you are calculating the derivative
+	 * @return the value of the derivative at the given point
+	 */
+	public static double derivative(ArrayList<String> reverse, double x, double y, String respect) {
+		double h = 1e-10;
+	    if(respect.equalsIgnoreCase("x")) {
+			return (FunctionAnalyser.reversePolish(reverse,x-2*h,y)-8*FunctionAnalyser.reversePolish(reverse,x-h,y)+8*FunctionAnalyser.reversePolish(reverse, x+h, y)-FunctionAnalyser.reversePolish(reverse, x+2*h, y))/(12*h);
+		}
+		else {
+			return (FunctionAnalyser.reversePolish(reverse,x,y-2*h)-8*FunctionAnalyser.reversePolish(reverse,x,y-h)+8*FunctionAnalyser.reversePolish(reverse, x, y+h)-FunctionAnalyser.reversePolish(reverse, x, y+2*h))/(12*h);
+		}
+	}
+
+
+
+	/**
+	 *
+	 * @param reverse the formula in reverse polish notation
+	 * @param t0 the initial time
+	 * @param t the value that you want to calculate
+	 * @param h the timestep so the precision which you want to calculate it
+	 * @param y0 the value of the formula at the initial time
+	 * @return the value of the function at the desired point
+	 */
 	public static double runge_kutta (ArrayList<String> reverse, double t0, double t, double h, double y0) {
 		double k1, k2, k3, k4;
 		System.out.println(reverse);

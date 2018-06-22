@@ -1,6 +1,9 @@
 package com.project.putting_game;
 
-import com.badlogic.gdx.*;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
+import com.badlogic.gdx.InputAdapter;
+import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector3;
@@ -22,53 +25,81 @@ import java.util.StringTokenizer;
 public class Game implements Screen {
 	private OrthographicCamera camera;
 	private Texture fieldTexture;
+	private ArrayList<Ball> balls;
 	private Ball ball;
-	private Field field;
-	public int i =0;
-	private Rectangle fieldShape;
 	private Hole hole;
+	private Field field;
+	public int i = 0;
+	private int maxDistance;
+	private Rectangle fieldShape;
+	private ArrayList<Hole> holes;
 	final Project2 game;
 	final private String file;
 	private boolean condition = true;
 	private String course;
 	private boolean gameMode1;
+	public ArrayList<String> fieldFormula;
+	private int players;
 	private boolean design;
 	private Stage stage;
 	private Pixmap pixmap;
+	private Stage mpStage;
+	private Label.LabelStyle ballStyle;
 
-	public Game (Project2 game, String file) {
-	    //Creation of camera
-        this.game = game;
-        this.gameMode1 = game.getGameMode();
-        this.file = file;
-        camera = new OrthographicCamera();
-        camera.setToOrtho(false, 800, 480);
+	public Game (Project2 game, String file,int players) {
+		//Creation of camera
+		this.players = players;
+		this.maxDistance =300;
+		this.game = game;
+		this.gameMode1 = game.getGameMode();
+		this.file = file;
+		camera = new OrthographicCamera();
+		camera.setToOrtho(false, 800, 480);
 		design = true;
 		Settings fieldVariables = textToSettings();
-		//Create bucket Rectangle
-		ball = new Ball(fieldVariables.startPosition, 32);
-		hole = new Hole(fieldVariables.goalPosition, fieldVariables.goalRadius);
-		this.course = fieldVariables.courseFunction.replaceAll(" ","");
+
+		if(!fieldVariables.courseFunction.equalsIgnoreCase("spline"))
+			this.fieldFormula = FunctionAnalyser.ShuntingYard(fieldVariables.courseFunction);
+
+		this.balls = new ArrayList<Ball>();
+		this.holes = new ArrayList<Hole>();
+
+		for(int i = 0; i < this.players; i++){
+			balls.add(new Ball(players,fieldVariables.startPosition.scl((float)(1+0.3*i)).cpy(), "golfball.png", 24));
+			holes.add(new Hole(players,fieldVariables.goalPosition.scl((float)(1-0.1*i)).cpy(), "hole.png", fieldVariables.goalRadius));
+		}
+		this.ball = balls.get(0);
+		this.hole = holes.get(0);
+
+
+		this.course = fieldVariables.courseFunction;
 		//Create field
-        fieldShape = new Rectangle();
-        fieldShape.x = 0;//game.borderLength;
-        fieldShape.y = 0;//game.borderLength;
-        fieldShape.width = Gdx.graphics.getWidth();// - game.borderLength*2;
-        fieldShape.height = Gdx.graphics.getHeight();// - game.borderLength*2;
-		field = new Field(course);
-		pixmap = new Pixmap(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), Pixmap.Format.RGBA8888);
+
+		fieldShape = new Rectangle();
+		fieldShape.x = 0;//game.borderLength;
+		fieldShape.y = 0;//game.borderLength;
+		fieldShape.width = Gdx.graphics.getWidth();// - game.borderLength*2;
+		fieldShape.height = Gdx.graphics.getHeight();// - game.borderLength*2;
+		field = new Field(course.replaceAll(" ",""));
+		pixmap = new Pixmap((int) Gdx.graphics.getWidth(), (int) Gdx.graphics.getHeight(), Pixmap.Format.RGBA8888);
 		for (int y = 0; y < Gdx.graphics.getHeight(); y++) {
 			for (int x = 0; x < Gdx.graphics.getWidth(); x++) {
 				if(field.getMatrix()[y][x].height >=0) {
-					float  value = -1*map(field.getMatrix()[y][x].height, field.getMax(),field.getMin());
+					float  value = map(field.getMatrix()[y][x].height, field.getMax(),field.getMin());
 					pixmap.setColor(new Color(0,  value, 0, 1f));// set color White with Alpha=0.5
 				}
 				else{
 					pixmap.setColor(new Color(0,0,0.4f,1f));
 				}
-				pixmap.drawPixel(x, Gdx.graphics.getHeight()-y);
+				pixmap.drawPixel(x, y);
 			}
 		}
+		ballStyle = new Label.LabelStyle();
+		ballStyle.font = game.skin.getFont("default");
+		Label turn = new Label("turn",ballStyle);
+		turn.setPosition(10,Gdx.graphics.getHeight()-turn.getPrefHeight()-10);
+		mpStage = new Stage(new ScreenViewport());
+		mpStage.addActor(turn);
 
 		stage = new Stage(new ScreenViewport());
 		Label text = new Label("Drag the mouse over the screen to create rivers, when you are done press ENTER",game.skin);
@@ -77,12 +108,13 @@ public class Game implements Screen {
 		Gdx.input.setInputProcessor(new InputAdapter(){
 			@Override
 			public boolean touchDown (int x, int y, int pointer, int button) {
+				//System.out.println("Touched:"+" "+x+" "+(Gdx.graphics.getHeight()-y));
 				if (design) {
 					for (int i = y - 5; i <= y + 5; i++) //for all points within radius of 5
 						for (int j = x - 5; j <= x + 5; j++){
 							pixmap.setColor(Color.BLUE);
 							pixmap.drawPixel(j, i);
-							field.getMatrix()[field.getMatrix().length-i][j].height=-1;//set equal to water so ball reacts same way
+							field.getMatrix()[i][j].height=-1;//set equal to water so ball reacts same way
 						}
 					fieldTexture = new Texture(pixmap);
 				}
@@ -91,11 +123,12 @@ public class Game implements Screen {
 			@Override
 			public boolean touchDragged (int x, int y, int pointer) {
 				if (design) {
+					//System.out.println(x+" "+y+" "+(field.getMatrix().length-1-y));
 					for (int i = y - 5; i <= y + 5; i++) //for all points within radius of 5
 						for (int j = x - 5; j <= x + 5; j++){
 							pixmap.setColor(Color.BLUE);
 							pixmap.drawPixel(j, i);
-							field.getMatrix()[field.getMatrix().length-i][j].height=-1;//set equal to water so ball reacts same way
+							field.getMatrix()[i][j].height=-1;//set equal to water so ball reacts same way
 						}
 					fieldTexture = new Texture(pixmap);
 				}
@@ -125,27 +158,56 @@ public class Game implements Screen {
 		game.batch.setProjectionMatrix(camera.combined);
 		game.batch.begin();
 		game.batch.draw(fieldTexture, fieldShape.x, fieldShape.y, fieldShape.width, fieldShape.height);
-		game.batch.draw(ball.ballImage, ball.position.x, ball.position.y, ball.shape.width, ball.shape.height);
-		game.batch.draw(hole.holeImage, hole.position.x, hole.position.y, hole.holeShape.width, hole.holeShape.height );
+
+		for(Ball b: balls) {
+			b.ballImage.setPosition(b.position.x-b.shape.height/2, b.position.y-b.shape.height/2);
+			b.ballImage.draw(game.batch);
+		}
+		for(Hole h: holes){
+			h.holeImage.draw(game.batch);
+			}
 		game.batch.end();
-		if(stage!=null){
+		if(design){
 			stage.act();
 			stage.getBatch().setProjectionMatrix(camera.combined);
 			stage.draw();//draw stage (so the elements of the stage)
 		}
+		else{
+			float value = ((float) nextBallColor(ball)+1)/((float)players);
+			ballStyle.fontColor=new Color(value, (float)0.2, 1-value, 1f);
+			mpStage.act();
+			mpStage.getBatch().setProjectionMatrix(camera.combined);
+			mpStage.draw();//draw stage (so the elements of the stage)
+		}
+		play();
+	}
+
+	public boolean checkRadius(Ball ball, Hole hole) {
+		boolean result = false;
+		if(Math.pow((ball.position.x+ball.shape.width/2-(hole.position.x+hole.holeShape.width/2)), 2) + Math.pow((ball.position.y+ball.shape.height/2-(hole.position.y+hole.holeShape.height/2)), 2) <= Math.pow(hole.holeShape.height/2-ball.shape.width/2,2)){
+			result = true;
+		}
+		return result;
+	}
+
+	public void play(){
 		Vector3 origin = new Vector3();
-        Vector3 ballPos = new Vector3();
-		if(Gdx.input.justTouched() && condition && gameMode1 &&!design) {
+		Vector3 ballPos = new Vector3();
+		ball = balls.get(nextBall(ball, condition));
+		hole = holes.get(nextBall(ball, condition));
+        if(Gdx.input.justTouched() && condition && gameMode1  && !design && !ball.arrived) {
+        	score();
             Vector3 touchPos = new Vector3();
             touchPos.set(Gdx.input.getX(), Gdx.input.getY(), 0);
             camera.unproject(touchPos);
-            origin.set((int)touchPos.x - 64/2, (int)touchPos.y - 64/2, 0);
+            origin.set((int)touchPos.x - ball.shape.width/2, (int)touchPos.y - ball.shape.height/2, 0);
 
             ballPos.set((int)ball.position.x, (int)ball.position.y, 0);
             Vector3 direction = new Vector3();
 
             direction.set((ballPos.x-origin.x), (ballPos.y-origin.y), 0);
-            ball.setUserVelocity(direction.scl(3f));
+            ball.setUserVelocity(direction.scl(6f));
+            System.out.println(direction.len());
             ball.prevPosition = ballPos;
         }
 
@@ -153,6 +215,7 @@ public class Game implements Screen {
         {
             Moves Course1 = new Moves(game.inputfile);
             Vector3[] data = Course1.getData();
+            ball = balls.get(0);
             if(data[i] != null && i < data.length)
             {
                 ball.setUserVelocity(data[i]);
@@ -168,75 +231,110 @@ public class Game implements Screen {
             }
         }
 
-        if(ball.velocity.len() >= 0.02) {
-		    condition = false;
-            //Makes sure the ball doesn't get out of the window
-            Engine.calculate(ball, field);
-            if(ball.position.x < ball.shape.width/2){
-                ball.position = ball.prevPosition;
-            }
-            if(ball.position.x > Gdx.graphics.getWidth() - ball.shape.width/2) {
-                ball.position = ball.prevPosition;
-            }
-            if(ball.position.y < ball.shape.height/2) {
-                ball.position = ball.prevPosition;
-            }
-            if(ball.position.y > Gdx.graphics.getHeight() - ball.shape.height/2) {
-                ball.position = ball.prevPosition;
-            }
-        }
-        if(ball.velocity.len() < 200){
-		    ball.velocity.x = 0;
-		    ball.velocity.y = 0;
-		    condition = true;
-        }
+        Engine.calculate(ball, field, fieldFormula);
+		if(ball.velocity.len() == 0 && !distanceBalls(ball)){
+			ball.position = ball.prevPosition;
+			ball.velocity.scl(0);
+		}
 
-        if(ball.velocity.len() <= 0.2 && checkRadius())
-        {
-            outputGame(ball);
-            game.setScreen(new com.project.putting_game.WinScreen(game));
-        }
+		condition = ball.velocity.len() == 0;
+
+		if(checkFinished()) {
+			outputGame(ball);
+			game.setScreen(new com.project.putting_game.WinScreen(game));
+		}
+
+
+		if(ball.velocity.len() == 0 && checkRadius(ball, hole)) {
+			System.out.println("This ball is in his hole");
+			ball.arrived = true;
+		}
 	}
 
-	public boolean checkRadius()
-    {
-        boolean result = false;
-        if(Math.pow((ball.position.x+ball.shape.width/2-(hole.position.x+hole.holeShape.width/2)), 2) + Math.pow((ball.position.y+ball.shape.height/2-(hole.position.y+hole.holeShape.height/2)), 2) <= Math.pow(hole.holeShape.height/2-ball.shape.width/2,2)){
-            result = true;
-        }
-        return result;
-    }
+	public int nextBall(Ball ball,boolean condition){
+		int id = 0;
+		if(ball.velocity.len() == 0 && Gdx.input.isTouched()&&condition){
+			if(ball.getId() < balls.size() - 1){
+				id = ball.getId() + 1;
+			}
+			return id;
+		}
+		else{
+			return ball.getId();
+		}
+	}
+	public int nextBallColor(Ball ball){
+		int id = 0;
+		if(ball.velocity.len() == 0){
+			if(ball.getId() < balls.size() - 1){
+				id = ball.getId() + 1;
+			}
+			return id;
+		}
+		else{
+			return ball.getId();
+		}
+	}
+	public boolean distanceBalls(Ball ball) {
+		Vector3 origin = ball.position.cpy();
+		for(Ball b: balls){
+
+			if(Math.abs(origin.dst(b.position)) > maxDistance){
+				System.out.println(Math.abs(origin.dst(b.position)));
+				return false;
+			}
+		}
+		return true;
+	}
+
+	public void score(){
+		int maxScore = 0;
+		for(Ball b: balls){
+			if(b.moveHistory.getSize() > maxScore) {
+				maxScore = b.moveHistory.getSize();
+			}
+		}
+	}
+
+	public boolean checkFinished(){
+		for(Ball b: balls){
+			if(!b.arrived) {
+				return false;
+			}
+		}
+		return true;
+	}
 
 	@Override
 	public void dispose () {
-        fieldTexture.dispose();
+		fieldTexture.dispose();
 	}
 
-    @Override
-    public void resize(int width, int height) {
-    }
-    @Override
-    public void show(){
-        //play music
-    }
-    @Override
-    public void hide(){
-    }
-    @Override
-    public void pause() {
-    }
-    @Override
-    public void resume() {
-    }
+	@Override
+	public void resize(int width, int height) {stage.getViewport().update(width, height);
+	}
+	@Override
+	public void show(){
+		//play music
+	}
+	@Override
+	public void hide(){
+	}
+	@Override
+	public void pause() {
+	}
+	@Override
+	public void resume() {
+	}
 
-    public static float map (double x, double max, double min) {
-	    return (float) (0 - (max-x)/(max-min));
-    }
+	public static float map (double x, double max, double min) {
+		return (float) ((x)/(max-min));
+	}
 
-    public void setGameMode(boolean gameMode1)
-    {
-        this.gameMode1 = gameMode1;
-    }
+	public void setGameMode(boolean gameMode1)
+	{
+		this.gameMode1 = gameMode1;
+	}
 	public Settings textToSettings() {
 		try{
 			FileReader reader = new FileReader(Gdx.files.local(file).file());
@@ -269,20 +367,20 @@ public class Game implements Screen {
 
 
 	public static void outputGame(Ball ball) {
-        String move;
-        ArrayList<String> lines = new ArrayList<String>();
-        while(!ball.moveHistory.isEmpty()) {
-            move = ball.moveHistory.dequeue().toString();
-            System.out.println(move);
-            lines.add(move);
-        }
-        try {
-            lines.add("");
-            Path file = Paths.get("Games.txt");
-            Files.write(file, lines, Charset.forName("UTF-8"), StandardOpenOption.APPEND);
-        }
-        catch(IOException e) {
-            System.out.println("You messed up");
-        }
-    }
+		String move;
+		ArrayList<String> lines = new ArrayList<String>();
+		while(!ball.moveHistory.isEmpty()) {
+			move = ball.moveHistory.dequeue().toString();
+			System.out.println(move);
+			lines.add(move);
+		}
+		try {
+			lines.add("");
+			Path file = Paths.get("Games.txt");
+			Files.write(file, lines, Charset.forName("UTF-8"), StandardOpenOption.APPEND);
+		}
+		catch(IOException e) {
+			System.out.println("You messed up");
+		}
+	}
 }
