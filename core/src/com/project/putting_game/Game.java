@@ -45,6 +45,8 @@ public class Game implements Screen {
 	private Pixmap pixmap;
 	private Stage mpStage;
 	private Label.LabelStyle ballStyle;
+	private Label scoreLabel;
+	private int score;
 
 	public Game (Project2 game, String file,int players) {
 		//Creation of camera
@@ -100,6 +102,9 @@ public class Game implements Screen {
 		turn.setPosition(10,Gdx.graphics.getHeight()-turn.getPrefHeight()-10);
 		mpStage = new Stage(new ScreenViewport());
 		mpStage.addActor(turn);
+		scoreLabel = new Label("shots taken: 0",game.skin);
+		scoreLabel.setPosition(Gdx.graphics.getWidth()-scoreLabel.getWidth()-10,Gdx.graphics.getHeight()-scoreLabel.getPrefHeight()-10);
+		mpStage.addActor(scoreLabel);
 
 		stage = new Stage(new ScreenViewport());
 		Label text = new Label("Drag the mouse over the screen to create rivers, when you are done press ENTER",game.skin);
@@ -175,6 +180,7 @@ public class Game implements Screen {
 		else{
 			float value = ((float) nextBallColor(ball)+1)/((float)players);
 			ballStyle.fontColor=new Color(value, (float)0.2, 1-value, 1f);
+			scoreLabel.setText("shots taken: "+score);
 			mpStage.act();
 			mpStage.getBatch().setProjectionMatrix(camera.combined);
 			mpStage.draw();//draw stage (so the elements of the stage)
@@ -225,7 +231,7 @@ public class Game implements Screen {
 			else{
 				System.out.println("No velocities left");
 				outputGame(ball);
-				game.setScreen(new WinScreen(game));
+				game.setScreen(new WinScreen(game,i));
 				//System.exit(0);
 			}
 		}
@@ -240,7 +246,7 @@ public class Game implements Screen {
 
 		if(checkFinished()) {
 			outputGame(ball);
-			game.setScreen(new com.project.putting_game.WinScreen(game));
+			game.setScreen(new com.project.putting_game.WinScreen(game,score));
 		}
 
 
@@ -293,6 +299,7 @@ public class Game implements Screen {
 				maxScore = b.moveHistory.getSize();
 			}
 		}
+		score = maxScore;
 	}
 
 	public boolean checkFinished(){
