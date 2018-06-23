@@ -9,6 +9,7 @@ public class Field {
 	private Properties[][] matrix;
 	private double max;
 	private double min;
+	private ArrayList<String> formula;
 
 	public Properties[][] getMatrix() {
 		return matrix;
@@ -97,6 +98,7 @@ public class Field {
 		        }
         }else{
 	        ArrayList<String> function = FunctionAnalyser.ShuntingYard(course);
+	        this.formula = function;
 			max= FunctionAnalyser.reversePolish(function,0,0);//initialise
 			min=max;//initialise
 	        for(int i = 0; i < matrix.length; i++) {
@@ -112,4 +114,9 @@ public class Field {
 	        }
        }
     }
+
+    public ArrayList<String> getFormula() {
+        return formula;
+    }
+
 }

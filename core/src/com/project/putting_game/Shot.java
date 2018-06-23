@@ -1,8 +1,7 @@
 package com.project.putting_game;
 import com.badlogic.gdx.math.Vector3;
 
-public class Shot
-{
+public class Shot implements Comparable {
     private Ball ball;
     private Field course;
     private Vector3 direction;
@@ -32,7 +31,7 @@ public class Shot
         ball.setUserVelocity(new Vector3(randX, randY, 0));
         while(ball.velocity.len() >= 0.02)
         {
-            Engine.calculate(ball, course);
+            Engine.calculate(ball, course, course.getFormula());
         }
         //ball.setUserVelocity(new Vector3(0,0,0));
         x = ball.position.x - ball.shape.width/2;
@@ -69,6 +68,10 @@ public class Shot
         return y;
     }
 
+    public void setX(float x) {this.x = x;}
+
+    public void setY(float y) {this.x = y;}
+
     public float getScore()
     {
         return score;
@@ -77,5 +80,18 @@ public class Shot
     public Vector3 getDirection()
     {
         return direction;
+    }
+
+    @Override
+    public int compareTo(Object o) {
+        Shot shot = (Shot)o;
+        if(this.score > shot.score) {
+            return 1;
+        }
+        if(this.score < shot.score) {
+            return -1;
+        }
+
+        return 0;
     }
 }
