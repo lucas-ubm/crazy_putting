@@ -5,8 +5,7 @@ import com.badlogic.gdx.math.Vector3;
 import java.util.ArrayList;
 import java.util.Random;
 
-public class RandomBot
-{
+public class GeneticBot {
     private Field course;
     private Ball ball;
     private int populationSize;
@@ -15,7 +14,7 @@ public class RandomBot
     private Hole hole;
 
 
-    RandomBot(Field course, Ball ball, Hole hole, int populationSize) {
+    public GeneticBot(Field course, Ball ball, Hole hole, int populationSize) {
         this.populationSize = populationSize;
         this.population = new ArrayList<Shot>();
         this.course = course;

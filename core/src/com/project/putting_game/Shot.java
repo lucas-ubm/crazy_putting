@@ -9,8 +9,6 @@ public class Shot implements Comparable {
     private Hole hole;
     private float x;
     private float y;
-    private float randX;
-    private float randY;
     private float score;
 
     Shot(float x, float y, Ball ball, Field course, Hole hole)
@@ -20,15 +18,14 @@ public class Shot implements Comparable {
         //originalPosition = ball.position;
         direction = new Vector3(x,y,0);
         //System.out.println(direction);
-        randX = x;
-        randY = y;
+
         this.hole = hole;
         takeShot();
     }
 
     public void takeShot()
     {
-        ball.setUserVelocity(new Vector3(randX, randY, 0));
+        ball.setUserVelocity(direction);
         while(ball.velocity.len() >= 0.02)
         {
             Engine.calculate(ball, course, course.getFormula());
@@ -50,12 +47,12 @@ public class Shot implements Comparable {
 
     public float getRandX()
     {
-        return randX;
+        return direction.x;
     }
 
     public float getRandY()
     {
-        return randY;
+        return direction.y;
     }
 
     public float getX()
