@@ -1,7 +1,6 @@
 package com.project.putting_game;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.math.Vector;
 import com.badlogic.gdx.math.Vector3;
 
 import java.util.ArrayList;
@@ -17,7 +16,6 @@ public class GeneticBot {
     private int nMoves;
     private double totalFitness;
 
-
     public GeneticBot(Field course, Ball ball, Hole hole, int populationSize, int nMoves) {
         this.nMoves = nMoves;
         this.populationSize = populationSize;
@@ -32,6 +30,9 @@ public class GeneticBot {
         populate();
         while(bestPlay.getScore() < 0.06){
             geneticAlgorithm();
+            for(Shot s: bestPlay.moves) {
+                System.out.println(s.getDirection());
+            }
         }
         return bestPlay;
 
@@ -61,7 +62,7 @@ public class GeneticBot {
 
         for(int i=0; i < populationSize; i++) {
             Play p = new Play();
-            for(int i=0; i < nMoves; i++){
+            for(int j = 0; j < nMoves; j++){
                 float x = random.nextFloat() * Gdx.graphics.getWidth();
                 float y = random.nextFloat() * Gdx.graphics.getHeight();
 
@@ -110,8 +111,8 @@ public class GeneticBot {
     public void mutationXY(Play p) {
         double a = Math.random();
         if(a < 0.01) {
-            p.moves.remove(nMoves);
-            p.moves.add(new Shot(new Vector3((float)(Math.random()*Gdx.graphics.getWidth()), (float)(Math.random()*Gdx.graphics.getHeight()), 0), ball, course, hole)ñ
+            p.moves.remove(nMoves-1);
+            p.moves.add(new Shot(new Vector3((float)(Math.random()*Gdx.graphics.getWidth()), (float)(Math.random()*Gdx.graphics.getHeight()), 0), ball, course, hole));
         }
 
     }
