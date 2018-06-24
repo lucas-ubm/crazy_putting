@@ -51,7 +51,7 @@ public class Game implements Screen {
 	public Game (Project2 game, String file,int players) {
 		//Creation of camera
 		this.players = players;
-		this.maxDistance =300;
+		this.maxDistance =100;
 		this.game = game;
 		this.gameMode1 = game.getGameMode();
 		this.file = file;
@@ -72,7 +72,6 @@ public class Game implements Screen {
 		}
 		this.ball = balls.get(0);
 		this.hole = holes.get(0);
-
 
 		this.course = fieldVariables.courseFunction;
 		//Create field
@@ -166,7 +165,9 @@ public class Game implements Screen {
 
 		for(Ball b: balls) {
 			b.ballImage.setPosition(b.position.x-b.shape.height/2, b.position.y-b.shape.height/2);
-			b.ballImage.draw(game.batch);
+			if(!b.arrived){
+				b.ballImage.draw(game.batch);
+			}
 		}
 		for(Hole h: holes){
 			h.holeImage.draw(game.batch);
@@ -200,7 +201,11 @@ public class Game implements Screen {
 		Vector3 origin = new Vector3();
 		Vector3 ballPos = new Vector3();
 		ball = balls.get(nextBall(ball, condition));
+		/*while(ball.arrived){
+			ball = balls.get(nextBall(ball, condition));
+		}*/
 		hole = holes.get(nextBall(ball, condition));
+		//System.out.println(ball.getId()+" "+hole.id);
 		if(Gdx.input.justTouched() && condition && gameMode1  && !design && !ball.arrived) {
 			score();
 			Vector3 touchPos = new Vector3();
@@ -237,9 +242,12 @@ public class Game implements Screen {
 		}
 
 		Engine.calculate(ball, field, fieldFormula);
-		if(ball.velocity.len() == 0 && !distanceBalls(ball)){
-			ball.position = ball.prevPosition;
-			ball.velocity.scl(0);
+
+		if(ball.velocity.len() == 0 &&ball==balls.get(0)&&!checkDistance()){//every player has shot
+			for (Ball b : balls) {
+				b.position = b.prevPosition;
+				b.velocity.scl(0);
+			}
 		}
 
 		condition = ball.velocity.len() == 0;
@@ -249,9 +257,8 @@ public class Game implements Screen {
 			game.setScreen(new com.project.putting_game.WinScreen(game,score));
 		}
 
-
 		if(ball.velocity.len() == 0 && checkRadius(ball, hole)) {
-			System.out.println("This ball is in his hole");
+			System.out.println(ball.getId()+" is in his hole");
 			ball.arrived = true;
 		}
 	}
@@ -283,9 +290,16 @@ public class Game implements Screen {
 	public boolean distanceBalls(Ball ball) {
 		Vector3 origin = ball.position.cpy();
 		for(Ball b: balls){
-
-			if(Math.abs(origin.dst(b.position)) > maxDistance){
-				System.out.println(Math.abs(origin.dst(b.position)));
+			if(!b.arrived && Math.abs(origin.dst(b.position)) > maxDistance){
+				//System.out.println(Math.abs(origin.dst(b.position)));
+				return false;
+			}
+		}
+		return true;
+	}
+	public boolean checkDistance(){
+		for (Ball b : balls) {
+			if (!distanceBalls(b)) {
 				return false;
 			}
 		}
