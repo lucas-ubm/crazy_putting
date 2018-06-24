@@ -1,3 +1,5 @@
+package com.project.putting_game.Noise;
+
 public class main {
 
     public static void main(String args[]) {

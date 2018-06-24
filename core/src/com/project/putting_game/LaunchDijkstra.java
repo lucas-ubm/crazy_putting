@@ -24,8 +24,11 @@ public class LaunchDijkstra {
 
         double[][] heights = new double[Gdx.graphics.getHeight()][Gdx.graphics.getWidth()];
 
-        for(int i; i<Gdx.graphics.getHeight() ; i++){
-            for(int m ; m<Gdx.graphics.getWidth() ; m++){
+        int height = (int)Gdx.graphics.getHeight();
+        int width = (int)Gdx.graphics.getWidth();
+
+        for(int i=0; i<height ; i++){
+            for(int m=0; m<width ; m++){
                 heights[i][m] = matrix[i][m].getHeight();   }    }
         return heights;
     }
@@ -34,8 +37,8 @@ public class LaunchDijkstra {
         //int[][] adjList = new int[Gdx.graphics.getHeight()][Gdx.graphics.getWidth()];
         int[][] adjList = new int[10][10];
 
-        for(int i; i<Gdx.graphics.getHeight() ; i++){
-            for(int m ; m<Gdx.graphics.getWidth() ; m++){
+        for(int i=0; i<Gdx.graphics.getHeight() ; i++){
+            for(int m=0; m<Gdx.graphics.getWidth() ; m++){
                 if(in[i][m] > 0) adjList[i][m] = 1;   
             }
         }

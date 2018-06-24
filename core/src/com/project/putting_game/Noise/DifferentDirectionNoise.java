@@ -1,3 +1,5 @@
+package com.project.putting_game.Noise;
+
 import java.util.Random;
 
 public class DifferentDirectionNoise implements NoiseMachine{

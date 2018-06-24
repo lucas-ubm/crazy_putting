@@ -1,3 +1,4 @@
+package com.project.putting_game.Noise;
 
 public interface NoiseMachine{
     

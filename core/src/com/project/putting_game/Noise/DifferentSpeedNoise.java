@@ -1,3 +1,5 @@
+package com.project.putting_game.Noise;
+
 import java.util.Random;
 
 public class DifferentSpeedNoise implements NoiseMachine{
