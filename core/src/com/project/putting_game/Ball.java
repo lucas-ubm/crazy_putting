@@ -17,6 +17,7 @@ public class Ball {
     public Vector3 position;
     public Vector3 prevPosition;
     public Sprite ballImage;
+    public String path;
     public Ellipse shape;
     public Queue<Vector3> moveHistory;
     public static int c=0;
@@ -27,9 +28,10 @@ public class Ball {
     	return this.id;
     }
 
-    public Ball(int players,Vector3 position, String path, int side) {
+    public Ball(int players, Vector3 position, String path, int side) {
         this.velocity = new Vector3(0,0,0);
         moveHistory = new Queue<Vector3>();
+        this.path = path;
 
 		arrived = false;
 	    id = c;
@@ -54,4 +56,4 @@ public class Ball {
         moveHistory.enqueue(newVelocity.cpy());
     }
 
-    }
+}

@@ -22,6 +22,7 @@ public class Engine {
         //Get the friction of the surface at current location ball
         CurrentFriction = fields.getMatrix()[(int) ball.position.y][(int) ball.position.x].friction;
 
+
         //Get the height of the field at current location ball
         currentHeight = fields.getMatrix()[(int) ball.position.y][(int) ball.position.x].height;
 
@@ -35,32 +36,17 @@ public class Engine {
 
         //Checks whether the ball has touched the walls or touched the water. If it did, return to the previous position and set acceleration to 0.
         int border = 0;
-        int ballSide =(int) ball.shape.height;
-        int side = border + ballSide;
+        double ballSide = ball.shape.height;
+        double side = border + ballSide;
+
         if (ball.position.x <= ball.shape.width/2 || ball.position.y <= ball.shape.height/2 || ball.position.x >= Gdx.graphics.getWidth() - side ||
                 ball.position.y >= Gdx.graphics.getHeight() - side || water(ball, fields)) {
             ball.position = ball.prevPosition;
             ball.velocity.scl(0);
         }
 
-        if(ball.velocity.len() <= 50) {
-            ball.velocity.scl(0);
-        }
 
-        if(ball.position.x <= ball.shape.width/2){
-            ball.position = ball.prevPosition;
-            ball.velocity.scl(0);
-        }
-        if(ball.position.x >= Gdx.graphics.getWidth() - ball.shape.width/2) {
-            ball.position = ball.prevPosition;
-            ball.velocity.scl(0);
-        }
-        if(ball.position.y <= ball.shape.height/2) {
-            ball.position = ball.prevPosition;
-            ball.velocity.scl(0);
-        }
-        if(ball.position.y >= Gdx.graphics.getHeight() - ball.shape.height/2) {
-            ball.position = ball.prevPosition;
+        if(ball.velocity.len() <= 50) {
             ball.velocity.scl(0);
         }
 

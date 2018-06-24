@@ -75,6 +75,8 @@ public class Game implements Screen {
 		this.course = fieldVariables.courseFunction;
 		//Create field
 
+
+
 		fieldShape = new Rectangle();
 		fieldShape.x = 0;//game.borderLength;
 		fieldShape.y = 0;//game.borderLength;
@@ -149,6 +151,9 @@ public class Game implements Screen {
 		});
 
 		fieldTexture = new Texture(pixmap);
+
+        GeneticBot bot = new GeneticBot(field, ball, hole, 500);
+        System.out.println(bot.startProcess());
 	}
 
 	public void render (float delta) {
@@ -207,7 +212,7 @@ public class Game implements Screen {
 
             direction.set((ballPos.x-origin.x), (ballPos.y-origin.y), 0);
             ball.setUserVelocity(direction.scl(6f));
-            System.out.println(direction.len());
+            System.out.println(direction);
             ball.prevPosition = ballPos;
         }
 
@@ -219,15 +224,15 @@ public class Game implements Screen {
             if(data[i] != null && i < data.length)
             {
                 ball.setUserVelocity(data[i]);
-                ballPos.set((int)ball.position.x, (int)ball.position.y, 0);
+                ballPos.set(ball.position.x, ball.position.y, 0);
                 ball.prevPosition = ballPos;
                 i++;
             }
             else{
                 System.out.println("No velocities left");
                 outputGame(ball);
-                game.setScreen(new WinScreen(game));
-                //System.exit(0);
+//                game.setScreen(new WinScreen(game));
+                System.exit(0);
             }
         }
 
@@ -371,7 +376,7 @@ public class Game implements Screen {
 		ArrayList<String> lines = new ArrayList<String>();
 		while(!ball.moveHistory.isEmpty()) {
 			move = ball.moveHistory.dequeue().toString();
-			System.out.println(move);
+//			System.out.println(move);
 			lines.add(move);
 		}
 		try {

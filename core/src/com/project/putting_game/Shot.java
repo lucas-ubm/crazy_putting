@@ -5,43 +5,43 @@ public class Shot implements Comparable {
     private Ball ball;
     private Field course;
     private Vector3 direction;
-    private Vector3 originalPosition = new Vector3(500,100,0);
+    private Vector3 originalPosition;
     private Hole hole;
     private float x;
     private float y;
     private float score;
 
-    Shot(float x, float y, Ball ball, Field course, Hole hole)
+    Shot(Vector3 direction, Ball ball, Field course, Hole hole)
     {
         this.ball = ball;
         this.course = course;
-        //originalPosition = ball.position;
-        direction = new Vector3(x,y,0);
+        originalPosition = ball.position.cpy();
+        this.direction = direction;
         //System.out.println(direction);
 
         this.hole = hole;
         takeShot();
     }
 
-    public void takeShot()
-    {
-        ball.setUserVelocity(direction);
-        while(ball.velocity.len() >= 0.02)
-        {
+    public void takeShot() {
+        ball.setUserVelocity(direction.cpy());
+        ball.prevPosition = ball.position.cpy();
+        while(ball.velocity.len() != 0) {
             Engine.calculate(ball, course, course.getFormula());
         }
-        //ball.setUserVelocity(new Vector3(0,0,0));
-        x = ball.position.x - ball.shape.width/2;
-        y = ball.position.y - ball.shape.height/2;
-        //System.out.println("x: " + x);
-        //System.out.println("y: " + y);
-        float ax = (hole.position.x + hole.holeShape.width/2) - (ball.position.x - ball.shape.width/2);
-        float ay = (hole.position.y + hole.holeShape.height/2) - (ball.position.y - ball.shape.height/2);
-        float x2 = ax*ax;
-        float y2 = ay*ay;
-        float a = x2+y2;
-        score = (float) Math.sqrt(a);
-        //System.out.println(score);
+//        //ball.setUserVelocity(new Vector3(0,0,0));
+//        x = ball.position.x - ball.shape.width/2;
+//        y = ball.position.y - ball.shape.height/2;
+//        //System.out.println("x: " + x);
+//        //System.out.println("y: " + y);
+//        float ax = (hole.position.x + hole.holeShape.width/2) - (ball.position.x - ball.shape.width/2);
+//        float ay = (hole.position.y + hole.holeShape.height/2) - (ball.position.y - ball.shape.height/2);
+//        float x2 = ax*ax;
+//        float y2 = ay*ay;
+//        float a = x2+y2;
+//        float distance = (float) Math.sqrt(a);
+        float distance = ball.position.dst(hole.position);
+        score = 1/distance;
         ball.position = originalPosition;
     }
 
