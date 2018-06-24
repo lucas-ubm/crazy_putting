@@ -26,6 +26,10 @@ public class Queue<T> {
     return dequeueStack.peek();
   }
 
+  public int getSize(){
+      return enqueueStack.size()+dequeueStack.size();
+  }
+
   private void checkDequeue() {
     if (dequeueStack.empty()) {
       while(!enqueueStack.empty()) {

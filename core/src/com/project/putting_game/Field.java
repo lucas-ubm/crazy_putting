@@ -6,8 +6,9 @@ import com.badlogic.gdx.math.Vector3;
 import java.util.ArrayList;
 
 public class Field {
-    private Properties[][] matrix;
-    private double max;
+	private Properties[][] matrix;
+	private double max;
+	private double min;
 
 	public Properties[][] getMatrix() {
 		return matrix;
@@ -21,22 +22,21 @@ public class Field {
 		return min;
 	}
 
-	private double min;
 
-    public Field (String course) {
-        matrix = new Properties[Gdx.graphics.getHeight()][Gdx.graphics.getWidth()];
-        if(course.equals("spline")) {
-        	//initialise test case
-        	int gridW = 7;
-        	int gridH = 4;
-        	Vector3[][] heights = new Vector3[gridH][gridW];
-        	Gdx.graphics.setWindowedMode((gridW-1)* Gdx.graphics.getWidth()/(gridW-1), (gridH-1)* Gdx.graphics.getHeight()/(gridH-1));
-	        for(int m=0; m<gridW; m++)
-        		for(int n=0; n<gridH; n++){
-        	        heights[n][m]= new Vector3((Gdx.graphics.getWidth()/(gridW-1)*m),Gdx.graphics.getHeight()/(gridH-1)*n,0);
-	                //System.out.println(n+" "+m+" "+heights[n][m].y+" "+heights[n][m].x);
-			        }
-        	//user input test case
+	public Field (String course) {
+		matrix = new Properties[Gdx.graphics.getHeight()][Gdx.graphics.getWidth()];
+		if(course.equals("spline")) {
+			//initialise test case
+			int gridW = 7;
+			int gridH = 4;
+			Vector3[][] heights = new Vector3[gridH][gridW];
+			Gdx.graphics.setWindowedMode((gridW-1)*(int)(Gdx.graphics.getWidth()/(gridW-1)), (gridH-1)*(int)(Gdx.graphics.getHeight()/(gridH-1)));
+			for(int m=0; m<gridW; m++)
+				for(int n=0; n<gridH; n++){
+					heights[n][m]= new Vector3((Gdx.graphics.getWidth()/(gridW-1)*m),Gdx.graphics.getHeight()/(gridH-1)*n,0);
+					//System.out.println(n+" "+m+" "+heights[n][m].y+" "+heights[n][m].x);
+				}
+			//user input test case
 	        /*
 	        7 7 7 5 5 5 5
 	        7 7 7 5 4 4 4

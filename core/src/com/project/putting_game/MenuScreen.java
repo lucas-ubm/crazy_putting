@@ -22,8 +22,8 @@ public class MenuScreen implements Screen {
 	private Texture uncheckImg;
 	private Texture golfImg;
 	private Rectangle golf;
-	
-	/**Constructor of MenuScreen. Same as create() if extending ApplicationAdapter. 
+
+	/**Constructor of MenuScreen. Same as create() if extending ApplicationAdapter.
 	 * Instantiating all variables defined above and its components (such as position and size).
 	 * @param game game created when 'run' was clicked (parent of all screens)
 	 */
@@ -146,7 +146,7 @@ public class MenuScreen implements Screen {
 	public void resume() {
 	}
 	@Override
-	/**Will be called when a button is clicked and we move to another screen, as specified in the listeners. 
+	/**Will be called when a button is clicked and we move to another screen, as specified in the listeners.
 	 * Deletes elements of the MenuScreen.
 	 */
 	public void dispose(){
