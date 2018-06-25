@@ -1,10 +1,8 @@
 package com.project.putting_game;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector3;
 
 import java.util.ArrayList;
-import java.util.Random;
 
 public class GeneticBot {
     private Field course;
@@ -30,9 +28,7 @@ public class GeneticBot {
         populate();
         while(bestPlay.getScore() < 0.06){
             geneticAlgorithm();
-            for(Shot s: bestPlay.moves) {
-                System.out.println(s.getDirection());
-            }
+//            bestPlay.print();
         }
         return bestPlay;
 
@@ -42,9 +38,11 @@ public class GeneticBot {
         ArrayList<Play> newPopulation = new ArrayList<Play>();
         while(newPopulation.size() < population.size()) {
             Play p1 = rouletteWheelSelection();
-//            System.out.println(s1.getDirection());
+            System.out.print("p1 ");
+            p1.print();
             Play p2 = rouletteWheelSelection();
-//            System.out.println(s2.getDirection());
+            System.out.print("p2 ");
+            p2.print();
             Play son = arithmeticCrossover(p1, p2);
             mutationXY(son);
             newPopulation.add(son);
@@ -58,19 +56,20 @@ public class GeneticBot {
 
     public void populate() {
         //System.out.println("Taking shots");
-        Random random = new Random();
 
         for(int i=0; i < populationSize; i++) {
             Play p = new Play();
             for(int j = 0; j < nMoves; j++){
-                float x = random.nextFloat() * Gdx.graphics.getWidth();
-                float y = random.nextFloat() * Gdx.graphics.getHeight();
-
-                Vector3 direction = new Vector3(x,y,0);
-                p.moves.add(new Shot(direction, ball, course, hole));
+                p.createShot(ball, course, hole);
 //            System.out.println(population.get(i).getScore());
             }
+
+            ball.position = ball.moveHistory.dequeue();
+            ball.moveHistory = new Queue<Vector3>();
             population.add(p);
+            if(p.getScore() > bestPlay.getScore()) {
+                bestPlay = p;
+            }
         }
 
     }
@@ -102,7 +101,7 @@ public class GeneticBot {
     public Play arithmeticCrossover(Play p1, Play p2) {
         Play p = new Play();
         for(int i = 0; i < nMoves; i++){
-            Vector3 direction = new Vector3((p1.moves.get(i).getRandX()+p2.moves.get(i).getRandX())/2, (p1.moves.get(i).getRandY()+p2.moves.get(i).getRandY())/2, 0);
+            Vector3 direction = p1.moves.get(i).getDirection().cpy().scl(0.5f).add(p2.moves.get(i).getDirection().cpy().scl(0.5f));
             p.moves.add(new Shot(direction.cpy(), ball, course, hole));
         }
         return p;
@@ -110,9 +109,9 @@ public class GeneticBot {
 
     public void mutationXY(Play p) {
         double a = Math.random();
-        if(a < 0.01) {
-            p.moves.remove(nMoves-1);
-            p.moves.add(new Shot(new Vector3((float)(Math.random()*Gdx.graphics.getWidth()), (float)(Math.random()*Gdx.graphics.getHeight()), 0), ball, course, hole));
+        if(a < 0.2) {
+            Vector3 direction = p.moves.get((int)(a*nMoves-1)).getDirection();
+            p.moves.get((int)(a*nMoves-1)).setDirection(new Vector3(direction.y, direction.x, 0));
         }
 
     }

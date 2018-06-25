@@ -156,8 +156,8 @@ public class Game implements Screen {
 
 		fieldTexture = new Texture(pixmap);
 
-//        GeneticBot bot = new GeneticBot(field, ball, hole, 500, 3);
-//        System.out.println(bot.startProcess());
+        GeneticBot bot = new GeneticBot(field, ball, hole, 500, 3);
+        bot.startProcess().print();
 	}
 
 	public void render (float delta) {

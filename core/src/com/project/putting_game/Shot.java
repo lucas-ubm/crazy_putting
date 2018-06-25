@@ -29,20 +29,20 @@ public class Shot implements Comparable {
         while(ball.velocity.len() != 0) {
             Engine.calculate(ball, course, course.getFormula());
         }
-//        //ball.setUserVelocity(new Vector3(0,0,0));
-//        x = ball.position.x - ball.shape.width/2;
-//        y = ball.position.y - ball.shape.height/2;
-//        //System.out.println("x: " + x);
-//        //System.out.println("y: " + y);
-//        float ax = (hole.position.x + hole.holeShape.width/2) - (ball.position.x - ball.shape.width/2);
-//        float ay = (hole.position.y + hole.holeShape.height/2) - (ball.position.y - ball.shape.height/2);
-//        float x2 = ax*ax;
-//        float y2 = ay*ay;
-//        float a = x2+y2;
-//        float distance = (float) Math.sqrt(a);
-        float distance = ball.position.dst(hole.position);
+        //ball.setUserVelocity(new Vector3(0,0,0));
+        x = ball.position.x - ball.shape.width/2;
+        y = ball.position.y - ball.shape.height/2;
+        //System.out.println("x: " + x);
+        //System.out.println("y: " + y);
+        float ax = (hole.position.x + hole.holeShape.width/2) - (ball.position.x - ball.shape.width/2);
+        float ay = (hole.position.y + hole.holeShape.height/2) - (ball.position.y - ball.shape.height/2);
+        float x2 = ax*ax;
+        float y2 = ay*ay;
+        float a = x2+y2;
+        float distance = (float) Math.sqrt(a);
+
         score = 1/distance;
-        ball.position = originalPosition;
+//        ball.position = originalPosition;
     }
 
     public float getRandX()
@@ -78,6 +78,7 @@ public class Shot implements Comparable {
     {
         return direction;
     }
+    public void setDirection(Vector3 direction) {this.direction = direction;}
 
     @Override
     public int compareTo(Object o) {
