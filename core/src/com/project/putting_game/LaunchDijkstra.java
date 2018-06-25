@@ -20,12 +20,11 @@ public class LaunchDijkstra {
         heights = translateToHeights(c.getMatrix());
     }
 
-    public ArrayList<Hole> run () {
+    public void run () {
 
         ShortestPath t = new ShortestPath();
         t.dijkstra(adjacencyList, 0);
 
-        return null;
     }
 
     public double[][] translateToHeights(Properties[][] matrix) {
