@@ -80,16 +80,18 @@ public class Engine {
 
     }
 
+    /**
+     *
+     * @param position position of the ball
+     * @param velocity velocity of the ball
+     * @param field field containing spline
+     * @return acceleration
+     */
+    public static Vector3 acceleration(Vector3 position, Vector3 velocity, Field field){
+        Vector3 acceleration = new Vector3();
+        acceleration.x =(float) (((-g) * FunctionAnalyser.derivative(field, (int)position.x, (int)position.y, "x")) - (CurrentFriction * g * velocity.x));
 
-    /**Method to calculate the force on the ball at the x-axis. This method is used when calculating the new velocity*/
-    public static double forceX(Field field, Ball ball, ArrayList<String> formula) {
-    	double Fx;
-    	if(formula.get(0).equalsIgnoreCase("spline"))
-	        Fx = ((-g) * FunctionAnalyser.derivative(field, (int)ball.position.x, (int)ball.position.y, "x")) - (CurrentFriction * g * vx);
-        else
-        	Fx = ((-g) * FunctionAnalyser.derivative(formula, ball.position.x, ball.position.y, "x")) - (CurrentFriction * g * vx);
-        return Fx;
-    }
+        acceleration.y =(float) (((-g) * FunctionAnalyser.derivative(field, (int)position.x, (int)position.y, "y")) - (CurrentFriction * g * velocity.y));
 
     /**Method to calculate the force on the ball at the y-axis. This method is used when calculating the new velocity*/
     public static double forceY(Field field, Ball ball, ArrayList<String> formula) {
