@@ -87,9 +87,9 @@ public class Engine {
      */
     public static Vector3 acceleration(Vector3 position, Vector3 velocity, Field field){
         Vector3 acceleration = new Vector3();
-        acceleration.x =(float) (((-g) * FunctionAnalyser.derivative(field, position.x, position.y, "x")) - (CurrentFriction * g * velocity.x));
+        acceleration.x =(float) (((-g) * FunctionAnalyser.derivative(field, (int)position.x, (int)position.y, "x")) - (CurrentFriction * g * velocity.x));
 
-        acceleration.y =(float) (((-g) * FunctionAnalyser.derivative(field, position.x, position.y, "y")) - (CurrentFriction * g * velocity.y));
+        acceleration.y =(float) (((-g) * FunctionAnalyser.derivative(field, (int)position.x, (int)position.y, "y")) - (CurrentFriction * g * velocity.y));
 
         return acceleration;
     }
