@@ -51,7 +51,7 @@ public class Game implements Screen {
 	public Game (Project2 game, String file,int players) {
 		//Creation of camera
 		this.players = players;
-		this.maxDistance =100;
+		this.maxDistance =150;
 		this.game = game;
 		this.gameMode1 = game.getGameMode();
 		this.file = file;

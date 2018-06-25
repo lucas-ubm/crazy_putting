@@ -25,13 +25,13 @@ public class Engine {
         double y = ball.position.y;
         vx = ball.velocity.x;
         vy = ball.velocity.y;
-
+	    System.out.println("Before: "+ball.position.y+" "+ball.position.x);
         //Calculating the next location and velocity of the ball per timestep
         xh = x + h * vx;
         yh = y + h * vy;
         vx_h = vx + h * forceX(fields, ball, formula);
         vy_h = vy + h * forceY(fields, ball, formula);
-
+	    System.out.println("velocity: "+vx+" "+vy+" step: "+xh+" "+yh);
         //Storing the newly obtained velocities and locations in the Ball object
         ball.position.x = (float) xh;
         ball.shape.x = (float) xh;
@@ -39,7 +39,7 @@ public class Engine {
         ball.shape.y = (float) yh;
         ball.velocity.x = (float) vx_h;
         ball.velocity.y = (float) vy_h;
-
+	    System.out.println("After: "+ball.position.y+" "+ball.position.x);
         //Get the friction of the surface at current location ball
         CurrentFriction = fields.getMatrix()[(int) ball.position.y][(int) ball.position.x].friction;
 
