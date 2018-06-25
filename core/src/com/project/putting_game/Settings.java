@@ -8,13 +8,16 @@ package com.project.putting_game;
 
 import com.badlogic.gdx.math.Vector3;
 
-public interface Settings {
-    Vector3 ballPosition = new Vector3(80,80,0);
-    int ballWidth = 32;
-    int ballHeight = 32;
+public class Settings {
+    String courseFunction;
+    Vector3 startPosition;
+    Vector3 goalPosition;
+    int goalRadius;
 
-    Vector3 holePosition = new Vector3(300,300,0);
-
-
-
+    public Settings(String courseFunction, Vector3 startPosition, Vector3 goalPosition, int goalRadius) {
+        this.courseFunction = courseFunction;
+        this.startPosition = startPosition;
+        this.goalPosition = goalPosition;
+        this.goalRadius = goalRadius;
+    }
 }

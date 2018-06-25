@@ -11,27 +11,18 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
-
-
-public class WinScreen implements Screen
-{
+public class WinScreen implements Screen {
     final com.project.putting_game.Project2 game;
-    OrthographicCamera camera;
-    String playButton;
+    private OrthographicCamera camera;
     private Stage stage;
-    private TextButton playAgain;
-    TextButton.TextButtonStyle textButtonStyle;
-    Skin skin;
     private Texture golfImg;
     private Rectangle golf;
 
-
     /**Constructor of WinScreen. Same as create() if extending ApplicationAdapter.
 	 * Instantiating all variables defined above and its components (such as position and size).
-	 * @param game - game created when 'run' was clicked (parent of all screens)
+	 * @param game game created when 'run' was clicked (parent of all screens)
 	 */
-    public WinScreen(final Project2 game)
-    {
+    public WinScreen(final Project2 game) {
         this.game = game;
         camera = new OrthographicCamera();
         camera.setToOrtho(false, 800,480);
@@ -43,45 +34,25 @@ public class WinScreen implements Screen
         golf.x = 0;
         golf.y = Gdx.graphics.getHeight() - golf.height;
 
-        skin = new Skin();
-        skin.add("default", game.font);
-        Pixmap backgroundButton = new Pixmap((int)Gdx.graphics.getWidth()/2,(int)Gdx.graphics.getHeight()/10,Pixmap.Format.RGB888);//format is enum: how to store color values
-        backgroundButton.setColor(Color.WHITE);
-        backgroundButton.fill();
-        skin.add("background",new Texture(backgroundButton));
-
-
-        textButtonStyle = new TextButton.TextButtonStyle();
-        textButtonStyle.up = skin.newDrawable("background", Color.FOREST); //standard color of the button (no special action)
-        textButtonStyle.up = skin.newDrawable("background", Color.FOREST);
-        textButtonStyle.down = skin.newDrawable("background", Color.BLACK); //let the button turn black if you press your mouse when standing on the button
-        textButtonStyle.checked = skin.newDrawable("background", Color.BLACK);
-        textButtonStyle.over = skin.newDrawable("background", Color.BROWN); //let the button turn brown when the mouse is standing on the button
-        textButtonStyle.font = skin.getFont("default");
-        skin.add("default", textButtonStyle);
-        backgroundButton.dispose();
-
-
         stage = new Stage(new ScreenViewport());
         Gdx.input.setInputProcessor(stage);
-        playAgain = new TextButton("Play again!", skin);
+        TextButton playAgain = new TextButton("Play again!", game.skin);
         playAgain.setPosition(Gdx.graphics.getWidth()/2 - playAgain.getWidth()/2,2*Gdx.graphics.getHeight()/6);
         //When button 'Play again!' is clicked, set the screen to the Game (and close WinScreen)
         playAgain.addListener(new ClickListener(){
             public void clicked(InputEvent event,float x, float y){
-                game.setScreen(new com.project.putting_game.Game(game));
+                Ball.c =0;Hole.c=0;
+                game.setScreen(new com.project.putting_game.MenuScreen(game));
                 dispose();
             }
         });
         stage.addActor(playAgain);
-
-
     }
+
     /** Called many times a second. Draws all textures and elements of the stage, such as buttons and labels, on the screen.
-	 * @param delta -  time elapsed since rendering the last frame
+	 * @param delta time elapsed since rendering the last frame
 	 */
-    public void render(float delta)
-    {
+    public void render(float delta) {
         Gdx.gl.glClearColor(0, 0.7f, 0, 0); //set color of screen/background
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         camera.update();
@@ -91,11 +62,15 @@ public class WinScreen implements Screen
         stage.getBatch().draw(golfImg, golf.x, golf.y, golf.width, golf.height);//draw background picture
         stage.getBatch().end();
         stage.draw();//draw stage (so the elements of the stage)
-
-
     }
+
+    /** Resize the Screen
+     * @param width new width of screen
+     * @param height new height of screen
+     */
     @Override
     public void resize(int width, int height) {
+        stage.getViewport().update(width, height);
     }
     @Override
     public void show(){

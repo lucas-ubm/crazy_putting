@@ -1,12 +1,18 @@
 package com.project.putting_game;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
+import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.*;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
@@ -14,144 +20,202 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
+import java.util.StringTokenizer;
 
 public class Game implements Screen {
-	private SpriteBatch batch;
 	private OrthographicCamera camera;
-	private Texture ballImage;
 	private Texture fieldTexture;
+	private ArrayList<Ball> balls;
 	private Ball ball;
-	public int i =0;
-	private Rectangle fieldShape;
 	private Hole hole;
-	private Project2 game;
+	private Field field;
+	public int i = 0;
+	private int maxDistance;
+	private Rectangle fieldShape;
+	private ArrayList<Hole> holes;
+	final Project2 game;
+	final private String file;
 	private boolean condition = true;
 	private String course;
 	private boolean gameMode1;
+	public ArrayList<String> fieldFormula;
+	private int players;
+	private boolean design;
+	private Stage stage;
+	private Pixmap pixmap;
+	private Stage mpStage;
+	private Label.LabelStyle ballStyle;
+
+	public Game (Project2 game, String file,int players) {
+		//Creation of camera
+		this.players = players;
+		this.maxDistance =300;
+		this.game = game;
+		this.gameMode1 = game.getGameMode();
+		this.file = file;
+		camera = new OrthographicCamera();
+		camera.setToOrtho(false, 800, 480);
+		design = true;
+		Settings fieldVariables = textToSettings();
+
+		if(!fieldVariables.courseFunction.equalsIgnoreCase("spline"))
+			this.fieldFormula = FunctionAnalyser.ShuntingYard(fieldVariables.courseFunction);
+
+		this.balls = new ArrayList<Ball>();
+		this.holes = new ArrayList<Hole>();
+
+		for(int i = 0; i < this.players; i++){
+			balls.add(new Ball(players,fieldVariables.startPosition.scl((float)(1+0.3*i)).cpy(), "golfball.png", 24));
+			holes.add(new Hole(players,fieldVariables.goalPosition.scl((float)(1-0.1*i)).cpy(), "hole.png", fieldVariables.goalRadius));
+		}
+		this.ball = balls.get(0);
+		this.hole = holes.get(0);
 
 
-	public Game (Project2 game) {
-	    //Creation of camera
-        this.game = game;
-        this.gameMode1 = game.gameMode1;
-        camera = new OrthographicCamera();
-        camera.setToOrtho(false, 800, 480);
+		this.course = fieldVariables.courseFunction;
+		//Create field
 
+		fieldShape = new Rectangle();
+		fieldShape.x = 0;//game.borderLength;
+		fieldShape.y = 0;//game.borderLength;
+		fieldShape.width = Gdx.graphics.getWidth();// - game.borderLength*2;
+		fieldShape.height = Gdx.graphics.getHeight();// - game.borderLength*2;
+		field = new Field(course.replaceAll(" ",""));
+		pixmap = new Pixmap((int) Gdx.graphics.getWidth(), (int) Gdx.graphics.getHeight(), Pixmap.Format.RGBA8888);
+		for (int y = 0; y < Gdx.graphics.getHeight(); y++) {
+			for (int x = 0; x < Gdx.graphics.getWidth(); x++) {
+				if(field.getMatrix()[y][x].height >=0) {
+					float  value = map(field.getMatrix()[y][x].height, field.getMax(),field.getMin());
+					pixmap.setColor(new Color(0,  value, 0, 1f));// set color White with Alpha=0.5
+				}
+				else{
+					pixmap.setColor(new Color(0,0,0.4f,1f));
+				}
+				pixmap.drawPixel(x, y);
+			}
+		}
+		ballStyle = new Label.LabelStyle();
+		ballStyle.font = game.skin.getFont("default");
+		Label turn = new Label("turn",ballStyle);
+		turn.setPosition(10,Gdx.graphics.getHeight()-turn.getPrefHeight()-10);
+		mpStage = new Stage(new ScreenViewport());
+		mpStage.addActor(turn);
 
+		stage = new Stage(new ScreenViewport());
+		Label text = new Label("Drag the mouse over the screen to create rivers, when you are done press ENTER",game.skin);
+		text.setPosition(0,Gdx.graphics.getHeight()-text.getPrefHeight());
+		stage.addActor(text);
+		Gdx.input.setInputProcessor(new InputAdapter(){
+			@Override
+			public boolean touchDown (int x, int y, int pointer, int button) {
+				//System.out.println("Touched:"+" "+x+" "+(Gdx.graphics.getHeight()-y));
+				if (design) {
+					for (int i = y - 5; i <= y + 5; i++) //for all points within radius of 5
+						for (int j = x - 5; j <= x + 5; j++){
+							pixmap.setColor(Color.BLUE);
+							pixmap.drawPixel(j, i);
+							field.getMatrix()[i][j].height=-1;//set equal to water so ball reacts same way
+						}
+					fieldTexture = new Texture(pixmap);
+				}
+				return true; // return true to indicate the event was handled
+			}
+			@Override
+			public boolean touchDragged (int x, int y, int pointer) {
+				if (design) {
+					//System.out.println(x+" "+y+" "+(field.getMatrix().length-1-y));
+					for (int i = y - 5; i <= y + 5; i++) //for all points within radius of 5
+						for (int j = x - 5; j <= x + 5; j++){
+							pixmap.setColor(Color.BLUE);
+							pixmap.drawPixel(j, i);
+							field.getMatrix()[i][j].height=-1;//set equal to water so ball reacts same way
+						}
+					fieldTexture = new Texture(pixmap);
+				}
+				return true; // return true to indicate the event was handled
+			}
+			@Override
+			public boolean keyDown(int keycode){
+				if(keycode==Input.Keys.ENTER) {
+					if(design)
+						stage.dispose();
+					design = false;
+				}
+				if(keycode==Input.Keys.ESCAPE) {
+					//game.setScreen(new Game(game,file));
+				}
+				return true;
+			}
+		});
 
-        //Create bucket Rectangle
-        ball = new Ball(new Vector3(0,0,0), new Vector3(80, 80, 0), "golfball.png", 32, 32);
-        hole = new Hole(new Vector3(300,300,0), "hole.png", 50, 50);
-        //Create field
-        fieldShape = new Rectangle();
-        fieldShape.x = 60;
-        fieldShape.y = 60;
-        fieldShape.width = 800 - 120;
-        fieldShape.height = 480 - 120;
-
+		fieldTexture = new Texture(pixmap);
 	}
 
 	public void render (float delta) {
 		Gdx.gl.glClearColor(0, 0, 0.2f, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		camera.update();
-
 		game.batch.setProjectionMatrix(camera.combined);
 		game.batch.begin();
-        course = "flat";
-        Field field = new Field(800, 480, new Vector3(0, 0, 0), 3, course);
-        Pixmap pixmap = new Pixmap((int) Gdx.graphics.getWidth(), (int) Gdx.graphics.getHeight(), Pixmap.Format.RGBA8888);
+		game.batch.draw(fieldTexture, fieldShape.x, fieldShape.y, fieldShape.width, fieldShape.height);
 
-		if(course.equals("sinx+siny")) {
-            for (int x = 0; x < Gdx.graphics.getWidth(); x++) {
-                for (int y = 0; y < Gdx.graphics.getHeight(); y++) {
-                    if(field.matrix[y][x].height >=0) {
-                        float value = -1*map(Math.sin((double)(x)/(400/5.1))+Math.sin((double)(y)/(240/5.1)), 2,-2);
-                        pixmap.setColor(new Color(0,  value, 0, 1f));// set color White with Alpha=0.5
-                    }
-                    else{
-                        pixmap.setColor(new Color(0,0,0.4f,1f));
-                    }
-                    pixmap.drawPixel(x, y);
-                }
-            }
-            fieldTexture = new Texture(pixmap);
-            pixmap.dispose();
-        }
-        else if(course.equals("flat")) {
-		    for (int x = 0; x < Gdx.graphics.getWidth(); x++) {
-                for (int y = 0; y < Gdx.graphics.getHeight(); y++) {
-                    pixmap.setColor(new Color(0,  0.8f, 0, 1f));// set color White with Alpha=0.5
-                    pixmap.drawPixel(x, y);
-                }
-            }
-            fieldTexture = new Texture(pixmap);
-            pixmap.dispose();
-        }
-        else if(course.equals("slope")) {
-            for (int x = 0; x < Gdx.graphics.getWidth(); x++) {
-                for (int y = 0; y < Gdx.graphics.getHeight(); y++) {
-                    if(field.matrix[y][x].height >=0) {
-                        float value = -1*map(x+y, 1280,0);
-                        pixmap.setColor(new Color(0,  value, 0, 1f));// set color White with Alpha=0.5
-                    }
-                    else{
-                        pixmap.setColor(new Color(0,0,0.4f,1f));
-                    }
-                    pixmap.drawPixel(x, y);
-                }
-            }
-            fieldTexture = new Texture(pixmap);
-            pixmap.dispose();
-        }
-        else if(course.equals("parabola")) {
-            for (int x = 0; x < Gdx.graphics.getWidth(); x++) {
-                for (int y = 0; y < Gdx.graphics.getHeight(); y++) {
-                    if(field.matrix[y][x].height >=0) {
-                        float value = -1*map(x*y, 384000,0);
-                        pixmap.setColor(new Color(0,  value, 0, 1f));// set color White with Alpha=0.5
-                    }
-                    else{
-                        pixmap.setColor(new Color(0,0,0.4f,1f));
-                    }
-                    pixmap.drawPixel(x, y);
-                }
-            }
-            fieldTexture = new Texture(pixmap);
-            pixmap.dispose();
-        }
-
-        game.batch.draw(fieldTexture, fieldShape.x, fieldShape.y, fieldShape.width, fieldShape.height);
-		game.batch.draw(ball.ballImage, ball.position.x, ball.position.y, ball.shape.width, ball.shape.height);
-		game.batch.draw(hole.holeImage, hole.position.x, hole.position.y, hole.holeShape.width, hole.holeShape.height );
-
+		for(Ball b: balls) {
+			b.ballImage.setPosition(b.position.x-b.shape.height/2, b.position.y-b.shape.height/2);
+			b.ballImage.draw(game.batch);
+		}
+		for(Hole h: holes){
+			h.holeImage.draw(game.batch);
+			}
 		game.batch.end();
-        Vector3 origin = new Vector3();
-        Vector3 ballPos = new Vector3();
+		if(design){
+			stage.act();
+			stage.getBatch().setProjectionMatrix(camera.combined);
+			stage.draw();//draw stage (so the elements of the stage)
+		}
+		else{
+			float value = ((float) nextBallColor(ball)+1)/((float)players);
+			ballStyle.fontColor=new Color(value, (float)0.2, 1-value, 1f);
+			mpStage.act();
+			mpStage.getBatch().setProjectionMatrix(camera.combined);
+			mpStage.draw();//draw stage (so the elements of the stage)
+		}
+		play();
+	}
 
+	public boolean checkRadius(Ball ball, Hole hole) {
+		boolean result = false;
+		if(Math.pow((ball.position.x+ball.shape.width/2-(hole.position.x+hole.holeShape.width/2)), 2) + Math.pow((ball.position.y+ball.shape.height/2-(hole.position.y+hole.holeShape.height/2)), 2) <= Math.pow(hole.holeShape.height/2-ball.shape.width/2,2)){
+			result = true;
+		}
+		return result;
+	}
 
-		if(Gdx.input.justTouched() && condition && gameMode1) {
-		    boolean condition = true;
-
+	public void play(){
+		Vector3 origin = new Vector3();
+		Vector3 ballPos = new Vector3();
+		ball = balls.get(nextBall(ball, condition));
+		hole = holes.get(nextBall(ball, condition));
+        if(Gdx.input.justTouched() && condition && gameMode1  && !design && !ball.arrived) {
+        	score();
             Vector3 touchPos = new Vector3();
             touchPos.set(Gdx.input.getX(), Gdx.input.getY(), 0);
             camera.unproject(touchPos);
-            origin.set((int)touchPos.x - 64/2, (int)touchPos.y - 64/2, 0);
+            origin.set((int)touchPos.x - ball.shape.width/2, (int)touchPos.y - ball.shape.height/2, 0);
 
             ballPos.set((int)ball.position.x, (int)ball.position.y, 0);
             Vector3 direction = new Vector3();
 
             direction.set((ballPos.x-origin.x), (ballPos.y-origin.y), 0);
-            ball.setUserVelocity(direction.scl(3f));
+            ball.setUserVelocity(direction.scl(6f));
+            System.out.println(direction.len());
             ball.prevPosition = ballPos;
-
         }
 
         if(!gameMode1 && condition)
         {
-
-            Moves Course1 = new Moves("Input.txt");
+            Moves Course1 = new Moves(game.inputfile);
             Vector3[] data = Course1.getData();
+            ball = balls.get(0);
             if(data[i] != null && i < data.length)
             {
                 ball.setUserVelocity(data[i]);
@@ -162,107 +226,161 @@ public class Game implements Screen {
             else{
                 System.out.println("No velocities left");
                 outputGame(ball);
-                System.exit(0);
+                game.setScreen(new WinScreen(game));
+                //System.exit(0);
             }
         }
 
-        if(ball.velocity.len() >= 0.02) {
-		    condition = false;
-            //Makes sure the bucket doesn't get out of the window
-            Engine.calculate(ball, field);
-            if(ball.position.x < 60){
-                ball.position.x = 60;
-            }
-            if(ball.position.x > 800 - 92) {
-                ball.position.x = 800 - 92;
+        Engine.calculate(ball, field, fieldFormula);
+		if(ball.velocity.len() == 0 && !distanceBalls(ball)){
+			ball.position = ball.prevPosition;
+			ball.velocity.scl(0);
+		}
 
-            }
-            if(ball.position.y < 60) {
-                ball.position.y = 60;
-            }
-            if(ball.position.y > 480 - 92) {
-                ball.position.y = 480- 92;
-            }
+		condition = ball.velocity.len() == 0;
 
-        }
-        if(ball.velocity.len() < 200){
-		    ball.velocity.x = 0;
-		    ball.velocity.y = 0;
-		    condition = true;
-        }
+		if(checkFinished()) {
+			outputGame(ball);
+			game.setScreen(new com.project.putting_game.WinScreen(game));
+		}
 
-        if(ball.velocity.len() <= 0.2 && checkRadius())
-        {
-            outputGame(ball);
-            game.setScreen(new com.project.putting_game.WinScreen(game));
 
-        }
-
+		if(ball.velocity.len() == 0 && checkRadius(ball, hole)) {
+			System.out.println("This ball is in his hole");
+			ball.arrived = true;
+		}
 	}
 
-	public boolean checkRadius()
-    {
-        boolean result = false;
-        if(Math.pow((ball.position.x+ball.shape.width/2-(hole.position.x+hole.holeShape.width/2)), 2) + Math.pow((ball.position.y+ball.shape.height/2-(hole.position.y+hole.holeShape.height/2)), 2) <= Math.pow(hole.holeShape.height/2-ball.shape.width/2,2)){
-            result = true;
-        }
-        return result;
+	public int nextBall(Ball ball,boolean condition){
+		int id = 0;
+		if(ball.velocity.len() == 0 && Gdx.input.isTouched()&&condition){
+			if(ball.getId() < balls.size() - 1){
+				id = ball.getId() + 1;
+			}
+			return id;
+		}
+		else{
+			return ball.getId();
+		}
+	}
+	public int nextBallColor(Ball ball){
+		int id = 0;
+		if(ball.velocity.len() == 0){
+			if(ball.getId() < balls.size() - 1){
+				id = ball.getId() + 1;
+			}
+			return id;
+		}
+		else{
+			return ball.getId();
+		}
+	}
+	public boolean distanceBalls(Ball ball) {
+		Vector3 origin = ball.position.cpy();
+		for(Ball b: balls){
 
-    }
+			if(Math.abs(origin.dst(b.position)) > maxDistance){
+				System.out.println(Math.abs(origin.dst(b.position)));
+				return false;
+			}
+		}
+		return true;
+	}
+
+	public void score(){
+		int maxScore = 0;
+		for(Ball b: balls){
+			if(b.moveHistory.getSize() > maxScore) {
+				maxScore = b.moveHistory.getSize();
+			}
+		}
+	}
+
+	public boolean checkFinished(){
+		for(Ball b: balls){
+			if(!b.arrived) {
+				return false;
+			}
+		}
+		return true;
+	}
 
 	@Override
 	public void dispose () {
-        ballImage.dispose();
-        fieldTexture.dispose();
-		batch.dispose();
+		fieldTexture.dispose();
 	}
 
-    @Override
-    public void resize(int width, int height) {
-    }
-    @Override
-    public void show(){
-        //play music
-    }
-    @Override
-    public void hide(){
-    }
-    @Override
-    public void pause() {
-    }
-    @Override
-    public void resume() {
-    }
+	@Override
+	public void resize(int width, int height) {stage.getViewport().update(width, height);
+	}
+	@Override
+	public void show(){
+		//play music
+	}
+	@Override
+	public void hide(){
+	}
+	@Override
+	public void pause() {
+	}
+	@Override
+	public void resume() {
+	}
 
-    public static float map (double x, double max, double min) {
-	    return (float) (0 - (max-x)/(max-min));
+	public static float map (double x, double max, double min) {
+		return (float) ((x)/(max-min));
+	}
 
-    }
+	public void setGameMode(boolean gameMode1)
+	{
+		this.gameMode1 = gameMode1;
+	}
+	public Settings textToSettings() {
+		try{
+			FileReader reader = new FileReader(Gdx.files.local(file).file());
+			BufferedReader in = new BufferedReader(reader);
+			String line = in.readLine();
+			ArrayList<String> fileString = new ArrayList<String>();
+			int i = 0;
+			while (line!=null){
+				StringTokenizer st = new StringTokenizer(line);
 
-    public void setGameMode(boolean gameMode1)
-    {
-        this.gameMode1 = gameMode1;
-    }
-
-    public static void outputGame(Ball ball) {
-        String move;
-        ArrayList<String> lines = new ArrayList<String>();
-        while(!ball.moveHistory.isEmpty()) {
-            move = ball.moveHistory.dequeue().toString();
-            System.out.println(move);
-            lines.add(move);
-
-        }
-        try {
-            lines.add("");
-            Path file = Paths.get("Games.txt");
-            Files.write(file, lines, Charset.forName("UTF-8"), StandardOpenOption.APPEND);
-        }
-        catch(IOException e) {
-            System.out.println("You fucked up");
-        }
-
-    }
+				while (st.hasMoreTokens() && i!=0)
+					fileString.add(st.nextToken());
+				if(i == 0) fileString.add(line);
+				line = in.readLine();
+				i++;
+			}
+			in.close();
+			reader.close();
+			System.out.println(fileString);
+			Settings result = new Settings(fileString.get(0),new Vector3(Integer.parseInt(fileString.get(1)),
+					Integer.parseInt(fileString.get(2)),0), new Vector3(Integer.parseInt(fileString.get(3)),
+					Integer.parseInt(fileString.get(4)),0), Integer.parseInt(fileString.get(5)));
+			return result;
+		}
+		catch(IOException i){
+			System.out.println("File mistake, probably");
+		}
+		return null;
+	}
 
 
+	public static void outputGame(Ball ball) {
+		String move;
+		ArrayList<String> lines = new ArrayList<String>();
+		while(!ball.moveHistory.isEmpty()) {
+			move = ball.moveHistory.dequeue().toString();
+			System.out.println(move);
+			lines.add(move);
+		}
+		try {
+			lines.add("");
+			Path file = Paths.get("Games.txt");
+			Files.write(file, lines, Charset.forName("UTF-8"), StandardOpenOption.APPEND);
+		}
+		catch(IOException e) {
+			System.out.println("You messed up");
+		}
+	}
 }
