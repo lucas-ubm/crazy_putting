@@ -29,8 +29,8 @@ public class Engine {
         //Calculating the next location and velocity of the ball per timestep
         xh = x + h * vx;
         yh = y + h * vy;
-        vx_h = vx + h * forceX(ball, formula);
-        vy_h = vy + h * forceY(ball, formula);
+        vx_h = vx + h * forceX(fields, ball, formula);
+        vy_h = vy + h * forceY(fields, ball, formula);
 
         //Storing the newly obtained velocities and locations in the Ball object
         ball.position.x = (float) xh;
@@ -82,14 +82,22 @@ public class Engine {
 
 
     /**Method to calculate the force on the ball at the x-axis. This method is used when calculating the new velocity*/
-    public static double forceX(Ball ball, ArrayList<String> formula) {
-        double Fx = ((-g) * FunctionAnalyser.derivative(formula, ball.position.x, ball.position.y, "x")) - (CurrentFriction * g * vx);
+    public static double forceX(Field field, Ball ball, ArrayList<String> formula) {
+    	double Fx;
+    	if(formula.get(0).equalsIgnoreCase("spline"))
+	        Fx = ((-g) * FunctionAnalyser.derivative(field, (int)ball.position.x, (int)ball.position.y, "x")) - (CurrentFriction * g * vx);
+        else
+        	Fx = ((-g) * FunctionAnalyser.derivative(formula, ball.position.x, ball.position.y, "x")) - (CurrentFriction * g * vx);
         return Fx;
     }
 
     /**Method to calculate the force on the ball at the y-axis. This method is used when calculating the new velocity*/
-    public static double forceY(Ball ball, ArrayList<String> formula) {
-        double Fy = ((-g) * FunctionAnalyser.derivative(formula, ball.position.x, ball.position.y, "y")) - (CurrentFriction * g * vy);
+    public static double forceY(Field field, Ball ball, ArrayList<String> formula) {
+	    double Fy;
+	    if(formula.get(0).equalsIgnoreCase("spline"))
+		    Fy = ((-g) * FunctionAnalyser.derivative(field, (int)ball.position.x, (int)ball.position.y, "y")) - (CurrentFriction * g * vy);
+	    else
+		    Fy = ((-g) * FunctionAnalyser.derivative(formula, ball.position.x, ball.position.y, "y")) - (CurrentFriction * g * vy);
         return Fy;
     }
 
