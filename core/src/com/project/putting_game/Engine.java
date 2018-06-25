@@ -2,6 +2,7 @@ package com.project.putting_game;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.Vector3;
 
 import java.util.ArrayList;
 
@@ -10,74 +11,68 @@ public class Engine {
     public static final double g = 9.81;
     public static double CurrentFriction;
     public static double currentHeight;
-    public static final double h = 0.005;
-    public static double xh;
-    public static double yh;
-    public static double vx_h;
-    public static double vy_h;
-    public static double vx;
-    public static double vy;
+    public static final float h = 0.005f;
+    public static Vector3 k1;
+    public static Vector3 k2;
+    public static Vector3 k3;
+    public static Vector3 k4;
 
 
     public static void calculate(Ball ball, Field fields, ArrayList<String> formula) {
-        //Getting the current location and velocity of the ball
-        double x = ball.position.x;
-        double y = ball.position.y;
-        vx = ball.velocity.x;
-        vy = ball.velocity.y;
-	    System.out.println("Before: "+ball.position.y+" "+ball.position.x);
-        //Calculating the next location and velocity of the ball per timestep
-        xh = x + h * vx;
-        yh = y + h * vy;
-        vx_h = vx + h * forceX(fields, ball, formula);
-        vy_h = vy + h * forceY(fields, ball, formula);
-	    System.out.println("velocity: "+vx+" "+vy+" step: "+xh+" "+yh);
-        //Storing the newly obtained velocities and locations in the Ball object
-        ball.position.x = (float) xh;
-        ball.shape.x = (float) xh;
-        ball.position.y = (float) yh;
-        ball.shape.y = (float) yh;
-        ball.velocity.x = (float) vx_h;
-        ball.velocity.y = (float) vy_h;
-	    System.out.println("After: "+ball.position.y+" "+ball.position.x);
         //Get the friction of the surface at current location ball
         CurrentFriction = fields.getMatrix()[(int) ball.position.y][(int) ball.position.x].friction;
+
 
         //Get the height of the field at current location ball
         currentHeight = fields.getMatrix()[(int) ball.position.y][(int) ball.position.x].height;
 
-        //Checks whether the ball has touched the walls or touched the water. If it did, return to the previous position and set velocity to 0.
+        if (formula.get(0).equalsIgnoreCase("spline")) {
+            k1 = acceleration(ball.position.cpy(), ball.velocity.cpy(), fields).scl(h);
+            k2 = acceleration(ball.position.cpy().add(1f / 3f * h), ball.velocity.cpy().add(k1.cpy().scl(1f / 3f)), fields).scl(h);
+            k3 = acceleration(ball.position.cpy().add(2f / 3f * h), ball.velocity.cpy().sub(k1.cpy().scl(1f / 3f).add(k2.cpy())), fields).scl(h);
+            k4 = acceleration(ball.position.cpy().add(h), ball.velocity.cpy().add(k1.cpy()).sub(k2.cpy()).add(k3.cpy()), fields).scl(h);
+        } else {
+            k1 = acceleration(ball.position.cpy(), ball.velocity.cpy(), formula).scl(h);
+            k2 = acceleration(ball.position.cpy().add(1f / 3f * h), ball.velocity.cpy().add(k1.cpy().scl(1f / 3f)), formula).scl(h);
+            k3 = acceleration(ball.position.cpy().add(2f / 3f * h), ball.velocity.cpy().sub(k1.cpy().scl(1f / 3f).add(k2.cpy())), formula).scl(h);
+            k4 = acceleration(ball.position.cpy().add(h), ball.velocity.cpy().add(k1.cpy()).sub(k2.cpy()).add(k3.cpy()), formula).scl(h);
+        }
+
+
+        ball.velocity.add((k1.add(k2.scl(3)).add(k3.scl(3)).add(k4)).scl(1f / 6f));
+        ball.position.add(ball.velocity.cpy().scl(h));
+
+        //Checks whether the ball has touched the walls or touched the water. If it did, return to the previous position and set acceleration to 0.
         int border = 0;
-        int ballSide =(int) ball.shape.height;
-        int side = border + ballSide;
-        if (ball.position.x <= ball.shape.width/2 || ball.position.y <= ball.shape.height/2 || ball.position.x >= Gdx.graphics.getWidth() - side ||
+        double ballSide = ball.shape.height;
+        double side = border + ballSide;
+
+        if (ball.position.x <= ball.shape.width / 2 || ball.position.y <= ball.shape.height / 2 || ball.position.x >= Gdx.graphics.getWidth() - side ||
                 ball.position.y >= Gdx.graphics.getHeight() - side || water(ball, fields)) {
-//             System.out.println("Previous " + ball.prevPosition);
             ball.position = ball.prevPosition;
             ball.velocity.scl(0);
         }
 
-        if(ball.velocity.len() <= 50) {
-            ball.velocity.scl(0);
-        }
 
-        if(ball.position.x <= ball.shape.width/2){
-            ball.position = ball.prevPosition;
+        if (ball.velocity.len() <= 50) {
             ball.velocity.scl(0);
         }
-        if(ball.position.x >= Gdx.graphics.getWidth() - ball.shape.width/2) {
-            ball.position = ball.prevPosition;
-            ball.velocity.scl(0);
-        }
-        if(ball.position.y <= ball.shape.height/2) {
-            ball.position = ball.prevPosition;
-            ball.velocity.scl(0);
-        }
-        if(ball.position.y >= Gdx.graphics.getHeight() - ball.shape.height/2) {
-            ball.position = ball.prevPosition;
-            ball.velocity.scl(0);
-        }
+    }
 
+    /**
+     *
+     * @param position position of the ball
+     * @param velocity velocity of the ball
+     * @param formula formula of the field
+     * @return acceleration
+     */
+    public static Vector3 acceleration(Vector3 position, Vector3 velocity,ArrayList<String> formula){
+        Vector3 acceleration = new Vector3();
+        acceleration.x =(float) (((-g) * FunctionAnalyser.derivative(formula, position.x, position.y, "x")) - (CurrentFriction * g * velocity.x));
+
+        acceleration.y =(float) (((-g) * FunctionAnalyser.derivative(formula, position.x, position.y, "y")) - (CurrentFriction * g * velocity.y));
+
+        return acceleration;
     }
 
     /**
@@ -88,20 +83,14 @@ public class Engine {
      * @return acceleration
      */
     public static Vector3 acceleration(Vector3 position, Vector3 velocity, Field field){
-        Vector3 acceleration = new Vector3();
-        acceleration.x =(float) (((-g) * FunctionAnalyser.derivative(field, (int)position.x, (int)position.y, "x")) - (CurrentFriction * g * velocity.x));
+            Vector3 acceleration = new Vector3();
+            acceleration.x = (float) (((-g) * FunctionAnalyser.derivative(field, (int) position.x, (int) position.y, "x")) - (CurrentFriction * g * velocity.x));
 
-        acceleration.y =(float) (((-g) * FunctionAnalyser.derivative(field, (int)position.x, (int)position.y, "y")) - (CurrentFriction * g * velocity.y));
+            acceleration.y = (float) (((-g) * FunctionAnalyser.derivative(field, (int) position.x, (int) position.y, "y")) - (CurrentFriction * g * velocity.y));
 
-    /**Method to calculate the force on the ball at the y-axis. This method is used when calculating the new velocity*/
-    public static double forceY(Field field, Ball ball, ArrayList<String> formula) {
-	    double Fy;
-	    if(formula.get(0).equalsIgnoreCase("spline"))
-		    Fy = ((-g) * FunctionAnalyser.derivative(field, (int)ball.position.x, (int)ball.position.y, "y")) - (CurrentFriction * g * vy);
-	    else
-		    Fy = ((-g) * FunctionAnalyser.derivative(formula, ball.position.x, ball.position.y, "y")) - (CurrentFriction * g * vy);
-        return Fy;
+            return acceleration;
     }
+
 
     //Right now, input is the ball object containing vectors. The output is only one position.
     //Now we get 2 positions, current pos + position we want to get too. Now we want to know what force we have to use to get to that point.
