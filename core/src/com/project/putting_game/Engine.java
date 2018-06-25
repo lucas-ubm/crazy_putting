@@ -26,10 +26,20 @@ public class Engine {
         //Get the height of the field at current location ball
         currentHeight = fields.getMatrix()[(int) ball.position.y][(int) ball.position.x].height;
 
-        k1 = acceleration(ball.position.cpy(), ball.velocity.cpy(), formula).scl(h);
-        k2 = acceleration(ball.position.cpy().add(1f/3f*h), ball.velocity.cpy().add(k1.cpy().scl(1f/3f)), formula).scl(h);
-        k3 = acceleration(ball.position.cpy().add(2f/3f*h), ball.velocity.cpy().sub(k1.cpy().scl(1f/3f).add(k2.cpy())), formula).scl(h);
-        k4 = acceleration(ball.position.cpy().add(h), ball.velocity.cpy().add(k1.cpy()).sub(k2.cpy()).add(k3.cpy()), formula).scl(h);
+        if(formula.get(0).equalsIgnoreCase("spline")) {
+            k1 = acceleration(ball.position.cpy(), ball.velocity.cpy(), fields).scl(h);
+            k2 = acceleration(ball.position.cpy().add(1f/3f*h), ball.velocity.cpy().add(k1.cpy().scl(1f/3f)), fields).scl(h);
+            k3 = acceleration(ball.position.cpy().add(2f/3f*h), ball.velocity.cpy().sub(k1.cpy().scl(1f/3f).add(k2.cpy())), fields).scl(h);
+            k4 = acceleration(ball.position.cpy().add(h), ball.velocity.cpy().add(k1.cpy()).sub(k2.cpy()).add(k3.cpy()), fields).scl(h);
+        }
+        else {
+            k1 = acceleration(ball.position.cpy(), ball.velocity.cpy(), formula).scl(h);
+            k2 = acceleration(ball.position.cpy().add(1f/3f*h), ball.velocity.cpy().add(k1.cpy().scl(1f/3f)), formula).scl(h);
+            k3 = acceleration(ball.position.cpy().add(2f/3f*h), ball.velocity.cpy().sub(k1.cpy().scl(1f/3f).add(k2.cpy())), formula).scl(h);
+            k4 = acceleration(ball.position.cpy().add(h), ball.velocity.cpy().add(k1.cpy()).sub(k2.cpy()).add(k3.cpy()), formula).scl(h);
+        }
+
+
 
         ball.velocity.add((k1.add(k2.scl(3)).add(k3.scl(3)).add(k4)).scl(1f/6f));
         ball.position.add(ball.velocity.cpy().scl(h));
@@ -64,6 +74,22 @@ public class Engine {
         acceleration.x =(float) (((-g) * FunctionAnalyser.derivative(formula, position.x, position.y, "x")) - (CurrentFriction * g * velocity.x));
 
         acceleration.y =(float) (((-g) * FunctionAnalyser.derivative(formula, position.x, position.y, "y")) - (CurrentFriction * g * velocity.y));
+
+        return acceleration;
+    }
+
+    /**
+     *
+     * @param position position of the ball
+     * @param velocity velocity of the ball
+     * @param field field containing spline
+     * @return acceleration
+     */
+    public static Vector3 acceleration(Vector3 position, Vector3 velocity, Field field){
+        Vector3 acceleration = new Vector3();
+        acceleration.x =(float) (((-g) * FunctionAnalyser.derivative(field, position.x, position.y, "x")) - (CurrentFriction * g * velocity.x));
+
+        acceleration.y =(float) (((-g) * FunctionAnalyser.derivative(field, position.x, position.y, "y")) - (CurrentFriction * g * velocity.y));
 
         return acceleration;
     }

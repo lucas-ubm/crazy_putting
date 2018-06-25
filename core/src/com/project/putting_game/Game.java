@@ -60,6 +60,10 @@ public class Game implements Screen {
 
 		if(!fieldVariables.courseFunction.equalsIgnoreCase("spline"))
 			this.fieldFormula = FunctionAnalyser.ShuntingYard(fieldVariables.courseFunction);
+		else{
+		    this.fieldFormula = new ArrayList<String>();
+		    this.fieldFormula.add("Spline");
+        }
 
 		this.balls = new ArrayList<Ball>();
 		this.holes = new ArrayList<Hole>();
