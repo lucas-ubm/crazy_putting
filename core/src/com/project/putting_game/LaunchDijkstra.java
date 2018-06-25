@@ -10,14 +10,22 @@ public class LaunchDijkstra {
     Vector3 start;
     Vector3 target;
     double[][] heights;
-    int[][] adjecencyList;
-    ArrayList<Integer> miniTargets = new ArrayList<Integer>();
+    int[][] adjacencyList;
+    ArrayList<Hole> miniTargets = new ArrayList<Hole>();
 
     public LaunchDijkstra (Field c, Ball ball, Hole hole){
         course = c;
         start = ball.getPosition();
         target = hole.getPosition();
         heights = translateToHeights(c.getMatrix());
+    }
+
+    public ArrayList<Hole> run () {
+
+        ShortestPath t = new ShortestPath();
+        t.dijkstra(adjacencyList, 0);
+
+        return null;
     }
 
     public double[][] translateToHeights(Properties[][] matrix) {
@@ -33,7 +41,7 @@ public class LaunchDijkstra {
         return heights;
     }
 
-    public int[][] translateToAdecencyList(double[][] in) {
+    public int[][] translateToAdjacencyList(double[][] in) {
         //int[][] adjList = new int[Gdx.graphics.getHeight()][Gdx.graphics.getWidth()];
         int[][] adjList = new int[10][10];
 

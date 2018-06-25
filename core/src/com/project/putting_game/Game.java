@@ -149,6 +149,7 @@ public class Game implements Screen {
 		});
 
 		fieldTexture = new Texture(pixmap);
+		LaunchDijkstra dijkstra = new LaunchDijkstra(field,ball,hole);
 	}
 
 	public void render (float delta) {
