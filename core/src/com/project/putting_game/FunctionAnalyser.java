@@ -134,11 +134,9 @@ public class FunctionAnalyser {
 	public static double derivative(Field field, int x, int y, String respect) {
 		if(respect.equalsIgnoreCase("x")) {
 			return (field.getMatrix()[y][x+1].height - field.getMatrix()[y][x-1].height)/2;
-			//return (FunctionAnalyser.reversePolish(reverse,x+1e-10,y)-FunctionAnalyser.reversePolish(reverse,x,y))/1e-10;
 		}
 		else {
 			return (field.getMatrix()[y+1][x].height - field.getMatrix()[y-1][x].height)/2;
-			//return (FunctionAnalyser.reversePolish(reverse,x,y+1e-10)-FunctionAnalyser.reversePolish(reverse,x,y))/1e-10;
 		}
 	}
 
