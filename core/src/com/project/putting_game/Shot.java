@@ -32,7 +32,7 @@ public class Shot
         ball.setUserVelocity(new Vector3(randX, randY, 0));
         while(ball.velocity.len() >= 0.02)
         {
-            Engine.calculate(ball, course);
+           // Engine.calculate(ball, course);
         }
         //ball.setUserVelocity(new Vector3(0,0,0));
         x = ball.position.x - ball.shape.width/2;
