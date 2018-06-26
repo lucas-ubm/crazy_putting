@@ -43,7 +43,6 @@ public class Game implements Screen {
     private boolean design;
     private Stage stage;
     private Pixmap pixmap;
-    private Pixmap pixmapMaze;
     private Stage mpStage;
     private Label.LabelStyle ballStyle;
     private static boolean startriver = false;
@@ -162,11 +161,10 @@ public class Game implements Screen {
 
 
             @Override
-            public boolean keyDown(int keycode){
+            public boolean keyDown(int keycode) throws ArrayIndexOutOfBoundsException {
 
                 if(keycode==Input.Keys.ENTER) {
                     if(design)
-
                         stage.dispose();
                     design = false;
                 }
@@ -174,6 +172,70 @@ public class Game implements Screen {
                     design =false;
                     stage.dispose();
                 }
+                if(keycode ==Input.Keys.BACKSPACE) {
+                    //First row vertical, etc.
+                    if(design) {
+
+                        pixmap.setColor(Color.BLUE);
+
+                        pixmap.drawLine(80, 0, 80, 80);
+                        pixmap.drawLine(160, 0, 160, 80);
+                        pixmap.drawLine(640, 0, 640, 80);
+
+                        pixmap.drawLine(160, 80, 160, 400);
+                        pixmap.drawLine(400, 80, 400, 160);
+                        pixmap.drawLine(720, 80, 720, 160);
+
+                        pixmap.drawLine(320, 160, 320, 400);
+                        pixmap.drawLine(400,160, 400, 240);
+                        pixmap.drawLine(480,160, 480, 240);
+                        pixmap.drawLine(560,160,560, 240);
+
+                        pixmap.drawLine(80, 240, 80, 320);
+                        pixmap.drawLine(640,240,640,320);
+
+                        pixmap.drawLine(240,320, 240, 400);
+                        pixmap.drawLine(480,240, 480,480);
+                        pixmap.drawLine(720,240, 720, 400);
+
+                        pixmap.drawLine(400,400, 400, 480);
+
+                        //First row first horizontal, etc
+                        pixmap.drawLine(160,80,240, 80);
+
+                        pixmap.drawLine(320,80,640, 80);
+
+                        pixmap.drawLine(80,160, 160, 160);
+                        pixmap.drawLine(240,160, 320,160);
+                        pixmap.drawLine(560,160, 640,160);
+                        pixmap.drawLine(720,160, 800,160);
+
+                        pixmap.drawLine(160,240, 240,240);
+                        pixmap.drawLine(320,240, 560,240);
+                        pixmap.drawLine(640,240,720,240);
+
+                        pixmap.drawLine(0,320, 80,320);
+                        pixmap.drawLine(400,320, 560,320);
+
+                        pixmap.drawLine(80,400, 240,400);
+                        pixmap.drawLine(560,400,720,400);
+
+                        fieldTexture = new Texture(pixmap);
+
+                        for(int i =2; i<Gdx.graphics.getWidth(); i++) {
+                            for(int j=2; j<Gdx.graphics.getHeight(); j++) {
+                                if(pixmap.getPixel(i,j) == 65535) {
+                                    if (i <= 800 && j <= 480) {
+                                        field.getMatrix()[field.getMatrix().length - 1 - j][i].height = -1;
+                                    }
+                                }
+                            }
+                        }
+
+                    }
+
+                }
+
                 return true;
             }
         });

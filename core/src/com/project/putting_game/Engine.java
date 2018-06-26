@@ -102,7 +102,8 @@ public class Engine {
         for (int i = (int)(center.x-ball.shape.width); i < center.x + ball.shape.width; i++) {
             for (int j = (int)(center.y-ball.shape.height); j < center.y + ball.shape.height; j++) {
                 if (i >= 2 && i <= 800-2 && j >= 2 && j <= 480-2) {
-                    if(field.getMatrix()[field.getMatrix().length-j][i].height <= -1){
+                    if(field.getMatrix()[field.getMatrix().length-j][i].height < 0){
+                        //System.out.println("height is :" + field.getMatrix()[field.getMatrix().length-j][i].height);
                         return true;
                     }
                 }
