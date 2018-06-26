@@ -63,6 +63,10 @@ public class Game implements Screen {
 
         if(!fieldVariables.courseFunction.equalsIgnoreCase("spline"))
             this.fieldFormula = FunctionAnalyser.ShuntingYard(fieldVariables.courseFunction);
+        else{
+            this.fieldFormula = new ArrayList<String>();
+            this.fieldFormula.add("spline");
+        }
 
         this.balls = new ArrayList<Ball>();
         this.holes = new ArrayList<Hole>();
@@ -175,6 +179,9 @@ public class Game implements Screen {
         });
 
         fieldTexture = new Texture(pixmap);
+
+//        GeneticBot bot = new GeneticBot(field, ball, hole, 500, 3);
+//        bot.startProcess().print();
     }
 
     public void render (float delta) {
