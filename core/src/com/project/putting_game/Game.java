@@ -50,10 +50,11 @@ public class Game implements Screen {
     private Label scoreLabel;
     private Play botPlay;
     private int score;
+    private boolean bot;
 
     public Game (Project2 game, String file,int players) {
         //Creation of camera
-        boolean bot = true;
+        this.bot = true;
         this.players = players;
         this.maxDistance =150;
         this.game = game;
@@ -427,6 +428,14 @@ public class Game implements Screen {
                 game.setScreen(new WinScreen(game, score));
                 //System.exit(0);
             }
+
+        }
+
+        if(bot && Gdx.input.justTouched() && condition && gameMode1  && !design && !ball.arrived) {
+            ball.setUserVelocity(botPlay.moves.get(i).getDirection());
+            ball.prevPosition = ball.position.cpy();
+            i++;
+
         }
 
         Engine.calculate(ball, field, fieldFormula);
