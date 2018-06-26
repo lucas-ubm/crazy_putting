@@ -56,4 +56,10 @@ public class Ball {
         moveHistory.enqueue(newVelocity.cpy());
     }
 
+    public void setPosition(Vector3 pos){
+    	position.x=pos.x;
+    	position.y=pos.y;
+	    shape.x = position.x;
+	    shape.y = position.y;
+	}
 }

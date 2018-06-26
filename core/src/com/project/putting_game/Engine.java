@@ -38,7 +38,7 @@ public class Engine {
         }
 
         ball.velocity.add((k1.add(k2.scl(3)).add(k3.scl(3)).add(k4)).scl(1f / 6f));
-	    ball.position.add(ball.velocity.cpy().scl(h));
+	    ball.setPosition(ball.position.add(ball.velocity.cpy().scl(h)));
 	    //System.out.println(ball.velocity.x+" "+ball.velocity.y+" "+ball.position.y+" "+ball.position.x);
 
         //Checks whether the ball has touched the walls or touched the water. If it did, return to the previous position and set acceleration to 0.
@@ -48,10 +48,9 @@ public class Engine {
 
         if (ball.position.x <= ball.shape.width / 2 || ball.position.y <= ball.shape.height / 2 || ball.position.x >= Gdx.graphics.getWidth() - side ||
                 ball.position.y >= Gdx.graphics.getHeight() - side || water(ball, fields)) {
-            ball.position = ball.prevPosition;
+            ball.setPosition(ball.prevPosition);
             ball.velocity.scl(0);
         }
-
 
         if (ball.velocity.len() <= 50) {
             ball.velocity.scl(0);
@@ -96,17 +95,21 @@ public class Engine {
     //So we simulate the movement of the ball to place X.
 
     public static boolean water(Ball ball, Field field) {
-        //System.out.println("Position:"+ball.position.x+" "+ball.position.y);
+        //System.out.println("Position:"+ball.position+"Height:"+field.getMatrix()[field.getMatrix().length-1- (int)ball.position.y][(int)ball.position.x].height);
+        boolean inside=false;
         Vector2 center = new Vector2(ball.position.x, ball.position.y);
         for (int i = (int)(center.x-ball.shape.width); i < center.x + ball.shape.width; i++) {
             for (int j = (int)(center.y-ball.shape.height); j < center.y + ball.shape.height; j++) {
                 if (ball.shape.contains(new Vector2(i, j))) {
+                	inside=true;
                     if(field.getMatrix()[field.getMatrix().length-1-j][i].height < 0){
+	                    System.out.println("Water!");
                         return true;
                     }
                 }
             }
         }
+        //System.out.println(inside);
         return false;
     }
 
