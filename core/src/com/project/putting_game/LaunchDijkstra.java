@@ -20,6 +20,7 @@ public class LaunchDijkstra {
     int width = (int)Gdx.graphics.getWidth();
 
     public LaunchDijkstra (Field c, Ball ball, Hole hole){
+        System.out.println("it is constructing");
         course = c;
         ballPos = ball.getPosition();
         holePos = hole.getPosition();
@@ -39,6 +40,8 @@ public class LaunchDijkstra {
     }
 
     public double[][] translateToHeights(Properties[][] matrix) {
+
+        System.out.println("it is at heights");
 
         double[][] heights = new double[height][width];
 
@@ -65,6 +68,7 @@ public class LaunchDijkstra {
     */
 
     public int[][] translateToAdjacencyList(double[][] in) {
+        System.out.println("it is at the translation");
 
         nodesNumbers = new int[height][width];
         int current = 1;
@@ -75,12 +79,21 @@ public class LaunchDijkstra {
             }
         }
 
-        ArrayList<Integer> linkedTo = new ArrayList<Integer>();
+        System.out.println("it is done with numbering");
 
+
+            ArrayList<Integer> linkedTo = new ArrayList<Integer>();
+
+        System.out.println("before");
         int[][] adjList = new int[height*width][height*width];
+        System.out.println("it made the adjecency list");
+
+        int resident = 0;
+        int linkingTo = 0;
+
         for(int i=0; i < height ; i++){
             for(int m=0; m < width ; m++){
-                int resident = nodesNumbers[i][m];
+                resident = nodesNumbers[i][m];
 
                 if((i-1) > 0 && (i-1) < height && (m-1)>0 && (m-1)<width && in[i-1][m-1]>0) linkedTo.add(nodesNumbers[i-1][m-1]);    //top-left
                 if((i-1) > 0 && (i-1) < height && (m)>0 && (m)<width && in[i-1][m]>0) linkedTo.add(nodesNumbers[i-1][m]);            //top
@@ -90,17 +103,14 @@ public class LaunchDijkstra {
                 if((i+1) > 0 && (i+1) < height && (m-1)>0 && (m-1)<width && in[i+1][m-1]>0) linkedTo.add(nodesNumbers[i+1][m-1]);    //bottom-left
                 if((i+1) > 0 && (i+1) < height && (m)>0 && (m)<width && in[i+1][m]>0) linkedTo.add(nodesNumbers[i+1][m]);            //bottom
                 if((i+1) > 0 && (i+1) < height && (m+1)>0 && (m+1)<width && in[i+1][m+1]>0) linkedTo.add(nodesNumbers[i+1][m+1]);    //bottom-right
+
+                for(int j=0 ; j<linkedTo.size() ; j++){
+                    adjList[resident][linkedTo.get(i)] = 1;
+                }
+
             }
         }
-
-        int[][] list = new int[height*width][height*width];
-        int linkingTo;
-            for(int i=0 ; i<linkedTo.size() ; i++){
-                linkingTo = linkedTo.get(i);
-                adjList[current][linkingTo] = 1;
-            }
-
-        return list;
+        return adjList;
     }
 
     }
