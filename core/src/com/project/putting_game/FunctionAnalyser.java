@@ -161,30 +161,4 @@ public class FunctionAnalyser {
 		}
 	}
 
-
-
-	/**
-	 *
-	 * @param reverse the formula in reverse polish notation
-	 * @param t0 the initial time
-	 * @param t the value that you want to calculate
-	 * @param h the timestep so the precision which you want to calculate it
-	 * @param y0 the value of the formula at the initial time
-	 * @return the value of the function at the desired point
-	 */
-	public static double runge_kutta (ArrayList<String> reverse, double t0, double t, double h, double y0) {
-		double k1, k2, k3, k4;
-		System.out.println(reverse);
-		while (t0 < t) {
-			k1 = h * FunctionAnalyser.reversePolish(reverse, t0, y0);
-			k2 = h * FunctionAnalyser.reversePolish(reverse, t0 + 1 / 3.0 * h, y0 + 1 / 3.0 * k1);
-			k3 = h * FunctionAnalyser.reversePolish(reverse, t0 + 2 / 3.0 * h, y0 - 1 / 3.0 * k1 + k2);
-			k4 = h * FunctionAnalyser.reversePolish(reverse, t0 + h, y0 + k1 - k2 + k3);
-			System.out.println(k1 + " " + k2 + " " + k3 + " " + k4);
-			y0 = y0+ 1 / 8.0 * (k1 + 3 * k2 + 3 * k3 + k4);
-			t0 += h;
-			System.out.println(y0);
-		}
-		return y0;
-	}
-	}
+}

@@ -24,7 +24,9 @@ public class Engine {
 
 
         //Get the height of the field at current location ball
-        currentHeight = fields.getMatrix()[(int) ball.position.y][(int) ball.position.x].height;
+        currentHeight = fields.getMatrix()[(int) (ball.position.y-ball.shape.height/2)][(int) (ball.position.x-ball.shape.width/2)].height;
+        System.out.println(ball.position);
+        System.out.println("Current height is "+currentHeight);
 
         if(formula.get(0).equalsIgnoreCase("spline")) {
             k1 = acceleration(ball.position.cpy(), ball.velocity.cpy(), fields).scl(h);
