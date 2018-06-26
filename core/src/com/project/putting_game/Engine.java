@@ -19,22 +19,22 @@ public class Engine {
 
 
     public static void calculate(Ball ball, Field fields, ArrayList<String> formula) {
-        //Get the friction of the surface at current location ball
+	    //System.out.println(ball.velocity.x+" "+ball.velocity.y+" "+ball.position.y+" "+ball.position.x);
+	    //Get the friction of the surface at current location ball
         CurrentFriction = fields.getMatrix()[(int) ball.position.y][(int) ball.position.x].friction;
 
         //Get the height of the field at current location ball
         currentHeight = fields.getMatrix()[(int) ball.position.y][(int) ball.position.x].height;
 
-        if(formula.get(0).equalsIgnoreCase("spline")) {
+        if (formula.get(0).equalsIgnoreCase("spline")) {
             k1 = acceleration(ball.position.cpy(), ball.velocity.cpy(), fields).scl(h);
-            k2 = acceleration(ball.position.cpy().add(1f/3f*h), ball.velocity.cpy().add(k1.cpy().scl(1f/3f)), fields).scl(h);
-            k3 = acceleration(ball.position.cpy().add(2f/3f*h), ball.velocity.cpy().sub(k1.cpy().scl(1f/3f).add(k2.cpy())), fields).scl(h);
+            k2 = acceleration(ball.position.cpy().add(1f / 3f * h), ball.velocity.cpy().add(k1.cpy().scl(1f / 3f)), fields).scl(h);
+            k3 = acceleration(ball.position.cpy().add(2f / 3f * h), ball.velocity.cpy().sub(k1.cpy().scl(1f / 3f).add(k2.cpy())), fields).scl(h);
             k4 = acceleration(ball.position.cpy().add(h), ball.velocity.cpy().add(k1.cpy()).sub(k2.cpy()).add(k3.cpy()), fields).scl(h);
-        }
-        else {
+        } else {
             k1 = acceleration(ball.position.cpy(), ball.velocity.cpy(), formula).scl(h);
-            k2 = acceleration(ball.position.cpy().add(1f/3f*h), ball.velocity.cpy().add(k1.cpy().scl(1f/3f)), formula).scl(h);
-            k3 = acceleration(ball.position.cpy().add(2f/3f*h), ball.velocity.cpy().sub(k1.cpy().scl(1f/3f).add(k2.cpy())), formula).scl(h);
+            k2 = acceleration(ball.position.cpy().add(1f / 3f * h), ball.velocity.cpy().add(k1.cpy().scl(1f / 3f)), formula).scl(h);
+            k3 = acceleration(ball.position.cpy().add(2f / 3f * h), ball.velocity.cpy().sub(k1.cpy().scl(1f / 3f).add(k2.cpy())), formula).scl(h);
             k4 = acceleration(ball.position.cpy().add(h), ball.velocity.cpy().add(k1.cpy()).sub(k2.cpy()).add(k3.cpy()), formula).scl(h);
         }
 
@@ -46,16 +46,15 @@ public class Engine {
         int ballSide =(int) ball.shape.height;
         int side = border + ballSide;
 
-        if (ball.position.x <= ball.shape.width/2 || ball.position.y <= ball.shape.height/2 || ball.position.x >= Gdx.graphics.getWidth() - side ||
+        if (ball.position.x <= ball.shape.width / 2 || ball.position.y <= ball.shape.height / 2 || ball.position.x >= Gdx.graphics.getWidth() - side ||
                 ball.position.y >= Gdx.graphics.getHeight() - side || water(ball, fields)) {
-            ball.position = ball.prevPosition;
+            ball.setPosition(ball.prevPosition);
             ball.velocity.scl(0);
         }
 
-        if(ball.velocity.len() <= 50) {
+        if (ball.velocity.len() <= 50) {
             ball.velocity.scl(0);
         }
-
     }
 
     /**
@@ -82,12 +81,12 @@ public class Engine {
      * @return acceleration
      */
     public static Vector3 acceleration(Vector3 position, Vector3 velocity, Field field){
-        Vector3 acceleration = new Vector3();
-        acceleration.x =(float) (((-g) * FunctionAnalyser.derivative(field, (int)position.x, (int)position.y, "x")) - (CurrentFriction * g * velocity.x));
+            Vector3 acceleration = new Vector3();
+            acceleration.x = (float) (((-g) * FunctionAnalyser.derivative(field, (int) position.x, (int) position.y, "x")) - (CurrentFriction * g * velocity.x));
 
-        acceleration.y =(float) (((-g) * FunctionAnalyser.derivative(field, (int)position.x, (int)position.y, "y")) - (CurrentFriction * g * velocity.y));
+            acceleration.y = (float) (((-g) * FunctionAnalyser.derivative(field, (int) position.x, (int) position.y, "y")) - (CurrentFriction * g * velocity.y));
 
-        return acceleration;
+            return acceleration;
     }
 
 
@@ -96,14 +95,16 @@ public class Engine {
     //So we simulate the movement of the ball to place X.
 
     public static boolean water(Ball ball, Field field) {
-        int s;
+        //System.out.println("Position:"+ball.position+"Height:"+field.getMatrix()[field.getMatrix().length-1- (int)ball.position.y][(int)ball.position.x].height);
+        boolean inside=false;
         Vector2 center = new Vector2(ball.position.x, ball.position.y);
 
         for (int i = (int)(center.x-ball.shape.width); i < center.x + ball.shape.width; i++) {
             for (int j = (int)(center.y-ball.shape.height); j < center.y + ball.shape.height; j++) {
-                if (i >= 2 && i <= 800-2 && j >= 2 && j <= 480-2) {
-                    if(field.getMatrix()[field.getMatrix().length-j][i].height < 0){
-                        //System.out.println("height is :" + field.getMatrix()[field.getMatrix().length-j][i].height);
+                if (ball.shape.contains(new Vector2(i, j))) {
+                	inside=true;
+                    if(field.getMatrix()[field.getMatrix().length-1-j][i].height < 0){
+	                    System.out.println("Water!");
                         return true;
                     }
                 }
@@ -111,6 +112,7 @@ public class Engine {
                     s=0;
             }
         }
+        //System.out.println(inside);
         return false;
     }
 

@@ -2,16 +2,16 @@ package com.project.putting_game;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
-import com.badlogic.gdx.graphics.Color;
 
 import java.io.*;
 
@@ -20,6 +20,9 @@ public class LoadInputScreen implements Screen {
 	private OrthographicCamera camera;
 	private Stage stage;
 	private Label error;
+	private ImageButton checkBox1;
+	private Texture checkImg;
+	private Texture uncheckImg;
 
 	public LoadInputScreen(final Project2 game){
 		this.game = game;
@@ -28,20 +31,44 @@ public class LoadInputScreen implements Screen {
 
 		stage = new Stage(new ScreenViewport());
 		Gdx.input.setInputProcessor(stage);
+
 		final TextField fileField = new TextField("Enter textfile name",game.skin);
 		fileField.setSize(Gdx.graphics.getWidth()*3/5,fileField.getPrefHeight());
 		fileField.setPosition(Gdx.graphics.getWidth()/2-fileField.getWidth()/2,4*Gdx.graphics.getHeight()/6);
 		stage.addActor(fileField);
 		final TextField playerField = new TextField("",game.skin);
+
 		playerField.setSize(50,playerField.getPrefHeight());
 		Label playerLabel = new Label("Number of players: ",game.skin);
-		playerLabel.setPosition(fileField.getX(),fileField.getY()-10-(playerField.getHeight())/2-playerLabel.getPrefHeight()/2);
+		playerLabel.setPosition(fileField.getX(),fileField.getY()-10-(playerField.getHeight())/2-playerLabel.getHeight()/2);
 		stage.addActor(playerLabel);
 		playerField.setPosition(playerLabel.getX()+playerLabel.getWidth(),fileField.getY()-playerField.getHeight()-10);
 		stage.addActor(playerField);
+
+		Label botLabel = new Label("Bot", game.skin);
+		botLabel.setPosition(playerLabel.getX()+botLabel.getHeight()+10, playerField.getY()-botLabel.getHeight()-10);
+		checkImg = new Texture(Gdx.files.internal("checked.png"));
+		uncheckImg = new Texture(Gdx.files.internal("unchecked.png"));
+		TextureRegionDrawable checkedState = new TextureRegionDrawable(new TextureRegion(checkImg));
+		TextureRegionDrawable uncheckedState = new TextureRegionDrawable(new TextureRegion(uncheckImg));
+		ImageButton.ImageButtonStyle imageButtonStyle = new ImageButton.ImageButtonStyle();
+		imageButtonStyle.imageChecked = checkedState;
+		imageButtonStyle.imageUp = uncheckedState;
+		checkBox1 = new ImageButton(imageButtonStyle);
+		checkBox1.setSize(botLabel.getHeight(), botLabel.getHeight());
+		checkBox1.setPosition(botLabel.getX() - checkBox1.getWidth()-10, botLabel.getY());
+		ButtonGroup radioButtons = new ButtonGroup();
+		radioButtons.add(checkBox1);
+		radioButtons.setMinCheckCount(0);
+		radioButtons.setMaxCheckCount(1);
+		checkBox1.setChecked(false);
+		stage.addActor(botLabel);
+		stage.addActor(checkBox1);
+
 		error = new Label("", game.skin);
+
 		TextButton cancel = new TextButton("Cancel", game.skin);
-		cancel.setPosition(Gdx.graphics.getWidth()/2+10,2*Gdx.graphics.getHeight()/6);
+		cancel.setPosition(Gdx.graphics.getWidth()/2+10,Gdx.graphics.getHeight()/6);
 		cancel.addListener(new ClickListener(){
 			public void clicked(InputEvent event, float x, float y) {
 				game.setScreen(new com.project.putting_game.MenuScreen(game));
@@ -50,7 +77,7 @@ public class LoadInputScreen implements Screen {
 		});
 		stage.addActor(cancel);
 		TextButton ok = new TextButton("OK", game.skin);
-		ok.setPosition(Gdx.graphics.getWidth()/2-ok.getWidth()-10,2*Gdx.graphics.getHeight()/6);
+		ok.setPosition(Gdx.graphics.getWidth()/2-ok.getWidth()-10,Gdx.graphics.getHeight()/6);
 		ok.setSize(cancel.getPrefWidth(), cancel.getPrefHeight());
 		if(!game.getGameMode()){
 			ok.addListener(new ClickListener(){
@@ -64,7 +91,7 @@ public class LoadInputScreen implements Screen {
 						error.setText("");
 						game.inputfile = file;
 						//give default course
-						game.setScreen(new com.project.putting_game.Game(game,"demo.txt",1));
+						game.setScreen(new com.project.putting_game.Game(game,"demo.txt",1,true));
 						dispose();
 					}// else display error and try again
 					catch(FileNotFoundException exception){
@@ -81,7 +108,12 @@ public class LoadInputScreen implements Screen {
 						int players = Integer.parseInt(playerField.getText());
 						//succeeds then
 						error.setText("");
-						game.setScreen(new com.project.putting_game.Game(game,file,players));
+						boolean bot;
+						if(checkBox1.isChecked())
+							bot=true;
+						else
+							bot=false;
+						game.setScreen(new com.project.putting_game.Game(game,file,players,bot));
 						dispose();
 					}// else display error and try again
 					catch(FileNotFoundException exception){
@@ -133,6 +165,8 @@ public class LoadInputScreen implements Screen {
 
 	@Override
 	public void dispose() {
+		checkImg.dispose();
+		uncheckImg.dispose();
 		stage.dispose();
 	}
 
