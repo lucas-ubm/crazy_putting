@@ -27,7 +27,8 @@ public class GeneticBot {
 
     public Play startProcess() {
         populate();
-        while(bestPlay.getScore() < 1/(hole.holeShape.height-ball.shape.height)){
+        //1/(hole.holeShape.height-ball.shape.height)
+        while(bestPlay.getScore() < 1/(hole.holeShape.height/2)){
             geneticAlgorithm();
             bestPlay.print();
 //            if(generation >= 5){
@@ -113,20 +114,20 @@ public class GeneticBot {
     public Play arithmeticCrossover(Play p1, Play p2) {
         Play p = new Play();
         for(int i = 0; i < nMoves; i++){
-            float x1 = Math.abs(p1.moves.get(i).getDirection().x);
-            float x2 = Math.abs(p2.moves.get(i).getDirection().x);
+            float x1 = p1.moves.get(i).getDirection().x;
+            float x2 = p2.moves.get(i).getDirection().x;
 
-            float y1 = Math.abs(p1.moves.get(i).getDirection().y);
-            float y2 = Math.abs(p2.moves.get(i).getDirection().y);
+            float y1 = p1.moves.get(i).getDirection().y;
+            float y2 = p2.moves.get(i).getDirection().y;
             Vector3 direction = new Vector3(x1+x2/2f, y1+y2/2f, 0);
 
-            if(Math.random() < 0.5) {
-                direction.x = direction.x*-1;
-            }
-
-            if(Math.random() < 0.5) {
-                direction.y = direction.y*-1;
-            }
+//            if(Math.random() < 0.5) {
+//                direction.x = direction.x*-1;
+//            }
+//
+//            if(Math.random() < 0.5) {
+//                direction.y = direction.y*-1;
+//            }
 
             p.moves.add(new Shot(direction.cpy(), ball, course, hole));
         }

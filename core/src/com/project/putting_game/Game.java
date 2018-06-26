@@ -184,7 +184,7 @@ public class Game implements Screen {
         fieldTexture = new Texture(pixmap);
 
         if(bot) {
-            GeneticBot bot = new GeneticBot(field, ball, hole, 50, 5);
+            GeneticBot bot = new GeneticBot(field, ball, hole, 50, 3);
             this.botPlay = bot.startProcess();
             System.out.println("Bot score is "+botPlay.getScore());
             botPlay.print();
@@ -205,7 +205,7 @@ public class Game implements Screen {
             b.ballImage.draw(game.batch);
         }
         for(Hole h: holes){
-            h.holeImage.setPosition(h.position.x-h.holeShape.height/2, h.position.y-h.holeShape.height/2);
+            h.holeImage.setPosition(h.position.x-h.holeShape.height/4, h.position.y-h.holeShape.height/2);
             h.holeImage.draw(game.batch);
         }
         game.batch.end();
@@ -224,12 +224,16 @@ public class Game implements Screen {
         play();
     }
 
+//    public boolean checkRadius(Ball ball, Hole hole) {
+//        boolean result = false;
+//        if(Math.pow((ball.position.x+ball.shape.width/2-(hole.position.x+hole.holeShape.width/2)), 2) + Math.pow((ball.position.y+ball.shape.height/2-(hole.position.y+hole.holeShape.height/2)), 2) <= Math.pow(hole.holeShape.height/2-ball.shape.width/2,2)){
+//            result = true;
+//        }
+//        return result;
+//    }
+
     public boolean checkRadius(Ball ball, Hole hole) {
-        boolean result = false;
-        if(Math.pow((ball.position.x+ball.shape.width/2-(hole.position.x+hole.holeShape.width/2)), 2) + Math.pow((ball.position.y+ball.shape.height/2-(hole.position.y+hole.holeShape.height/2)), 2) <= Math.pow(hole.holeShape.height/2-ball.shape.width/2,2)){
-            result = true;
-        }
-        return result;
+        return hole.holeShape.contains(ball.position.x, ball.position.y);
     }
 
     public void play(){
@@ -237,21 +241,21 @@ public class Game implements Screen {
         Vector3 ballPos = new Vector3();
         ball = balls.get(nextBall(ball, condition));
         hole = holes.get(nextBall(ball, condition));
-//        if(Gdx.input.justTouched() && condition && gameMode1  && !design && !ball.arrived) {
-//            score();
-//            Vector3 touchPos = new Vector3();
-//            touchPos.set(Gdx.input.getX(), Gdx.input.getY(), 0);
-//            camera.unproject(touchPos);
-//            origin.set((int)touchPos.x - ball.shape.width/2, (int)touchPos.y - ball.shape.height/2, 0);
-//
-//            ballPos.set((int)ball.position.x, (int)ball.position.y, 0);
-//            Vector3 direction = new Vector3();
-//
-//            direction.set((ballPos.x-origin.x), (ballPos.y-origin.y), 0);
-//            ball.setUserVelocity(direction.scl(6f));
-//            System.out.println(direction.len());
-//            ball.prevPosition = ballPos;
-//        }
+        if(Gdx.input.justTouched() && condition && gameMode1  && !design && !ball.arrived) {
+            score();
+            Vector3 touchPos = new Vector3();
+            touchPos.set(Gdx.input.getX(), Gdx.input.getY(), 0);
+            camera.unproject(touchPos);
+            origin.set((int)touchPos.x - ball.shape.width/2, (int)touchPos.y - ball.shape.height/2, 0);
+
+            ballPos.set((int)ball.position.x, (int)ball.position.y, 0);
+            Vector3 direction = new Vector3();
+
+            direction.set((ballPos.x-origin.x), (ballPos.y-origin.y), 0);
+            ball.setUserVelocity(direction.scl(6f));
+            System.out.println(direction.len());
+            ball.prevPosition = ballPos;
+        }
 
         if(!gameMode1 && condition)
         {

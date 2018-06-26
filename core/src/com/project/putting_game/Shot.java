@@ -40,7 +40,7 @@ public class Shot implements Comparable {
 //        float y2 = ay*ay;
 //        float a = x2+y2;
 //        float distance = (float) Math.sqrt(a);
-        float distance = Math.abs(ball.position.dst(hole.position));
+        float distance = ball.position.dst(hole.position);
         score = 1/distance;
 //        ball.position = originalPosition;
     }
