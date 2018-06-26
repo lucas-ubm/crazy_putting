@@ -48,10 +48,12 @@ public class Game implements Screen {
     private static boolean startriver = false;
     private static int s;
     private Label scoreLabel;
+    private Play botPlay;
     private int score;
 
     public Game (Project2 game, String file,int players) {
         //Creation of camera
+        boolean bot = true;
         this.players = players;
         this.maxDistance =150;
         this.game = game;
@@ -336,9 +338,13 @@ public class Game implements Screen {
         });
 
         fieldTexture = new Texture(pixmap);
+        if(bot) {
+            GeneticBot bot = new GeneticBot(field, ball, hole, 50, 5);
+            this.botPlay = bot.startProcess();
+            System.out.println("Bot score is "+botPlay.getScore());
+            botPlay.print();
+        }
 
-//        GeneticBot bot = new GeneticBot(field, ball, hole, 500, 3);
-//        bot.startProcess().print();
     }
 
     public void render (float delta) {
