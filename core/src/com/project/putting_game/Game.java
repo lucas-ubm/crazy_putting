@@ -75,7 +75,7 @@ public class Game implements Screen {
         this.holes = new ArrayList<Hole>();
 
         for(int i = 0; i < this.players; i++){
-            balls.add(new Ball(players,fieldVariables.startPosition.scl((float)(1+0.3*i)).cpy(), "golfball.png", 24));
+            balls.add(new Ball(players,fieldVariables.startPosition.cpy(), "golfball.png", 24));
             holes.add(new Hole(players,fieldVariables.goalPosition.scl((float)(1-0.1*i)).cpy(), "hole.png", fieldVariables.goalRadius));
         }
         this.ball = balls.get(0);
@@ -184,7 +184,7 @@ public class Game implements Screen {
         fieldTexture = new Texture(pixmap);
 
         if(bot) {
-            GeneticBot bot = new GeneticBot(field, ball, hole, 50, 3);
+            GeneticBot bot = new GeneticBot(field, ball, hole, 50, 5);
             this.botPlay = bot.startProcess();
             System.out.println("Bot score is "+botPlay.getScore());
             botPlay.print();
