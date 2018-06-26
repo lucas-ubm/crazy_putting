@@ -48,7 +48,8 @@ public class Game implements Screen {
 	private Label scoreLabel;
 	private int score;
 
-	public Game (Project2 game, String file,int players) {
+	public Game (Project2 game, String file,int players,boolean bot) {
+		System.out.println(bot);
 		//Creation of camera
 		this.players = players;
 		this.maxDistance =150;
