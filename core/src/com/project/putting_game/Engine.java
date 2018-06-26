@@ -19,10 +19,9 @@ public class Engine {
 
 
     public static void calculate(Ball ball, Field fields, ArrayList<String> formula) {
-        //Get the friction of the surface at current location ball
+	    //System.out.println(ball.velocity.x+" "+ball.velocity.y+" "+ball.position.y+" "+ball.position.x);
+	    //Get the friction of the surface at current location ball
         CurrentFriction = fields.getMatrix()[(int) ball.position.y][(int) ball.position.x].friction;
-
-
         //Get the height of the field at current location ball
         currentHeight = fields.getMatrix()[(int) ball.position.y][(int) ball.position.x].height;
 
@@ -38,9 +37,9 @@ public class Engine {
             k4 = acceleration(ball.position.cpy().add(h), ball.velocity.cpy().add(k1.cpy()).sub(k2.cpy()).add(k3.cpy()), formula).scl(h);
         }
 
-
         ball.velocity.add((k1.add(k2.scl(3)).add(k3.scl(3)).add(k4)).scl(1f / 6f));
-        ball.position.add(ball.velocity.cpy().scl(h));
+	    ball.position.add(ball.velocity.cpy().scl(h));
+	    //System.out.println(ball.velocity.x+" "+ball.velocity.y+" "+ball.position.y+" "+ball.position.x);
 
         //Checks whether the ball has touched the walls or touched the water. If it did, return to the previous position and set acceleration to 0.
         int border = 0;
