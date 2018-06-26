@@ -19,10 +19,9 @@ public class Engine {
 
 
     public static void calculate(Ball ball, Field fields, ArrayList<String> formula) {
-	    //System.out.println(ball.velocity.x+" "+ball.velocity.y+" "+ball.position.y+" "+ball.position.x);
-	    //Get the friction of the surface at current location ball
+        //System.out.println(ball.velocity.x+" "+ball.velocity.y+" "+ball.position.y+" "+ball.position.x);
+        //Get the friction of the surface at current location ball
         CurrentFriction = fields.getMatrix()[(int) ball.position.y][(int) ball.position.x].friction;
-
         //Get the height of the field at current location ball
         currentHeight = fields.getMatrix()[(int) ball.position.y][(int) ball.position.x].height;
 
@@ -38,13 +37,14 @@ public class Engine {
             k4 = acceleration(ball.position.cpy().add(h), ball.velocity.cpy().add(k1.cpy()).sub(k2.cpy()).add(k3.cpy()), formula).scl(h);
         }
 
-        ball.velocity.add((k1.add(k2.scl(3)).add(k3.scl(3)).add(k4)).scl(1f/6f));
-        ball.position.add(ball.velocity.cpy().scl(h));
+        ball.velocity.add((k1.add(k2.scl(3)).add(k3.scl(3)).add(k4)).scl(1f / 6f));
+        ball.setPosition(ball.position.add(ball.velocity.cpy().scl(h)));
+        //System.out.println(ball.velocity.x+" "+ball.velocity.y+" "+ball.position.y+" "+ball.position.x);
 
         //Checks whether the ball has touched the walls or touched the water. If it did, return to the previous position and set acceleration to 0.
         int border = 0;
-        int ballSide =(int) ball.shape.height;
-        int side = border + ballSide;
+        double ballSide = ball.shape.height;
+        double side = border + ballSide;
 
         if (ball.position.x <= ball.shape.width / 2 || ball.position.y <= ball.shape.height / 2 || ball.position.x >= Gdx.graphics.getWidth() - side ||
                 ball.position.y >= Gdx.graphics.getHeight() - side || water(ball, fields)) {
@@ -81,12 +81,12 @@ public class Engine {
      * @return acceleration
      */
     public static Vector3 acceleration(Vector3 position, Vector3 velocity, Field field){
-            Vector3 acceleration = new Vector3();
-            acceleration.x = (float) (((-g) * FunctionAnalyser.derivative(field, (int) position.x, (int) position.y, "x")) - (CurrentFriction * g * velocity.x));
+        Vector3 acceleration = new Vector3();
+        acceleration.x = (float) (((-g) * FunctionAnalyser.derivative(field, (int) position.x, (int) position.y, "x")) - (CurrentFriction * g * velocity.x));
 
-            acceleration.y = (float) (((-g) * FunctionAnalyser.derivative(field, (int) position.x, (int) position.y, "y")) - (CurrentFriction * g * velocity.y));
+        acceleration.y = (float) (((-g) * FunctionAnalyser.derivative(field, (int) position.x, (int) position.y, "y")) - (CurrentFriction * g * velocity.y));
 
-            return acceleration;
+        return acceleration;
     }
 
 
@@ -98,18 +98,15 @@ public class Engine {
         //System.out.println("Position:"+ball.position+"Height:"+field.getMatrix()[field.getMatrix().length-1- (int)ball.position.y][(int)ball.position.x].height);
         boolean inside=false;
         Vector2 center = new Vector2(ball.position.x, ball.position.y);
-
         for (int i = (int)(center.x-ball.shape.width); i < center.x + ball.shape.width; i++) {
             for (int j = (int)(center.y-ball.shape.height); j < center.y + ball.shape.height; j++) {
                 if (ball.shape.contains(new Vector2(i, j))) {
-                	inside=true;
+                    inside=true;
                     if(field.getMatrix()[field.getMatrix().length-1-j][i].height < 0){
-	                    System.out.println("Water!");
+                        System.out.println("Water!");
                         return true;
                     }
                 }
-                else
-                    s=0;
             }
         }
         //System.out.println(inside);

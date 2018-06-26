@@ -55,11 +55,11 @@ public class Ball {
         this.velocity = newVelocity;
         moveHistory.enqueue(newVelocity.cpy());
     }
-
     public void setPosition(Vector3 pos){
-    	position.x=pos.x;
-    	position.y=pos.y;
-	    shape.x = position.x;
-	    shape.y = position.y;
-	}
+        position.x=pos.x;
+        position.y=pos.y;
+        shape.x = position.x;
+        shape.y = position.y;
+    }
+
 }

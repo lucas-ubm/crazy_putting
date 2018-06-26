@@ -47,11 +47,13 @@ public class Game implements Screen {
     private Label.LabelStyle ballStyle;
     private static boolean startriver = false;
     private static int s;
+    private Label scoreLabel;
+    private int score;
 
     public Game (Project2 game, String file,int players) {
         //Creation of camera
         this.players = players;
-        this.maxDistance =300;
+        this.maxDistance =150;
         this.game = game;
         this.gameMode1 = game.getGameMode();
         this.file = file;
@@ -106,6 +108,10 @@ public class Game implements Screen {
         turn.setPosition(10,Gdx.graphics.getHeight()-turn.getPrefHeight()-10);
         mpStage = new Stage(new ScreenViewport());
         mpStage.addActor(turn);
+
+        scoreLabel = new Label("shots taken: 0",game.skin);
+        scoreLabel.setPosition(Gdx.graphics.getWidth()-scoreLabel.getWidth()-10,Gdx.graphics.getHeight()-scoreLabel.getPrefHeight()-10);
+        mpStage.addActor(scoreLabel);
 
         stage = new Stage(new ScreenViewport());
         Label text = new Label("Drag the mouse to create rivers, click for boulders. When you are done press ENTER",game.skin);
@@ -179,58 +185,147 @@ public class Game implements Screen {
                         pixmap.setColor(Color.BLUE);
 
                         pixmap.drawLine(80, 0, 80, 80);
+                            for(int j =0; j<80; j++) {
+                                field.getMatrix()[j][80].height = -1;
+                            }
                         pixmap.drawLine(160, 0, 160, 80);
+                            for(int j =0; j<80; j++) {
+                                field.getMatrix()[j][160].height = -1;
+                            }
                         pixmap.drawLine(640, 0, 640, 80);
+                            for(int j =0; j<80; j++) {
+                                field.getMatrix()[j][640].height = -1;
+                            }
+
 
                         pixmap.drawLine(160, 80, 160, 400);
+                            for(int j =80; j<400; j++) {
+                                field.getMatrix()[j][160].height = -1;
+                            }
+
                         pixmap.drawLine(400, 80, 400, 160);
+                            for(int j =80; j<160; j++) {
+                                field.getMatrix()[j][400].height = -1;
+                            }
                         pixmap.drawLine(720, 80, 720, 160);
+                            for(int j =80; j<160; j++) {
+                                field.getMatrix()[j][720].height = -1;
+                            }
+
+
 
                         pixmap.drawLine(320, 160, 320, 400);
+                            for(int j =160; j<400; j++) {
+                                field.getMatrix()[j][320].height = -1;
+                            }
                         pixmap.drawLine(400,160, 400, 240);
+                            for(int j =160; j<240; j++) {
+                                field.getMatrix()[j][400].height = -1;
+                            }
                         pixmap.drawLine(480,160, 480, 240);
+                            for(int j =160; j<240; j++) {
+                                field.getMatrix()[j][480].height = -1;
+                            }
                         pixmap.drawLine(560,160,560, 240);
+                            for(int j =160; j<240; j++) {
+                                field.getMatrix()[j][560].height = -1;
+                            }
+
 
                         pixmap.drawLine(80, 240, 80, 320);
+                            for(int j =240; j<320; j++) {
+                                field.getMatrix()[j][80].height = -1;
+                            }
                         pixmap.drawLine(640,240,640,320);
+                            for(int j =240; j<320; j++) {
+                                field.getMatrix()[j][640].height = -1;
+                            }
 
                         pixmap.drawLine(240,320, 240, 400);
+                            for(int j =320; j<400; j++) {
+                                field.getMatrix()[j][240].height = -1;
+                            }
                         pixmap.drawLine(480,240, 480,480);
+                            for(int j =240; j<480; j++) {
+                                field.getMatrix()[j][480].height = -1;
+                            }
                         pixmap.drawLine(720,240, 720, 400);
+                            for(int j =240; j<400; j++) {
+                                field.getMatrix()[j][720].height = -1;
+                            }
 
                         pixmap.drawLine(400,400, 400, 480);
+                            for(int j =400; j<480; j++) {
+                                field.getMatrix()[j][400].height = -1;
+                            }
 
                         //First row first horizontal, etc
                         pixmap.drawLine(160,80,240, 80);
-
+                            for(int j =160; j<240; j++) {
+                                field.getMatrix()[80][j].height = -1;
+                            }
                         pixmap.drawLine(320,80,640, 80);
+                            for(int j =320; j<640; j++) {
+                                field.getMatrix()[80][j].height = -1;
+                            }
+
+
 
                         pixmap.drawLine(80,160, 160, 160);
+                            for(int j =80; j<160; j++) {
+                                field.getMatrix()[160][j].height = -1;
+                            }
                         pixmap.drawLine(240,160, 320,160);
+                            for(int j =240; j<320; j++) {
+                                field.getMatrix()[160][j].height = -1;
+                            }
                         pixmap.drawLine(560,160, 640,160);
+                            for(int j =560; j<640; j++) {
+                                field.getMatrix()[160][j].height = -1;
+                            }
                         pixmap.drawLine(720,160, 800,160);
+                            for(int j =720; j<800; j++) {
+                                field.getMatrix()[160][j].height = -1;
+                            }
+
+
 
                         pixmap.drawLine(160,240, 240,240);
+                            for(int j =160; j<240; j++) {
+                                field.getMatrix()[240][j].height = -1;
+                            }
                         pixmap.drawLine(320,240, 560,240);
+                            for(int j =320; j<560; j++) {
+                                field.getMatrix()[240][j].height = -1;
+                            }
                         pixmap.drawLine(640,240,720,240);
+                            for(int j =640; j<720; j++) {
+                                field.getMatrix()[240][j].height = -1;
+                            }
+
+
 
                         pixmap.drawLine(0,320, 80,320);
+                            for(int j =0; j<80; j++) {
+                                field.getMatrix()[320][j].height = -1;
+                            }
                         pixmap.drawLine(400,320, 560,320);
+                            for(int j =400; j<560; j++) {
+                                field.getMatrix()[320][j].height = -1;
+                            }
+
+
 
                         pixmap.drawLine(80,400, 240,400);
+                            for(int j =80; j<240; j++) {
+                                field.getMatrix()[400][j].height = -1;
+                            }
                         pixmap.drawLine(560,400,720,400);
+                            for(int j =560; j<720; j++) {
+                                field.getMatrix()[400][j].height = -1;
+                            }
 
                         fieldTexture = new Texture(pixmap);
-
-                        for(int i =2; i<Gdx.graphics.getWidth(); i++) {
-                            for(int j=2; j<Gdx.graphics.getHeight(); j++) {
-                                if(pixmap.getPixel(i,j) == 65535) {
-                                    if (i <= 800 && j <= 480) {
-                                        field.getMatrix()[field.getMatrix().length - 1 - j][i].height = -1;
-                                    }
-                                }
-                            }
-                        }
 
                     }
 
@@ -256,7 +351,9 @@ public class Game implements Screen {
 
         for(Ball b: balls) {
             b.ballImage.setPosition(b.position.x-b.shape.height/2, b.position.y-b.shape.height/2);
-            b.ballImage.draw(game.batch);
+            if(!b.arrived) {
+                b.ballImage.draw(game.batch);
+            }
         }
         for(Hole h: holes){
             h.holeImage.draw(game.batch);
@@ -270,6 +367,7 @@ public class Game implements Screen {
         else{
             float value = ((float) nextBallColor(ball)+1)/((float)players);
             ballStyle.fontColor=new Color(value, (float)0.2, 1-value, 1f);
+            scoreLabel.setText("shots taken: "+score);
             mpStage.act();
             mpStage.getBatch().setProjectionMatrix(camera.combined);
             mpStage.draw();//draw stage (so the elements of the stage)
@@ -302,7 +400,6 @@ public class Game implements Screen {
 
             direction.set((ballPos.x-origin.x), (ballPos.y-origin.y), 0);
             ball.setUserVelocity(direction.scl(6f));
-            System.out.println(direction.len());
             ball.prevPosition = ballPos;
         }
 
@@ -321,13 +418,13 @@ public class Game implements Screen {
             else{
                 System.out.println("No velocities left");
                 outputGame(ball);
-                game.setScreen(new WinScreen(game));
+                game.setScreen(new WinScreen(game, score));
                 //System.exit(0);
             }
         }
 
         Engine.calculate(ball, field, fieldFormula);
-        if(ball.velocity.len() == 0 && !distanceBalls(ball)){
+        if(ball.velocity.len() == 0 &&ball==balls.get(0)&&!checkDistance()){
             ball.position = ball.prevPosition;
             ball.velocity.scl(0);
         }
@@ -336,7 +433,7 @@ public class Game implements Screen {
 
         if(checkFinished()) {
             outputGame(ball);
-            game.setScreen(new com.project.putting_game.WinScreen(game));
+            game.setScreen(new com.project.putting_game.WinScreen(game, score));
         }
 
 
@@ -358,6 +455,16 @@ public class Game implements Screen {
             return ball.getId();
         }
     }
+
+    public boolean checkDistance(){
+        for (Ball b : balls) {
+            if (!distanceBalls(b)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
     public int nextBallColor(Ball ball){
         int id = 0;
         if(ball.velocity.len() == 0){
@@ -370,6 +477,8 @@ public class Game implements Screen {
             return ball.getId();
         }
     }
+
+
     public boolean distanceBalls(Ball ball) {
         Vector3 origin = ball.position.cpy();
         for(Ball b: balls){
@@ -389,6 +498,7 @@ public class Game implements Screen {
                 maxScore = b.moveHistory.getSize();
             }
         }
+        score = maxScore;
     }
 
     public boolean checkFinished(){

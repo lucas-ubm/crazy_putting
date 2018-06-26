@@ -23,8 +23,7 @@ public class SplineInterpolator {
 		double[][] c1 = {{1, 0, 0, 0}, {0, 0, 1, 0}, {-3, 3, -2, -1}, {2, -2, 1, 1}};
 		double[][] c2 = {{1, 0, -3, 2}, {0, 0, 3, -2}, {0, 1, -2, 1}, {0, 0, -1, 1}};
 		double[][] ds = {{heights[i][j].z,heights[i+1][j].z,fy(heights,i,j),fy(heights,i+1,j)},{heights[i][j+1].z,heights[i+1][j+1].z,fy(heights,i,j+1),fy(heights,i+1,j+1)},{fx(heights,i,j),fx(heights,i+1,j),fxy(heights,i,j),fxy(heights,i+1,j)},{fx(heights,i,j+1),fx(heights,i+1,j+1),fxy(heights,i,j+1),fxy(heights,i+1,j+1)}};
-		/*if(j==0&&i==0){
-			System.out.println("ds:");
+		/*if(j<3&&i<3){
 			MatrixToString(ds);
 			System.out.println();
 		}*/
