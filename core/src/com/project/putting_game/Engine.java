@@ -17,8 +17,7 @@ public class Engine {
     public static Vector3 k3;
     public static Vector3 k4;
 
-
-    public static void calculate(Ball ball, Field fields, ArrayList<String> formula) {
+    public static boolean calculate(Ball ball, Field fields, ArrayList<String> formula) {
         //System.out.println(ball.velocity.x+" "+ball.velocity.y+" "+ball.position.y+" "+ball.position.x);
         //Get the friction of the surface at current location ball
         CurrentFriction = fields.getMatrix()[(int) ball.position.y][(int) ball.position.x].friction;
@@ -55,6 +54,7 @@ public class Engine {
         if (ball.velocity.len() <= 50) {
             ball.velocity.scl(0);
         }
+        return water(ball, fields);
     }
 
     /**
@@ -111,5 +111,6 @@ public class Engine {
         //System.out.println(inside);
         return false;
     }
+
 
 }

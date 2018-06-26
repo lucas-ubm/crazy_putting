@@ -43,16 +43,24 @@ public class Shot implements Comparable {
         float distance = ball.position.dst(hole.position);
 
         score = 1/distance;
+
+//        if(water()){
+//            score*=0.5;
+//            System.out.println("anacoluto");
+//        }
 //        ball.position = originalPosition;
     }
 
-    public double getWater(){
-        Ball test = ball.copy();
-        while(ball.velocity.len()!=0){
-            Engine.calculate(ball, course, course.getFormula());
-        }
-        return 0.3;
-    }
+//    private boolean water(){
+//        Ball waterBall = ball.copy();
+//        waterBall.setUserVelocity(waterBall.position.sub(hole.position.cpy()).scl(-3));
+//        while(waterBall.velocity.len()!=0) {
+//            if(Engine.calculate(ball, course, course.getFormula())){
+//                return true;
+//            }
+//        }
+//        return false;
+//    }
     public float getRandX()
     {
         return direction.x;

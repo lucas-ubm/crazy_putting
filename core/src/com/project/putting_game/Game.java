@@ -427,14 +427,20 @@ public class Game implements Screen {
 
         if(bot && Gdx.input.justTouched() && condition && gameMode1  && !design && !ball.arrived) {
             if(botPlay==null) {
-                GeneticBot bot = new GeneticBot(field, ball, hole, 150, 8);
+                GeneticBot bot = new GeneticBot(field, ball, hole, 150, 1);
                 this.botPlay = bot.startProcess();
                 System.out.println("Bot score is "+botPlay.getScore());
                 botPlay.print();
             }
-            ball.setUserVelocity(botPlay.moves.get(i).getDirection());
-            ball.prevPosition = ball.position.cpy();
-            i++;
+            if(i<botPlay.moves.size()){
+                ball.setUserVelocity(botPlay.moves.get(i).getDirection());
+                ball.prevPosition = ball.position.cpy();
+                i++;
+            }
+            else{
+                System.out.println("No more shots for the bot");
+            }
+
 
         }
 

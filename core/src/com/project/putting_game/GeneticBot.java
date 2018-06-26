@@ -26,6 +26,7 @@ public class GeneticBot {
     }
 
     public Play startProcess() {
+//        System.out.println("Hey");
         populate();
         //1/(hole.holeShape.height-ball.shape.height)
         while(bestPlay.getScore() < 1/(hole.holeShape.height/4)){
