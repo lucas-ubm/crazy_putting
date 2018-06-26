@@ -67,6 +67,6 @@ public class Ball {
     }
 
     public Ball copy(){
-        return new Ball(this.players, this.position, this.path, (int)this.shape.height);
+        return new Ball(this.players, this.position.cpy(), this.path, (int)this.shape.height);
     }
 }

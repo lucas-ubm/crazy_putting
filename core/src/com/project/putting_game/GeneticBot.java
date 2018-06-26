@@ -1,5 +1,6 @@
 package com.project.putting_game;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector3;
 
 import java.util.ArrayList;
@@ -31,10 +32,14 @@ public class GeneticBot {
         //1/(hole.holeShape.height-ball.shape.height)
         while(bestPlay.getScore() < 1/(hole.holeShape.height/4)){
             geneticAlgorithm();
-            bestPlay.print();
+//            System.out.println("Here");
+//            bestPlay.print();
 //            if(generation >= 5){
 //                return bestPlay;
 //            }
+            if(population.get(0).moves.get(0).getDirection().len() > new Vector3(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(),0).len()){
+                return null;
+            }
         }
         ball.position = ball.oriPosition;
         return bestPlay;
@@ -50,11 +55,11 @@ public class GeneticBot {
 
         while(newPopulation.size() < population.size()) {
             Play p1 = rouletteWheelSelection();
-            System.out.print("p1 ");
-            p1.print();
+//            System.out.print("p1 ");
+//            p1.print();
             Play p2 = rouletteWheelSelection();
-            System.out.print("p2 ");
-            p2.print();
+//            System.out.print("p2 ");
+//            p2.print();
             Play son = arithmeticCrossover(p1, p2);
             mutationXY(son);
             newPopulation.add(son);
@@ -63,7 +68,7 @@ public class GeneticBot {
             }
         }
         generation++;
-        System.out.println("Fitness: "+totalFitness + " for generation "+generation);
+//        System.out.println("Fitness: "+totalFitness + " for generation "+generation);
         this.population = newPopulation;
     }
 

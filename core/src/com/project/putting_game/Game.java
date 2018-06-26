@@ -377,12 +377,16 @@ public class Game implements Screen {
     }
 
     public boolean checkRadius(Ball ball, Hole hole) {
-        boolean result = false;
-        if(Math.pow((ball.position.x+ball.shape.width/2-(hole.position.x+hole.holeShape.width/2)), 2) + Math.pow((ball.position.y+ball.shape.height/2-(hole.position.y+hole.holeShape.height/2)), 2) <= Math.pow(hole.holeShape.height/2-ball.shape.width/2,2)){
-            result = true;
-        }
-        return result;
+        return hole.holeShape.contains(ball.position.x, ball.position.y);
     }
+
+//    public boolean checkRadius(Ball ball, Hole hole) {
+//        boolean result = false;
+//        if(Math.pow((ball.position.x+ball.shape.width/2-(hole.position.x+hole.holeShape.width/2)), 2) + Math.pow((ball.position.y+ball.shape.height/2-(hole.position.y+hole.holeShape.height/2)), 2) <= Math.pow(hole.holeShape.height/2-ball.shape.width/2,2)){
+//            result = true;
+//        }
+//        return result;
+//    }
 
     public void play(){
         Vector3 origin = new Vector3();
@@ -426,11 +430,25 @@ public class Game implements Screen {
         }
 
         if(bot && Gdx.input.justTouched() && condition && gameMode1  && !design && !ball.arrived) {
-            if(botPlay==null) {
-                GeneticBot bot = new GeneticBot(field, ball, hole, 150, 1);
+            int p = 0;
+            int m = 0;
+            while(botPlay==null) {
+                System.out.println("here for the "+p+m+" time.");
+                GeneticBot bot = new GeneticBot(field, ball, hole, 150+50*p, 3+m);
                 this.botPlay = bot.startProcess();
-                System.out.println("Bot score is "+botPlay.getScore());
-                botPlay.print();
+
+                if(m < p || p>=3){
+                    m++;
+                }
+                else{
+                    p++;
+                }
+
+                if(botPlay != null){
+                    System.out.println("Bot score is "+botPlay.getScore());
+                    botPlay.print();
+                }
+
             }
             if(i<botPlay.moves.size()){
                 ball.setUserVelocity(botPlay.moves.get(i).getDirection());
