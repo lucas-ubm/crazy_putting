@@ -21,6 +21,7 @@ public class Ball {
     public String path;
     public Ellipse shape;
     public Queue<Vector3> moveHistory;
+    public int players;
     public static int c=0;
     private int id;
     public boolean arrived;
@@ -30,6 +31,7 @@ public class Ball {
     }
 
     public Ball(int players, Vector3 position, String path, int side) {
+        this.players = players;
         this.velocity = new Vector3(0,0,0);
         moveHistory = new Queue<Vector3>();
         this.path = path;
@@ -62,5 +64,9 @@ public class Ball {
         position.y=pos.y;
         shape.x = position.x;
         shape.y = position.y;
+    }
+
+    public Ball copy(){
+        return new Ball(this.players, this.position, this.path, (int)this.shape.height);
     }
 }

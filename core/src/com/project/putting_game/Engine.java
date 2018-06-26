@@ -103,7 +103,6 @@ public class Engine {
                 if (ball.shape.contains(new Vector2(i, j))) {
                     inside=true;
                     if(field.getMatrix()[field.getMatrix().length-1-j][i].height < 0){
-                        System.out.println("Water!");
                         return true;
                     }
                 }
@@ -112,7 +111,5 @@ public class Engine {
         //System.out.println(inside);
         return false;
     }
-
-
 
 }

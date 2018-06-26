@@ -46,6 +46,13 @@ public class Shot implements Comparable {
 //        ball.position = originalPosition;
     }
 
+    public double getWater(){
+        Ball test = ball.copy();
+        while(ball.velocity.len()!=0){
+            Engine.calculate(ball, course, course.getFormula());
+        }
+        return 0.3;
+    }
     public float getRandX()
     {
         return direction.x;

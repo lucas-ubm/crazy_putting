@@ -427,7 +427,7 @@ public class Game implements Screen {
 
         if(bot && Gdx.input.justTouched() && condition && gameMode1  && !design && !ball.arrived) {
             if(botPlay==null) {
-                GeneticBot bot = new GeneticBot(field, ball, hole, 200, 12);
+                GeneticBot bot = new GeneticBot(field, ball, hole, 150, 8);
                 this.botPlay = bot.startProcess();
                 System.out.println("Bot score is "+botPlay.getScore());
                 botPlay.print();
