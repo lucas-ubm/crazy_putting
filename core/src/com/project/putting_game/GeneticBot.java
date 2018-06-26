@@ -12,6 +12,7 @@ public class GeneticBot {
     private Play bestPlay;
     private Hole hole;
     private int nMoves;
+    public int generation;
     private double totalFitness;
 
     public GeneticBot(Field course, Ball ball, Hole hole, int populationSize, int nMoves) {
@@ -26,16 +27,26 @@ public class GeneticBot {
 
     public Play startProcess() {
         populate();
-        while(bestPlay.getScore() < 0.06){
+        //1/(hole.holeShape.height-ball.shape.height)
+        while(bestPlay.getScore() < 1/(hole.holeShape.height/4)){
             geneticAlgorithm();
-//            bestPlay.print();
+            bestPlay.print();
+//            if(generation >= 5){
+//                return bestPlay;
+//            }
         }
+        ball.position = ball.oriPosition;
         return bestPlay;
 
     }
 
     public void geneticAlgorithm() {
         ArrayList<Play> newPopulation = new ArrayList<Play>();
+        totalFitness = 0;
+        for(Play p: population) {
+            totalFitness += p.getScore();
+        }
+
         while(newPopulation.size() < population.size()) {
             Play p1 = rouletteWheelSelection();
             System.out.print("p1 ");
@@ -49,8 +60,9 @@ public class GeneticBot {
             if(son.getScore() > bestPlay.getScore()) {
                 bestPlay = son;
             }
-//            System.out.println(son.getDirection());
         }
+        generation++;
+        System.out.println("Fitness: "+totalFitness + " for generation "+generation);
         this.population = newPopulation;
     }
 
@@ -63,10 +75,13 @@ public class GeneticBot {
                 p.createShot(ball, course, hole);
 //            System.out.println(population.get(i).getScore());
             }
+            p.setLastPos(ball.position.cpy());
+            ball.position = ball.oriPosition.cpy();
 
-            ball.position = ball.moveHistory.dequeue();
             ball.moveHistory = new Queue<Vector3>();
             population.add(p);
+//            p.print();
+//            System.out.println("Score = "+p.getScore());
             if(p.getScore() > bestPlay.getScore()) {
                 bestPlay = p;
             }
@@ -75,10 +90,7 @@ public class GeneticBot {
     }
 
     public Play rouletteWheelSelection() {
-        totalFitness = 0;
-        for(Play p: population) {
-            totalFitness += p.getScore();
-        }
+
 //        System.out.println("Jelly bean: "+totalFitness);
 //        System.out.println("Fitness: "+totalFitness);
         double threshold = Math.random() * totalFitness;
@@ -98,18 +110,38 @@ public class GeneticBot {
     }
 
 
+
+
     public Play arithmeticCrossover(Play p1, Play p2) {
         Play p = new Play();
         for(int i = 0; i < nMoves; i++){
-            Vector3 direction = p1.moves.get(i).getDirection().cpy().scl(0.5f).add(p2.moves.get(i).getDirection().cpy().scl(0.5f));
+            float x1 = p1.moves.get(i).getDirection().x;
+            float x2 = p2.moves.get(i).getDirection().x;
+
+            float y1 = p1.moves.get(i).getDirection().y;
+            float y2 = p2.moves.get(i).getDirection().y;
+            Vector3 direction = new Vector3(x1+x2/2f, y1+y2/2f, 0);
+
+//            if(Math.random() < 0.5) {
+//                direction.x = direction.x*-1;
+//            }
+//
+//            if(Math.random() < 0.5) {
+//                direction.y = direction.y*-1;
+//            }
+
             p.moves.add(new Shot(direction.cpy(), ball, course, hole));
         }
+        p.setLastPos(ball.position.cpy());
+        ball.position = ball.oriPosition.cpy();
+
+        ball.moveHistory = new Queue<Vector3>();
         return p;
     }
 
     public void mutationXY(Play p) {
         double a = Math.random();
-        if(a < 0.2) {
+        if(a < 0.05) {
             Vector3 direction = p.moves.get((int)(a*nMoves-1)).getDirection();
             p.moves.get((int)(a*nMoves-1)).setDirection(new Vector3(direction.y, direction.x, 0));
         }
