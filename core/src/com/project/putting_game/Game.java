@@ -47,10 +47,13 @@ public class Game implements Screen {
     private Stage mpStage;
     private Label.LabelStyle ballStyle;
     private static boolean startriver = false;
-    private static int s;
+    private Play botPlay;
+    private int s;
+    private boolean bot;
 
     public Game (Project2 game, String file,int players) {
         //Creation of camera
+        bot = true;
         this.players = players;
         this.maxDistance =300;
         this.game = game;
@@ -180,8 +183,13 @@ public class Game implements Screen {
 
         fieldTexture = new Texture(pixmap);
 
-//        GeneticBot bot = new GeneticBot(field, ball, hole, 500, 3);
-//        bot.startProcess().print();
+        if(bot) {
+            GeneticBot bot = new GeneticBot(field, ball, hole, 50, 5);
+            this.botPlay = bot.startProcess();
+            System.out.println("Bot score is "+botPlay.getScore());
+            botPlay.print();
+        }
+
     }
 
     public void render (float delta) {
@@ -197,6 +205,7 @@ public class Game implements Screen {
             b.ballImage.draw(game.batch);
         }
         for(Hole h: holes){
+            h.holeImage.setPosition(h.position.x-h.holeShape.height/2, h.position.y-h.holeShape.height/2);
             h.holeImage.draw(game.batch);
         }
         game.batch.end();
@@ -228,21 +237,21 @@ public class Game implements Screen {
         Vector3 ballPos = new Vector3();
         ball = balls.get(nextBall(ball, condition));
         hole = holes.get(nextBall(ball, condition));
-        if(Gdx.input.justTouched() && condition && gameMode1  && !design && !ball.arrived) {
-            score();
-            Vector3 touchPos = new Vector3();
-            touchPos.set(Gdx.input.getX(), Gdx.input.getY(), 0);
-            camera.unproject(touchPos);
-            origin.set((int)touchPos.x - ball.shape.width/2, (int)touchPos.y - ball.shape.height/2, 0);
-
-            ballPos.set((int)ball.position.x, (int)ball.position.y, 0);
-            Vector3 direction = new Vector3();
-
-            direction.set((ballPos.x-origin.x), (ballPos.y-origin.y), 0);
-            ball.setUserVelocity(direction.scl(6f));
-            System.out.println(direction.len());
-            ball.prevPosition = ballPos;
-        }
+//        if(Gdx.input.justTouched() && condition && gameMode1  && !design && !ball.arrived) {
+//            score();
+//            Vector3 touchPos = new Vector3();
+//            touchPos.set(Gdx.input.getX(), Gdx.input.getY(), 0);
+//            camera.unproject(touchPos);
+//            origin.set((int)touchPos.x - ball.shape.width/2, (int)touchPos.y - ball.shape.height/2, 0);
+//
+//            ballPos.set((int)ball.position.x, (int)ball.position.y, 0);
+//            Vector3 direction = new Vector3();
+//
+//            direction.set((ballPos.x-origin.x), (ballPos.y-origin.y), 0);
+//            ball.setUserVelocity(direction.scl(6f));
+//            System.out.println(direction.len());
+//            ball.prevPosition = ballPos;
+//        }
 
         if(!gameMode1 && condition)
         {
@@ -259,9 +268,16 @@ public class Game implements Screen {
             else{
                 System.out.println("No velocities left");
                 outputGame(ball);
-                game.setScreen(new WinScreen(game));
+//                game.setScreen(new WinScreen(game));
                 //System.exit(0);
             }
+        }
+
+        if(bot && Gdx.input.justTouched() && condition && gameMode1  && !design && !ball.arrived) {
+            ball.setUserVelocity(botPlay.moves.get(i).getDirection());
+            ball.prevPosition = ball.position.cpy();
+            i++;
+
         }
 
         Engine.calculate(ball, field, fieldFormula);

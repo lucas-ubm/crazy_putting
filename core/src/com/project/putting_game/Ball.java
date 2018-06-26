@@ -14,6 +14,7 @@ import com.badlogic.gdx.math.Vector3;
 
 public class Ball {
     public Vector3 velocity;
+    public Vector3 oriPosition;
     public Vector3 position;
     public Vector3 prevPosition;
     public Sprite ballImage;
@@ -32,7 +33,7 @@ public class Ball {
         this.velocity = new Vector3(0,0,0);
         moveHistory = new Queue<Vector3>();
         this.path = path;
-
+        this.oriPosition = position.cpy();
 		arrived = false;
 	    id = c;
 	    c++;
