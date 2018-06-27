@@ -76,6 +76,7 @@ public class WinScreen implements Screen {
     public void resize(int width, int height) {
         stage.getViewport().update(width, height);
     }
+
     @Override
     public void show(){
     }
@@ -88,10 +89,11 @@ public class WinScreen implements Screen {
     @Override
     public void resume() {
     }
-    @Override
+
     /**Will be called when a button is clicked and we move to another screen, as specified in the listeners.
 	 * Deletes elements of the WinScreen
 	 */
+    @Override
     public void dispose(){
         stage.dispose();
     }

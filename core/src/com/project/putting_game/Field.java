@@ -78,14 +78,14 @@ public class Field {
 	        min=max;
 	        for(int p=0; p<heights.length-1; p++)
 		        for(int q=0; q<heights[p].length-1; q++) {
-			        as = SplineInterpolator.findCoefs(heights, p, q);
+			        as = SplineInterpolator.findCoefs(heights, p, q);//compute coefficients
 			        //SplineInterpolator.MatrixToString(as);
 			        //System.out.println(p+" "+q+" i "+heights[p][q].y+" to "+heights[p + 1][q + 1].y+" j "+heights[p][q].x+" to "+heights[p+1][q+1].x);
 			        for (int i = (int)heights[p][q].y; i < heights[p + 1][q + 1].y; i++)
 				        for (int j = (int)heights[p][q].x; j < heights[p + 1][q + 1].x; j++) {
 					        matrix[i][j] = new Properties();
-					        matrix[i][j].height = Math.abs(SplineInterpolator.getHeight(as, j, i));
-					        if(matrix[i][j].height>max)
+					        matrix[i][j].height = SplineInterpolator.getHeight(as, j, i);//compute height
+					        if(matrix[i][j].height>max) //update max and min
 						        max= matrix[i][j].height;
 					        if(matrix[i][j].height<min)
 						        min=matrix[i][j].height;

@@ -125,6 +125,7 @@ public class MenuScreen implements Screen {
 		stage.getBatch().end();
 		stage.draw();//draw stage (so the elements of the stage)
 	}
+
 	/** Resize the Screen
 	 * @param width new width of screen
 	 * @param height new height of screen
@@ -145,10 +146,11 @@ public class MenuScreen implements Screen {
 	@Override
 	public void resume() {
 	}
-	@Override
+
 	/**Will be called when a button is clicked and we move to another screen, as specified in the listeners.
 	 * Deletes elements of the MenuScreen.
 	 */
+	@Override
 	public void dispose(){
 		golfImg.dispose();
 		checkImg.dispose();

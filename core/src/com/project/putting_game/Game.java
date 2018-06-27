@@ -333,6 +333,8 @@ public class Game implements Screen {
 	@Override
 	public void dispose () {
 		fieldTexture.dispose();
+		stage.dispose();
+		mpStage.dispose();
 	}
 
 	@Override
