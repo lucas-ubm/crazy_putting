@@ -3,7 +3,6 @@ package com.project.putting_game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.*;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -24,6 +23,10 @@ public class LoadInputScreen implements Screen {
 	private Texture checkImg;
 	private Texture uncheckImg;
 
+	/**Constructor of LoadInputScreen. Same as create() if extending ApplicationAdapter.
+	 * Instantiating all variables defined above.
+	 * @param game game created when 'run' was clicked (parent of all screens)
+	 */
 	public LoadInputScreen(final Project2 game){
 		this.game = game;
 		camera = new OrthographicCamera();
@@ -79,7 +82,7 @@ public class LoadInputScreen implements Screen {
 		TextButton ok = new TextButton("OK", game.skin);
 		ok.setPosition(Gdx.graphics.getWidth()/2-ok.getWidth()-10,Gdx.graphics.getHeight()/6);
 		ok.setSize(cancel.getPrefWidth(), cancel.getPrefHeight());
-		if(!game.getGameMode()){
+		if(!game.getGameMode()){//Mode 2
 			ok.addListener(new ClickListener(){
 				public void clicked(InputEvent event, float x, float y) {
 					try{
@@ -99,10 +102,10 @@ public class LoadInputScreen implements Screen {
 					}
 				}
 			});
-		}else {
+		}else {//Mode 1
 			ok.addListener(new ClickListener(){
 				public void clicked(InputEvent event, float x, float y) {
-					try{//TODO check inputs
+					try{
 						String file = fileField.getText()+".txt";
 						FileReader reader = new FileReader(file);
 						int players = Integer.parseInt(playerField.getText());
@@ -134,6 +137,9 @@ public class LoadInputScreen implements Screen {
 	public void show() {
 	}
 
+	/** Called many times a second. Draws all textures and elements of the stage, such as buttons and labels, on the screen.
+	 * @param delta time elapsed since rendering the last frame
+	 */
 	@Override
 	public void render(float delta) {
 		Gdx.gl.glClearColor(0, 0.7f, 0, 0); //set color of screen/background
@@ -146,6 +152,10 @@ public class LoadInputScreen implements Screen {
 		game.batch.end();
 	}
 
+	/** Resize the Screen
+	 * @param width new width of screen
+	 * @param height new height of screen
+	 */
 	@Override
 	public void resize(int width, int height) {
 		stage.getViewport().update(width, height);
@@ -163,11 +173,13 @@ public class LoadInputScreen implements Screen {
 	public void hide() {
 	}
 
+	/**Will be called when a button is clicked and we move to another screen, as specified in the listeners.
+	 * Deletes elements of the WinScreen
+	 */
 	@Override
 	public void dispose() {
 		checkImg.dispose();
 		uncheckImg.dispose();
 		stage.dispose();
 	}
-
 }

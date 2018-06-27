@@ -9,6 +9,7 @@ import java.util.Random;
 public class Play {
     public ArrayList<Shot> moves;
     private double score;
+    private Vector3 lastPos;
 
     public Play() {
         this.moves = new ArrayList<Shot>();
@@ -46,10 +47,15 @@ public class Play {
         return s;
     }
 
+    public void setLastPos(Vector3 lastPos){
+        this.lastPos = lastPos;
+    }
+
 
     public void print(){
         for(int i=0; i<moves.size(); i++){
             System.out.println("Shot "+i+" is "+moves.get(i).getDirection());
         }
+        System.out.println("Last pos was " +lastPos);
     }
 }

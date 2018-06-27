@@ -145,10 +145,10 @@ public class MenuScreen implements Screen {
 	@Override
 	public void resume() {
 	}
-	@Override
 	/**Will be called when a button is clicked and we move to another screen, as specified in the listeners.
 	 * Deletes elements of the MenuScreen.
 	 */
+	@Override
 	public void dispose(){
 		golfImg.dispose();
 		checkImg.dispose();
