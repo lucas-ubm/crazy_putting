@@ -109,7 +109,7 @@ public class Field {
 	                    max= matrix[i][j].height;
 	                if(matrix[i][j].height<min)
 	                    min=matrix[i][j].height;
-	                matrix[i][j].friction = 0.1;
+	                matrix[i][j].friction = 0.4;
 	            }
 	        }
        }
