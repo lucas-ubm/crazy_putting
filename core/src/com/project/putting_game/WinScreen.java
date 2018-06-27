@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
@@ -19,10 +20,10 @@ public class WinScreen implements Screen {
     private Rectangle golf;
 
     /**Constructor of WinScreen. Same as create() if extending ApplicationAdapter.
-	 * Instantiating all variables defined above and its components (such as position and size).
-	 * @param game game created when 'run' was clicked (parent of all screens)
-	 */
-    public WinScreen(final Project2 game) {
+     * Instantiating all variables defined above and its components (such as position and size).
+     * @param game game created when 'run' was clicked (parent of all screens)
+     */
+    public WinScreen(final Project2 game,int score) {
         this.game = game;
         camera = new OrthographicCamera();
         camera.setToOrtho(false, 800,480);
@@ -47,11 +48,14 @@ public class WinScreen implements Screen {
             }
         });
         stage.addActor(playAgain);
+        Label scoreLabel = new Label("shots taken: "+score,game.skin);
+        scoreLabel.setPosition(Gdx.graphics.getWidth()/2-scoreLabel.getWidth()/2,3*Gdx.graphics.getHeight()/6);
+        stage.addActor(scoreLabel);
     }
 
     /** Called many times a second. Draws all textures and elements of the stage, such as buttons and labels, on the screen.
-	 * @param delta time elapsed since rendering the last frame
-	 */
+     * @param delta time elapsed since rendering the last frame
+     */
     public void render(float delta) {
         Gdx.gl.glClearColor(0, 0.7f, 0, 0); //set color of screen/background
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
@@ -84,10 +88,10 @@ public class WinScreen implements Screen {
     @Override
     public void resume() {
     }
-    @Override
     /**Will be called when a button is clicked and we move to another screen, as specified in the listeners.
-	 * Deletes elements of the WinScreen
-	 */
+     * Deletes elements of the WinScreen
+     */
+    @Override
     public void dispose(){
         stage.dispose();
     }
