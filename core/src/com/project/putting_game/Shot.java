@@ -47,16 +47,16 @@ public class Shot implements Comparable {
         ball.position = originalPosition;
     }
 
-    public void water(){
-        Ball waterBall = ball.copy();
-        waterBall.setUserVelocity((hole.position.cpy().sub(waterBall.position)).scl(5f));
-        while(!hole.holeShape.contains(ball.position.x, ball.position.y)){
-            ball.position.add(ball.velocity.cpy().scl(0.1f));
-            if(Engine.water(ball, course)){
-                this.score *= 0.8;
-            }
-        }
-    }
+//    public void water(){
+//        Ball waterBall = ball.copy();
+//        waterBall.setUserVelocity((hole.position.cpy().sub(waterBall.position)).scl(5f));
+//        while(!hole.holeShape.contains(ball.position.x, ball.position.y)){
+//            ball.position.add(ball.velocity.cpy().scl(0.1f));
+//            if(Engine.water(ball, course)){
+//                this.score *= 0.8;
+//            }
+//        }
+//    }
 
 
 
