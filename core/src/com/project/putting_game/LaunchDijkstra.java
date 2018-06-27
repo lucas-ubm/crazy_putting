@@ -19,6 +19,8 @@ public class LaunchDijkstra {
     int height = (int)Gdx.graphics.getHeight();
     int width = (int)Gdx.graphics.getWidth();
 
+    final int SCALEDOWN = 14;
+
     public LaunchDijkstra (Field c, Ball ball, Hole hole){
         System.out.println("it is constructing");
         course = c;
@@ -43,10 +45,10 @@ public class LaunchDijkstra {
 
         System.out.println("it is at heights");
 
-        double[][] heights = new double[height][width];
+        double[][] heights = new double[height/SCALEDOWN][width/SCALEDOWN];
 
-        for(int i=0; i<height ; i++){
-            for(int m=0; m<width ; m++){
+        for(int i=0; i<height ; i=i+SCALEDOWN){
+            for(int m=0; m<width ; m=m+SCALEDOWN){
                 heights[i][m] = matrix[i][m].getHeight();   }    }
 
                 return heights;
@@ -70,10 +72,10 @@ public class LaunchDijkstra {
     public int[][] translateToAdjacencyList(double[][] in) {
         System.out.println("it is at the translation");
 
-        nodesNumbers = new int[height][width];
+        nodesNumbers = new int[height/SCALEDOWN][width/SCALEDOWN];
         int current = 1;
-        for(int i=0; i < height ; i++){
-            for(int m=0; m < width ; m++){
+        for(int i=0; i < height/SCALEDOWN ; i++){
+            for(int m=0; m < width/SCALEDOWN ; m++){
                 nodesNumbers[i][m] = current;
                 current++;
             }
@@ -85,11 +87,10 @@ public class LaunchDijkstra {
             ArrayList<Integer> linkedTo = new ArrayList<Integer>();
 
         System.out.println("before");
-        int[][] adjList = new int[height*width][height*width];
+        int[][] adjList = new int[(height*width)/SCALEDOWN][(height*width)/ SCALEDOWN];
         System.out.println("it made the adjecency list");
 
         int resident = 0;
-        int linkingTo = 0;
 
         for(int i=0; i < height ; i++){
             for(int m=0; m < width ; m++){
