@@ -32,9 +32,7 @@ public class SelectInputScreen implements Screen {
 	private TextField goalFieldX;
 	private TextField goalFieldY;
 	private TextField radiusField;
-	private TextButton ok;
 	private Label error;
-	private TextButton cancel;
 
 	public SelectInputScreen(final Project2 game){
 		this.game = game;
@@ -97,7 +95,7 @@ public class SelectInputScreen implements Screen {
 		radiusField.setPosition(radiusLabel.getX()+radiusLabel.getWidth()+padding,radiusLabel.getY());
 		stage.addActor(radiusField);
 
-		cancel = new TextButton("Cancel", game.skin);
+		TextButton cancel = new TextButton("Cancel", game.skin);
 		cancel.setPosition(Gdx.graphics.getWidth()/2+10,2*Gdx.graphics.getHeight()/6);
 		cancel.addListener(new ClickListener(){
 			public void clicked(InputEvent event, float x, float y) {
@@ -106,7 +104,7 @@ public class SelectInputScreen implements Screen {
 			}
 		});
 		stage.addActor(cancel);
-		ok = new TextButton("OK", game.skin);
+		TextButton ok = new TextButton("OK", game.skin);
 		ok.setPosition(Gdx.graphics.getWidth()/2-ok.getWidth()-10,2*Gdx.graphics.getHeight()/6);
 		ok.setSize(cancel.getPrefWidth(), cancel.getPrefHeight());
 		ok.addListener(new ClickListener(){
@@ -148,7 +146,9 @@ public class SelectInputScreen implements Screen {
 	@Override
 	public void show() {
 	}
-
+	/** Called many times a second. Draws all textures and elements of the stage, such as buttons and labels, on the screen.
+	 * @param delta time elapsed since rendering the last frame
+	 */
 	@Override
 	public void render(float delta) {
 		Gdx.gl.glClearColor(0, 0.7f, 0, 0); //set color of screen/background
@@ -160,7 +160,10 @@ public class SelectInputScreen implements Screen {
 		stage.draw();//draw stage (so the elements of the stage)
 		game.batch.end();
 	}
-
+	/** Resize the Screen
+	 * @param width new width of screen
+	 * @param height new height of screen
+	 */
 	@Override
 	public void resize(int width, int height) {
 		labeltext = "Enter positions as integers where "+game.borderLength+"<x<"+(Gdx.graphics.getWidth()-game.borderLength)+" and "+game.borderLength+"<y<"+(Gdx.graphics.getHeight()-game.borderLength);
@@ -179,7 +182,9 @@ public class SelectInputScreen implements Screen {
 	@Override
 	public void hide() {
 	}
-
+	/**Will be called when a button is clicked and we move to another screen, as specified in the listeners.
+	 * Deletes elements of the SelectInputScreen.
+	 */
 	@Override
 	public void dispose() {
 		stage.dispose();

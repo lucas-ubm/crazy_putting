@@ -8,14 +8,14 @@ import java.util.ArrayList;
 
 public class Engine {
 
-    public static final double g = 9.81;
+    private static final double g = 9.81;
     public static double CurrentFriction;
     public static double currentHeight;
     public static final float h = 0.005f;
-    public static Vector3 k1;
-    public static Vector3 k2;
-    public static Vector3 k3;
-    public static Vector3 k4;
+    private static Vector3 k1;
+    private static Vector3 k2;
+    private static Vector3 k3;
+    private static Vector3 k4;
 
     public static boolean calculate(Ball ball, Field fields, ArrayList<String> formula) {
         //System.out.println(ball.velocity.x+" "+ball.velocity.y+" "+ball.position.y+" "+ball.position.x);
