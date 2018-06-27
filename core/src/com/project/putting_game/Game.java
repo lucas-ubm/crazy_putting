@@ -451,6 +451,7 @@ public class Game implements Screen {
 //
 //            }
             if(botPlay == null){
+
                 GeneticBot bot = new GeneticBot(field, ball, hole, 50, 3);
                 long start = System.currentTimeMillis();
                 this.botPlay = bot.startProcess();

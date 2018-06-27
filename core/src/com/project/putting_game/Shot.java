@@ -15,7 +15,22 @@ public class Shot implements Comparable {
     {
         this.ball = ball;
         this.course = course;
-        originalPosition = ball.position.cpy();
+
+        float intensity = 1f;
+        float a = (float)Math.random()*intensity;
+        float b = (float)Math.random()*intensity;
+
+        if(Math.random() < 0.5) {
+            a*=-1;
+        }
+        if(Math.random() < 0.5) {
+            b*=-1;
+        }
+
+        Vector3 fakePosition = new Vector3(ball.position.cpy().x *a, ball.position.cpy().y * b, 0);
+
+
+        originalPosition = fakePosition;
         this.direction = direction;
         //System.out.println(direction);
 
