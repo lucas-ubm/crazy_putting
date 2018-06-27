@@ -426,7 +426,7 @@ public class Game implements Screen {
         if(bot && Gdx.input.justTouched() && condition && gameMode1  && !design && !ball.arrived) {
             int p = 0;
             int m = 0;
-            Vector3 direction =  new Vector3(0,0,0);
+//            Vector3 direction =  new Vector3(0,0,0);
             while(botPlay==null) {
                 System.out.println("here for the "+p+m+" time.");
                 GeneticBot bot = new GeneticBot(field, ball, hole, 150+50*p, 3+m);
@@ -461,9 +461,9 @@ public class Game implements Screen {
 ////                game.setScreen(new WinScreen(game, score));
 //
 //            }
-            if (direction.len() != 0){
-//                ball.setUserVelocity(botPlay.moves.get(i).getDirection());
-                ball.setUserVelocity(direction);
+            if (ball.velocity.len() != 0){
+                ball.setUserVelocity(botPlay.moves.get(i).getDirection());
+//                ball.setUserVelocity(direction);
                 ball.prevPosition = ball.position.cpy();
                 i++;
             }
@@ -474,8 +474,10 @@ public class Game implements Screen {
 
         Engine.calculate(ball, field, fieldFormula);
         if(ball.velocity.len() == 0 &&ball==balls.get(0)&&!checkDistance()){
-            ball.setPosition(ball.prevPosition);
-            ball.velocity.scl(0);
+	        for (Ball b : balls) {
+		        b.setPosition(b.prevPosition);
+		        b.velocity.scl(0);
+	        }
         }
 
         condition = ball.velocity.len() == 0;
