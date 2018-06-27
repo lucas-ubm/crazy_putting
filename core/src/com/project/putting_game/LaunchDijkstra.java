@@ -1,6 +1,8 @@
 package com.project.putting_game;
 
 import java.util.ArrayList;
+import java.util.Random;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector3;
 
@@ -21,6 +23,9 @@ public class LaunchDijkstra {
 
     final int SCALEDOWN = 14;
 
+    Random r = new Random();
+
+
     public LaunchDijkstra (Field c, Ball ball, Hole hole){
         System.out.println("it is constructing");
         course = c;
@@ -32,13 +37,13 @@ public class LaunchDijkstra {
     }
 
     public void run () {
-        ShortestPath t = new ShortestPath();
+        FindShortestPath t = new FindShortestPath();
         t.dijkstra(adjacencyList, source, target);
     }
 
     public void setPositions() {
-        source = nodesNumbers[(int)ballPos.x][(int)ballPos.y];
-        target = nodesNumbers[(int)holePos.x][(int)holePos.y];
+        source = nodesNumbers[(int)ballPos.x/SCALEDOWN][(int)ballPos.y/SCALEDOWN];
+        target = nodesNumbers[(int)holePos.x/SCALEDOWN][(int)holePos.y/SCALEDOWN];
     }
 
     public double[][] translateToHeights(Properties[][] matrix) {
@@ -47,9 +52,11 @@ public class LaunchDijkstra {
 
         double[][] heights = new double[height/SCALEDOWN][width/SCALEDOWN];
 
-        for(int i=0; i<height ; i=i+SCALEDOWN){
-            for(int m=0; m<width ; m=m+SCALEDOWN){
-                heights[i][m] = matrix[i][m].getHeight();   }    }
+     //   for(int i=0; i<height-2 ; i=i+SCALEDOWN){
+            for(int i=0; i<462 ; i=i+SCALEDOWN){
+                for(int m=0; m<width-2 ; m=m+SCALEDOWN){
+                System.out.println("i is " + i + "  m is " + m);
+                heights[i/SCALEDOWN][m/SCALEDOWN] = matrix[i][m].getHeight();   }    }
 
                 return heights;
     }
@@ -73,7 +80,7 @@ public class LaunchDijkstra {
         System.out.println("it is at the translation");
 
         nodesNumbers = new int[height/SCALEDOWN][width/SCALEDOWN];
-        int current = 1;
+        int current = 0;
         for(int i=0; i < height/SCALEDOWN ; i++){
             for(int m=0; m < width/SCALEDOWN ; m++){
                 nodesNumbers[i][m] = current;
@@ -86,8 +93,11 @@ public class LaunchDijkstra {
 
             ArrayList<Integer> linkedTo = new ArrayList<Integer>();
 
+            height = height/SCALEDOWN;
+            width = width/SCALEDOWN;
+
         System.out.println("before");
-        int[][] adjList = new int[(height*width)/SCALEDOWN][(height*width)/ SCALEDOWN];
+        int[][] adjList = new int[(height*width)][(height*width)];
         System.out.println("it made the adjecency list");
 
         int resident = 0;
@@ -106,7 +116,7 @@ public class LaunchDijkstra {
                 if((i+1) > 0 && (i+1) < height && (m+1)>0 && (m+1)<width && in[i+1][m+1]>0) linkedTo.add(nodesNumbers[i+1][m+1]);    //bottom-right
 
                 for(int j=0 ; j<linkedTo.size() ; j++){
-                    adjList[resident][linkedTo.get(i)] = 1;
+                    adjList[resident][linkedTo.get(j)] = (int) (20 * r.nextDouble());
                 }
 
             }

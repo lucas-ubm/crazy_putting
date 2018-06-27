@@ -3,7 +3,7 @@ package com.project.putting_game.DijkstraGraphStyle;
 import java.util.*;
 
 public class DjikstraImplementation {
-
+/*
     public static Graph calculateShortestPathFromSource(Graph graph, Node source) {
         source.setDistance(0);
 
@@ -47,10 +47,10 @@ public class DjikstraImplementation {
         Integer sourceDistance = sourceNode.getDistance();
         if (sourceDistance + edgeWeigh < evaluationNode.getDistance()) {
             evaluationNode.setDistance(sourceDistance + edgeWeigh);
-            LinkedList<Node> shortestPath = new LinkedList<>(sourceNode.getShortestPath());
+            LinkedList<Node> shortestPath = new LinkedList<Node>(sourceNode.getShortestPath());
             shortestPath.add(sourceNode);
             evaluationNode.setShortestPath(shortestPath);
         }
     }
-
+*/
 }

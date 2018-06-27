@@ -1,7 +1,7 @@
 package com.project.putting_game.DijkstraGraphStyle;
 
 public class test {
-
+/*
             Node nodeA = new Node("A");
             Node nodeB = new Node("B");
             Node nodeC = new Node("C");
@@ -32,5 +32,5 @@ public class test {
         graph.addNode(nodeF);
 
             graph = Dijkstra.calculateShortestPathFromSource(graph, nodeA);
-
+*/
 }
