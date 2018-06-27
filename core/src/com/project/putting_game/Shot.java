@@ -51,7 +51,7 @@ public class Shot implements Comparable {
 //        ball.position = originalPosition;
     }
 
-//    private boolean water(){
+    //    private boolean water(){
 //        Ball waterBall = ball.copy();
 //        waterBall.setUserVelocity(waterBall.position.sub(hole.position.cpy()).scl(-1));
 //        while(waterBall.velocity.len()!=0) {
