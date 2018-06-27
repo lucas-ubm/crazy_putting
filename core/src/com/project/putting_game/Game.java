@@ -76,7 +76,7 @@ public class Game implements Screen {
         this.holes = new ArrayList<Hole>();
 
         for(int i = 0; i < this.players; i++){
-            balls.add(new Ball(players,fieldVariables.startPosition.cpy(), "golfball.png", 12));
+            balls.add(new Ball(players,fieldVariables.startPosition.cpy(), "golfball.png", 24));
             holes.add(new Hole(players,fieldVariables.goalPosition.scl((float)(1-0.1*i)).cpy(), "hole.png", fieldVariables.goalRadius));
         }
         this.ball = balls.get(0);
@@ -434,7 +434,7 @@ public class Game implements Screen {
             int m = 0;
             while(botPlay==null) {
                 System.out.println("here for the "+p+m+" time.");
-                GeneticBot bot = new GeneticBot(field, ball, hole, 200+50*p, 9+m);
+                GeneticBot bot = new GeneticBot(field, ball, hole, 200+50*p, 4+m);
                 this.botPlay = bot.startProcess();
 
                 if(m < p || p>=3){
