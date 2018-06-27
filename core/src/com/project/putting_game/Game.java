@@ -48,7 +48,7 @@ public class Game implements Screen {
     private static boolean startriver = false;
     private static int s;
     private Label scoreLabel;
-    private Play botPlay;
+//    private Play botPlay;
     private int score;
     private boolean bot;
 
@@ -432,6 +432,7 @@ public class Game implements Screen {
         if(bot && Gdx.input.justTouched() && condition && gameMode1  && !design && !ball.arrived) {
             int p = 0;
             int m = 0;
+            Vector3 direction =  new Vector3(0,0,0);
 //            while(botPlay==null) {
 //                System.out.println("here for the "+p+m+" time.");
 //                GeneticBot bot = new GeneticBot(field, ball, hole, 150+50*p, 3+m);
@@ -450,18 +451,23 @@ public class Game implements Screen {
 //                }
 //
 //            }
-            if(botPlay == null){
+            if(direction.len() == 0){
 
-                GeneticBot bot = new GeneticBot(field, ball, hole, 50, 3);
+//                GeneticBot bot = new GeneticBot(field, ball, hole, 50, 3);
+                BinaryBot bot = new BinaryBot(field, ball, hole, field.getFormula());
                 long start = System.currentTimeMillis();
-                this.botPlay = bot.startProcess();
+//                this.botPlay = bot.startProcess();
+                direction = bot.startProcess();
                 long end = System.currentTimeMillis();
                 System.out.println(end-start);
+                System.out.println(direction);
+
 //                game.setScreen(new WinScreen(game, score));
 
             }
-            if (botPlay!=null && i<botPlay.moves.size() ){
-                ball.setUserVelocity(botPlay.moves.get(i).getDirection());
+            if (direction.len() != 0){
+//                ball.setUserVelocity(botPlay.moves.get(i).getDirection());
+                ball.setUserVelocity(direction);
                 ball.prevPosition = ball.position.cpy();
                 i++;
             }
