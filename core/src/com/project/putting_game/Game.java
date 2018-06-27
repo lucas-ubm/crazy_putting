@@ -434,7 +434,7 @@ public class Game implements Screen {
             int m = 0;
             while(botPlay==null) {
                 System.out.println("here for the "+p+m+" time.");
-                GeneticBot bot = new GeneticBot(field, ball, hole, 200+50*p, 9+m);
+                GeneticBot bot = new GeneticBot(field, ball, hole, 100+50*p, 6+m);
                 this.botPlay = bot.startProcess();
 
                 if(m < p || p>=3){

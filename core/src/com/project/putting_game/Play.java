@@ -24,6 +24,7 @@ public class Play {
         if(moves.size() == 0){
             return -1;
         }
+        moves.get(moves.size()-1).water();
         return score = moves.get(moves.size()-1).getScore();
     }
 
