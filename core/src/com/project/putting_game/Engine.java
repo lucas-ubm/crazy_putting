@@ -37,6 +37,9 @@ public class Engine {
         }
 
         ball.velocity.add((k1.add(k2.scl(3)).add(k3.scl(3)).add(k4)).scl(1f / 6f));
+        if (ball.velocity.len() <= 50) {
+            ball.velocity.scl(0);
+        }
         ball.setPosition(ball.position.add(ball.velocity.cpy().scl(h)));
         //System.out.println(ball.velocity.x+" "+ball.velocity.y+" "+ball.position.y+" "+ball.position.x);
 
@@ -51,9 +54,7 @@ public class Engine {
             ball.velocity.scl(0);
         }
 
-        if (ball.velocity.len() <= 50) {
-            ball.velocity.scl(0);
-        }
+
         return water(ball, fields);
     }
 
