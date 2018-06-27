@@ -33,11 +33,12 @@ public class GeneticBot {
         while(bestPlay.getScore() < 1/(hole.holeShape.height/4)){
             geneticAlgorithm();
 //            System.out.println("Here");
-//            bestPlay.print();
-//            if(generation >= 5){
+            bestPlay.print();
+//            if(gener
+// ation >= 5){
 //                return bestPlay;
 //            }
-            if(population.get(0).moves.get(0).getDirection().len() > new Vector3(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(),0).len()){
+            if(population.get(0).moves.get(0).getDirection().len() > new Vector3(Gdx.graphics.getWidth()*5, Gdx.graphics.getHeight()*5,0).len()){
                 return null;
             }
         }
