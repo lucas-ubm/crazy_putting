@@ -33,7 +33,7 @@ public class GeneticBot {
         while(bestPlay.getScore() < 1/(hole.holeShape.height/4)){
             geneticAlgorithm();
 //            System.out.println("Here");
-            bestPlay.print();
+//            bestPlay.print();
 //            if(gener
 // ation >= 5){
 //                return bestPlay;
