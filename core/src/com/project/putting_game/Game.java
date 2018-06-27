@@ -455,11 +455,13 @@ public class Game implements Screen {
 
 //                GeneticBot bot = new GeneticBot(field, ball, hole, 50, 3);
                 BinaryBot bot = new BinaryBot(field, ball, hole, field.getFormula());
+//                RandomBot bot = new RandomBot(field, ball, hole, field.getFormula());
                 long start = System.currentTimeMillis();
 //                this.botPlay = bot.startProcess();
                 direction = bot.startProcess();
                 long end = System.currentTimeMillis();
                 System.out.println(end-start);
+                ball.moveHistory = new Queue<Vector3>();
                 System.out.println(direction);
 
 //                game.setScreen(new WinScreen(game, score));
