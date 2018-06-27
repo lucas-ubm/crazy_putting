@@ -38,7 +38,7 @@ public class GeneticBot {
 // ation >= 5){
 //                return bestPlay;
 //            }
-            if(population.get(0).moves.get(0).getDirection().len() > new Vector3(Gdx.graphics.getWidth()*5, Gdx.graphics.getHeight()*5,0).len()){
+            if(population.get(0).moves.get(0).getDirection().len() > new Vector3(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(),0).len()){
                 return null;
             }
         }
