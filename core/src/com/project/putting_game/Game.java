@@ -430,35 +430,35 @@ public class Game implements Screen {
         }
 
         if(bot && Gdx.input.justTouched() && condition && gameMode1  && !design && !ball.arrived) {
-//            int p = 0;
-//                int m = 0;
-//                while(botPlay==null) {
-//                    System.out.println("here for the "+p+m+" time.");
-//                    GeneticBot bot = new GeneticBot(field, ball, hole, 100+50*p, 2+m);
-//                    this.botPlay = bot.startProcess();
-//
-//                    if(m < p || p>=3){
-//                        m++;
-//                    }
-//                    else{
-//                        p++;
-//                    }
-//
-//                    if(botPlay != null){
-//                        System.out.println("Bot score is "+botPlay.getScore());
-//                        botPlay.print();
-//                    }
-//
-//            }
-            if(botPlay == null){
-                GeneticBot bot = new GeneticBot(field, ball, hole, 200, 2);
-                long start = System.currentTimeMillis();
-                this.botPlay = bot.startProcess();
-                long end = System.currentTimeMillis();
-                System.out.println(end-start);
-//                game.setScreen(new WinScreen(game, score));
+            int p = 0;
+                int m = 0;
+                while(botPlay==null) {
+                    System.out.println("here for the "+p+m+" time.");
+                    GeneticBot bot = new GeneticBot(field, ball, hole, 100+50*p, 2+m);
+                    this.botPlay = bot.startProcess();
+
+                    if(m < p || p>=3){
+                        m++;
+                    }
+                    else{
+                        p++;
+                    }
+
+                    if(botPlay != null){
+                        System.out.println("Bot score is "+botPlay.getScore());
+                        botPlay.print();
+                    }
 
             }
+//            if(botPlay == null){
+//                GeneticBot bot = new GeneticBot(field, ball, hole, 200, 2);
+//                long start = System.currentTimeMillis();
+//                this.botPlay = bot.startProcess();
+//                long end = System.currentTimeMillis();
+//                System.out.println(end-start);
+////                game.setScreen(new WinScreen(game, score));
+//
+//            }
             if (botPlay!=null && i<botPlay.moves.size() ){
                 ball.setUserVelocity(botPlay.moves.get(i).getDirection());
                 ball.prevPosition = ball.position.cpy();
