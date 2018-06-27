@@ -47,6 +47,7 @@ public class Game implements Screen {
     private Label.LabelStyle ballStyle;
     private static boolean startriver = false;
     private static int s;
+    private Play botPlay;
     private Label scoreLabel;
 //    private Play botPlay;
     private int score;
@@ -433,40 +434,40 @@ public class Game implements Screen {
             int p = 0;
             int m = 0;
             Vector3 direction =  new Vector3(0,0,0);
-//            while(botPlay==null) {
-//                System.out.println("here for the "+p+m+" time.");
-//                GeneticBot bot = new GeneticBot(field, ball, hole, 150+50*p, 3+m);
-//                this.botPlay = bot.startProcess();
-//
-//                if(m < p || p>=3){
-//                    m++;
-//                }
-//                else{
-//                    p++;
-//                }
-//
-//                if(botPlay != null){
-//                    System.out.println("Bot score is "+botPlay.getScore());
-//                    botPlay.print();
-//                }
-//
-//            }
-            if(direction.len() == 0){
+            while(botPlay==null) {
+                System.out.println("here for the "+p+m+" time.");
+                GeneticBot bot = new GeneticBot(field, ball, hole, 150+50*p, 3+m);
+                this.botPlay = bot.startProcess();
 
-//                GeneticBot bot = new GeneticBot(field, ball, hole, 50, 3);
-//                BinaryBot bot = new BinaryBot(field, ball, hole, field.getFormula());
-                RandomBot bot = new RandomBot(field, ball, hole, field.getFormula());
-                long start = System.currentTimeMillis();
-//                this.botPlay = bot.startProcess();
-                direction = bot.startProcess();
-                long end = System.currentTimeMillis();
-                System.out.println(end-start);
-                ball.moveHistory = new Queue<Vector3>();
-                System.out.println(direction);
+                if(m < p || p>=3){
+                    m++;
+                }
+                else{
+                    p++;
+                }
 
-//                game.setScreen(new WinScreen(game, score));
+                if(botPlay != null){
+                    System.out.println("Bot score is "+botPlay.getScore());
+                    botPlay.print();
+                }
 
             }
+//            if(direction.len() == 0){
+//
+////                GeneticBot bot = new GeneticBot(field, ball, hole, 50, 3);
+////                BinaryBot bot = new BinaryBot(field, ball, hole, field.getFormula());
+//                RandomBot bot = new RandomBot(field, ball, hole, field.getFormula());
+//                long start = System.currentTimeMillis();
+////                this.botPlay = bot.startProcess();
+//                direction = bot.startProcess();
+//                long end = System.currentTimeMillis();
+//                System.out.println(end-start);
+//                ball.moveHistory = new Queue<Vector3>();
+//                System.out.println(direction);
+//
+////                game.setScreen(new WinScreen(game, score));
+//
+//            }
             if (direction.len() != 0){
 //                ball.setUserVelocity(botPlay.moves.get(i).getDirection());
                 ball.setUserVelocity(direction);
