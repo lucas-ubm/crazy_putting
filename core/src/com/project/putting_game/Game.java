@@ -461,7 +461,7 @@ public class Game implements Screen {
 ////                game.setScreen(new WinScreen(game, score));
 //
 //            }
-            if (ball.velocity.len() != 0){
+            if (i < botPlay.moves.size()){
                 ball.setUserVelocity(botPlay.moves.get(i).getDirection());
 //                ball.setUserVelocity(direction);
                 ball.prevPosition = ball.position.cpy();
