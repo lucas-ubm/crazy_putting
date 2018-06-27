@@ -53,9 +53,9 @@ public class Game implements Screen {
     private int score;
     private boolean bot;
 
-    public Game (Project2 game, String file,int players) {
+    public Game (Project2 game, String file,int players,boolean bot) {
         //Creation of camera
-        this.bot = true;
+        this.bot = bot;
         this.players = players;
         this.maxDistance =150;
         this.game = game;
@@ -82,7 +82,6 @@ public class Game implements Screen {
         }
         this.ball = balls.get(0);
         this.hole = holes.get(0);
-
 
         this.course = fieldVariables.courseFunction;
         //Create field
@@ -123,7 +122,7 @@ public class Game implements Screen {
         stage.addActor(text);
 
         Gdx.input.setInputProcessor(new InputAdapter(){
-
+		//define behaviour after certain user input
             @Override
             public boolean touchDown (int x, int y, int pointer, int button) {
                 startriver = true;
@@ -149,7 +148,6 @@ public class Game implements Screen {
                 return true;
             }
 
-
             @Override
             public boolean touchDragged (int x, int y, int pointer) throws ArrayIndexOutOfBoundsException {
                 if (design && !startriver ) {
@@ -168,7 +166,6 @@ public class Game implements Screen {
                 startriver = false;
                 return true; // return true to indicate the event was handled
             }
-
 
             @Override
             public boolean keyDown(int keycode) throws ArrayIndexOutOfBoundsException {
@@ -201,7 +198,6 @@ public class Game implements Screen {
                                 field.getMatrix()[j][640].height = -1;
                             }
 
-
                         pixmap.drawLine(160, 80, 160, 400);
                             for(int j =80; j<400; j++) {
                                 field.getMatrix()[j][160].height = -1;
@@ -215,8 +211,6 @@ public class Game implements Screen {
                             for(int j =80; j<160; j++) {
                                 field.getMatrix()[j][720].height = -1;
                             }
-
-
 
                         pixmap.drawLine(320, 160, 320, 400);
                             for(int j =160; j<400; j++) {
@@ -234,7 +228,6 @@ public class Game implements Screen {
                             for(int j =160; j<240; j++) {
                                 field.getMatrix()[j][560].height = -1;
                             }
-
 
                         pixmap.drawLine(80, 240, 80, 320);
                             for(int j =240; j<320; j++) {
@@ -272,8 +265,6 @@ public class Game implements Screen {
                             for(int j =320; j<640; j++) {
                                 field.getMatrix()[80][j].height = -1;
                             }
-
-
 
                         pixmap.drawLine(80,160, 160, 160);
                             for(int j =80; j<160; j++) {
@@ -342,7 +333,10 @@ public class Game implements Screen {
         fieldTexture = new Texture(pixmap);
 
     }
-
+	/** Called many times a second. Draws all textures and elements of the stage, such as buttons and labels, on the screen.
+	 * @param delta time elapsed since rendering the last frame
+	 */
+	@Override
     public void render (float delta) {
         Gdx.gl.glClearColor(0, 0, 0.2f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
@@ -427,7 +421,6 @@ public class Game implements Screen {
                 game.setScreen(new WinScreen(game, score));
                 //System.exit(0);
             }
-
         }
 
         if(bot && Gdx.input.justTouched() && condition && gameMode1  && !design && !ball.arrived) {
@@ -477,13 +470,11 @@ public class Game implements Screen {
             else{
                 System.out.println("No more shots for the bot");
             }
-
-
         }
 
         Engine.calculate(ball, field, fieldFormula);
         if(ball.velocity.len() == 0 &&ball==balls.get(0)&&!checkDistance()){
-            ball.position = ball.prevPosition;
+            ball.setPosition(ball.prevPosition);
             ball.velocity.scl(0);
         }
 
@@ -493,7 +484,6 @@ public class Game implements Screen {
             outputGame(ball);
             game.setScreen(new com.project.putting_game.WinScreen(game, score));
         }
-
 
         if(ball.velocity.len() == 0 && checkRadius(ball, hole)) {
             System.out.println("This ball is in his hole");
@@ -514,15 +504,6 @@ public class Game implements Screen {
         }
     }
 
-    public boolean checkDistance(){
-        for (Ball b : balls) {
-            if (!distanceBalls(b)) {
-                return false;
-            }
-        }
-        return true;
-    }
-
     public int nextBallColor(Ball ball){
         int id = 0;
         if(ball.velocity.len() == 0){
@@ -536,7 +517,6 @@ public class Game implements Screen {
         }
     }
 
-
     public boolean distanceBalls(Ball ball) {
         Vector3 origin = ball.position.cpy();
         for(Ball b: balls){
@@ -548,6 +528,15 @@ public class Game implements Screen {
         }
         return true;
     }
+
+	public boolean checkDistance(){
+		for (Ball b : balls) {
+			if (!distanceBalls(b)) {
+				return false;
+			}
+		}
+		return true;
+	}
 
     public void score(){
         int maxScore = 0;
@@ -567,12 +556,19 @@ public class Game implements Screen {
         }
         return true;
     }
-
+	/**Will be called when a button is clicked and we move to another screen, as specified in the listeners.
+	 * Deletes elements of the GameScreen.
+	 */
     @Override
     public void dispose () {
         fieldTexture.dispose();
+        stage.dispose();
+        mpStage.dispose();
     }
-
+	/** Resize the Screen
+	 * @param width new width of screen
+	 * @param height new height of screen
+	 */
     @Override
     public void resize(int width, int height) {stage.getViewport().update(width, height);
     }
