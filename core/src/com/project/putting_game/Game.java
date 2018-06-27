@@ -454,8 +454,8 @@ public class Game implements Screen {
             if(direction.len() == 0){
 
 //                GeneticBot bot = new GeneticBot(field, ball, hole, 50, 3);
-                BinaryBot bot = new BinaryBot(field, ball, hole, field.getFormula());
-//                RandomBot bot = new RandomBot(field, ball, hole, field.getFormula());
+//                BinaryBot bot = new BinaryBot(field, ball, hole, field.getFormula());
+                RandomBot bot = new RandomBot(field, ball, hole, field.getFormula());
                 long start = System.currentTimeMillis();
 //                this.botPlay = bot.startProcess();
                 direction = bot.startProcess();
