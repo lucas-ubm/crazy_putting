@@ -429,15 +429,15 @@ public class Game implements Screen {
 //            Vector3 direction =  new Vector3(0,0,0);
             while(botPlay==null) {
                 System.out.println("here for the "+p+m+" time.");
-                GeneticBot bot = new GeneticBot(field, ball, hole, 150+50*p, 3+m);
+                GeneticBot bot = new GeneticBot(field, ball, hole, 300+50*p, 4+m);
                 this.botPlay = bot.startProcess();
 
-                if(m < p || p>=3){
-                    m++;
-                }
-                else{
-                    p++;
-                }
+//                if(m < p || p>=3){
+//                    m++;
+//                }
+//                else{
+//                    p++;
+//                }
 
                 if(botPlay != null){
                     System.out.println("Bot score is "+botPlay.getScore());
